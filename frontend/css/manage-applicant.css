@@ -1,0 +1,34 @@
+/* style.css */
+:root {
+    --primary: #4f46e5;
+    --bg-light: #f8fafc;
+    --border: #e2e8f0;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+body { background-color: var(--bg-light); color: var(--text-main); display: flex; min-height: 100vh; }
+
+/* Dashboard Sidebar Structure */
+.sidebar { width: 260px; background: white; border-right: 1px solid var(--border); padding: 20px; position: fixed; height: 100vh; }
+.logo { font-size: 1.5rem; font-weight: bold; color: var(--primary); margin-bottom: 40px; }
+.menu a { display: flex; align-items: center; padding: 12px; text-decoration: none; color: var(--text-muted); border-radius: 8px; margin-bottom: 8px; }
+.menu a.active { background: #eef2ff; color: var(--primary); font-weight: 600; }
+
+/* Main Content Adjustments */
+.main-content { margin-left: 260px; width: calc(100% - 260px); }
+.topbar { height: 60px; background: white; border-bottom: 1px solid var(--border); display: flex; justify-content: flex-end; align-items: center; padding: 0 40px; }
+
+/* Table & Status Colors (The "Reflection" UI) */
+.status { padding: 4px 12px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; text-transform: capitalize; }
+.status.shortlisted { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+.status.applied { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+.status.rejected { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+
+.btn { padding: 6px 14px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; border: 1px solid transparent; }
+.btn-green { border-color: #22c55e; color: #16a34a; background: white; }
+.btn-red { border-color: #ef4444; color: #dc2626; background: white; }
+.btn-green:hover { background: #16a34a; color: white; }
+.btn-red:hover { background: #dc2626; color: white; }

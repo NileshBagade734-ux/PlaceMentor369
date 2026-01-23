@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Recruiter | Manage Applicants</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50">
+  <div class="flex min-h-screen">
+    <aside class="w-64 bg-white border-r border-slate-200 p-6 hidden md:block">
+      <h1 class="text-xl font-bold text-indigo-600 mb-10">PlacementorAI</h1>
+     <nav class="space-y-2">
+  <!-- Dashboard Link -->
+  <a href="recruiter-dashboard.html" class="nav-link flex items-center gap-3 p-3 text-slate-600 hover:bg-indigo-50 rounded-xl cursor-pointer">
+    <i data-lucide="layout-dashboard"></i> Dashboard
+  </a>
+
+  <!-- Post Job Link (for recruiter only) -->
+  <a href="postjob.html" class="nav-link flex items-center gap-3 p-3 text-slate-600 hover:bg-indigo-50 rounded-xl cursor-pointer">
+    <i data-lucide="plus-circle"></i> Post Job
+  </a>
+
+  <!-- Manage Applicants Link -->
+  <a href="manage-applicant.html" class="nav-link flex items-center gap-3 p-3 text-slate-600 hover:bg-indigo-50 rounded-xl cursor-pointer">
+    <i data-lucide="users"></i> Manage Applicants
+  </a>
+</nav>
+
+    </aside>
+
+    <main class="flex-1 p-8">
+      <header class="mb-8">
+        <h2 class="text-3xl font-bold text-slate-800">Review Applications</h2>
+        <p class="text-slate-500">Manage student applications and filter by eligibility</p>
+      </header>
+
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <table class="w-full text-left">
+          <thead class="bg-slate-50 border-b border-slate-200">
+            <tr>
+              <th class="p-4 text-xs font-bold text-slate-500 uppercase">Student Name</th>
+              <th class="p-4 text-xs font-bold text-slate-500 uppercase">Applied For</th>
+              <th class="p-4 text-xs font-bold text-slate-500 uppercase text-center">CGPA</th>
+              <th class="p-4 text-xs font-bold text-slate-500 uppercase text-center">Resume</th>
+              <th class="p-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+              <th class="p-4 text-xs font-bold text-slate-500 uppercase">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="recruiter-table-body" class="divide-y divide-slate-100">
+            </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+  <script src="../js/manage-applicant.js"></script>
+</body>
+</html>

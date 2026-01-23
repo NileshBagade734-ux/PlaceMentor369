@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Management | PlacementorAI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../frontend/css/admin-managejob.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="brand">PlacementorAI</div>
+    <nav>
+      <a href="admin-dashboard.html" class="nav-item">
+        <i class="fa-solid fa-grip"></i> Dashboard
+      </a>
+      <a href="admin-studentverify.html" class="nav-item">
+        <i class="fa-solid fa-user-check"></i> Verify Students
+      </a>
+      <a href="admin-managejob.html" class="nav-item active">
+        <i class="fa-solid fa-list-check"></i> Manage Jobs
+      </a>
+    </nav>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-user">
+        <span>Administrator</span>
+        <a href="login.html" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="header-flex">
+        <div>
+          <h1>Job Management</h1>
+          <p class="subtitle">Validate recruiter postings for the student portal</p>
+        </div>
+        <button class="btn-reset" onclick="resetDatabase()">Reset Table Data</button>
+      </div>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Company & Location</th>
+              <th>Role</th>
+              <th>CGPA Cutoff</th>
+              <th>Deadline</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adminJobTableBody">
+            </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="../frontend/js/admin-managejob.js"></script>
+</body>
+</html>

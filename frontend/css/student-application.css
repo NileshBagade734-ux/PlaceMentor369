@@ -1,0 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.hidden {
+    display: none;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+}
+
+/* Top Bar */
+.topbar {
+    height: 64px;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+}
+
+.logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #4f46e5;
+}
+
+/* Layout */
+.layout {
+    display: flex;
+    min-height: calc(100vh - 64px);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    padding: 1.5rem 1rem;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.sidebar li:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.sidebar li.active {
+    background: #eef2ff;
+    color: #4f46e5;
+    font-weight: 600;
+}
+
+/* Content */
+.content {
+    flex: 1;
+    padding: 2.5rem;
+}
+
+.content h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+}
+
+.subtitle {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 2rem;
+}
+
+/* Table */
+.table-card {
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    padding: 1rem 1.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #64748b;
+    background: #f8fafc;
+}
+
+td {
+    padding: 1.25rem 1.5rem;
+    font-size: 0.875rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+tr:hover td {
+    background: #fcfdfe;
+}
+
+/* Status */
+.status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status.applied {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+.status.shortlisted {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status.rejected {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* Logout */
+.logout {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    border: 1px solid #fecaca;
+    color: #ef4444;
+    background: transparent;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+

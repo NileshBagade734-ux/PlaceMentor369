@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Post Job – PlacementorAI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="../css/postjob.css" />
+</head>
+
+<body class="bg-slate-50">
+  <header class="navbar">
+    <div class="logo">PlacementorAI</div>
+    <div class="nav-right">
+      <span>Recruiter</span>
+      <button class="logout-btn" onclick="location.href='login.html'">
+        <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <nav class="space-y-2">
+        <a href="recruiter-dashboard.html" class="nav-link">
+          <i data-lucide="layout-dashboard"></i> Dashboard
+        </a>
+        <a href="postjob.html" class="nav-link active">
+          <i data-lucide="plus-circle"></i> Post Job
+        </a>
+        <a href="manage-applicant.html" class="nav-link">
+          <i data-lucide="users"></i> Manage Applicants
+        </a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-slate-900">Post New Job</h1>
+        <p class="text-slate-500">Create a new opportunity for students to apply</p>
+      </div>
+
+      <form id="jobForm" class="max-w-3xl space-y-6">
+        <div class="card">
+          <h2 class="section-title">Job Information</h2>
+          <div class="space-y-4">
+            <div>
+              <label class="label">Job Title</label>
+              <input id="title" class="input" placeholder="e.g. Software Development Engineer" required />
+            </div>
+            <div>
+              <label class="label">Company Name</label>
+              <input id="company" class="input" placeholder="e.g. TechCorp India" required />
+            </div>
+            <div>
+              <label class="label">Job Description</label>
+              <textarea id="description" rows="5" class="input" placeholder="Roles, responsibilities, and perks..." required></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">Eligibility & Skills</h2>
+          <div class="space-y-6">
+            <div>
+              <label class="label mb-3 block">Eligible Branches</label>
+              <div id="branchesContainer" class="grid grid-cols-2 gap-3"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="label">Minimum CGPA</label>
+                <input id="cgpa" type="number" step="0.1" class="input" placeholder="7.5" required />
+              </div>
+              <div>
+                <label class="label">Application Deadline</label>
+                <input id="deadline" type="date" class="input" required />
+              </div>
+            </div>
+
+            <div>
+              <label class="label">Required Skills</label>
+              <div class="flex gap-2 mt-2">
+                <input id="skillInput" class="input flex-1" placeholder="e.g. React, Python" />
+                <button type="button" id="addSkillBtn" class="btn-primary">Add</button>
+              </div>
+              <div id="skillsContainer" class="flex flex-wrap gap-2 mt-3"></div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit w-full">Post Job Opportunity</button>
+      </form>
+    </main>
+  </div>
+
+  <script src="../js/postjob.js"></script>
+</body>
+</html>

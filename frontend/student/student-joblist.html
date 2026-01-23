@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opportunities | PlacementorAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .job-card.active { border-color: #4f46e5; background-color: #f5f7ff; }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-red { background: #fee2e2; color: #991b1b; }
+    .sidebar-item:hover { background: #f1f5f9; color: #4f46e5; }
+  </style>
+</head>
+<body class="bg-slate-50 overflow-hidden">
+
+<div class="flex h-screen">
+  <aside class="w-64 bg-white border-r border-slate-200 p-6 hidden lg:flex flex-col">
+    <h1 class="text-xl font-bold text-indigo-600 mb-10 flex items-center gap-2">
+      <i data-lucide="zap"></i> Placementor
+    </h1>
+        <nav class="flex-1 px-4 space-y-1">
+            <a href="../student/student-dashboard.html" class="sidebar-item active">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+            </a>
+            <a href="../student/student-profile.html" class="sidebar-item">
+                <i data-lucide="user" class="w-4 h-4"></i> Profile
+            </a>
+            <a href="../student/student-joblist.html" class="sidebar-item">
+                <i data-lucide="briefcase" class="w-4 h-4"></i> Jobs
+            </a>
+            <a href="../student/student-application.html" class="sidebar-item">
+                <i data-lucide="file-text" class="w-4 h-4"></i> My Applications
+            </a>
+        </nav>
+  </aside>
+
+  <main class="flex-1 flex overflow-hidden">
+    <section class="w-full md:w-2/5 border-r border-slate-200 overflow-y-auto p-6">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-slate-800">Job Board</h2>
+        <p class="text-sm text-slate-500" id="student-info">Loading profile...</p>
+      </div>
+      <div id="jobs-list" class="space-y-4"></div>
+    </section>
+
+    <section class="flex-1 bg-white overflow-y-auto p-10 relative">
+      <div id="empty-state" class="flex flex-col items-center justify-center h-full text-slate-400">
+        <i data-lucide="layers" size="48" class="mb-4 opacity-20"></i>
+        <p>Select a job to view details and apply</p>
+      </div>
+      <div id="job-details" class="hidden">
+        </div>
+    </section>
+  </main>
+</div>
+
+<script src="../js/student-joblist.js"></script>
+</body>
+</html>

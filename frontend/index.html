@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PlacementorAI</title>
+  <link rel="stylesheet" href="../frontend/css/style.css" />
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container nav">
+    <div class="logo">
+      🧠 <span>PlacementorAI</span>
+    </div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="about.html">About</a>
+      <a href="register.html">Sign Up</a>
+      <a href="login.html" class="login">Login</a>
+      <button class="btn primary">Get Started</button>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero container">
+  <div class="hero-left">
+    <span class="badge">AI-Powered Placement Platform</span>
+
+    <h1>AI-Powered Placement<br/>Readiness for Every<br/>Student</h1>
+
+    <p>
+      Conduct AI mock interviews, get objective feedback, and follow
+      personalized training paths aligned with industry roles.
+    </p>
+
+    <div class="features">
+      <div class="feature">
+        🎯
+        <div>
+          <h4>AI Mock Interviews</h4>
+          <p>Real-time evaluation</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        📈
+        <div>
+          <h4>Skill Analytics</h4>
+          <p>Track progress</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        🧠
+        <div>
+          <h4>Smart Feedback</h4>
+          <p>AI insights</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        🏆
+        <div>
+          <h4>Role Training</h4>
+          <p>Personalized paths</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <button class="btn primary" onclick="openModal('student')">Login as Student</button>
+      <button class="btn secondary" onclick="openModal('admin')">Login as Admin</button>
+    </div>
+
+    <small>Demo credentials: any email & password</small>
+  </div>
+
+  <div class="hero-right">
+    <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b" alt="students"/>
+
+    <div class="stats-card">
+      🏆
+      <div>
+        <strong>2,500+</strong>
+        <span>Students Placed</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY SECTION -->
+<section class="why">
+  <div class="container">
+    <h2>Why PlacementorAI?</h2>
+    <p>
+      We help students prepare smarter using AI-driven interviews,
+      skill analytics, and role-based training for real placement outcomes.
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container footer-grid">
+    <div>
+      <h3>PlacementorAI</h3>
+      <p>AI-powered placement readiness platform.</p>
+    </div>
+
+    <div>
+      <h4>Product</h4>
+      <a href="#">Features</a>
+      <a href="#">Career Paths</a>
+      <a href="#">Pricing</a>
+    </div>
+
+    <div>
+      <h4>Company</h4>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+      <a href="#">Privacy</a>
+    </div>
+
+    <div>
+      <h4>Social</h4>
+      <a href="#">LinkedIn</a>
+      <a href="#">Twitter</a>
+      <a href="#">GitHub</a>
+    </div>
+  </div>
+  <p class="copyright">© 2026 PlacementorAI</p>
+
+</footer>
+
+<!-- LOGIN MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-box">
+    <h2 id="modal-title">Login</h2>
+    <form onsubmit="login(event)">
+      <input type="email" placeholder="Email" required />
+      <input type="password" placeholder="Password" required />
+      <div class="modal-actions">
+        <button class="btn primary" type="submit">Login</button>
+        <button class="btn secondary" type="button" onclick="closeModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="../frontend/js/script.js"></script>
+</body>
+</html>

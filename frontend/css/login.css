@@ -1,0 +1,110 @@
+/* Global Font */
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* =========================
+   Input Fields
+========================= */
+.input-field {
+  margin-top: 0.25rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input-field:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+/* Dark mode input */
+.dark .input-field {
+  background-color: #374151;
+  color: #ffffff;
+  border-color: #4b5563;
+}
+
+/* =========================
+   Primary Button
+========================= */
+.primary-btn {
+  width: 100%;
+  background-color: #4f46e5;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background-color: #4338ca;
+}
+
+.primary-btn:active {
+  transform: scale(0.97);
+}
+
+.primary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================
+   Social Login Buttons
+========================= */
+.social-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid #d1d5db;
+  background-color: transparent;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.social-btn:hover {
+  background-color: #f3f4f6;
+}
+
+/* Dark mode social buttons */
+.dark .social-btn {
+  border-color: #4b5563;
+  color: #ffffff;
+}
+
+.dark .social-btn:hover {
+  background-color: #374151;
+}
+
+/* =========================
+   Password Toggle Icon
+========================= */
+#togglePassword {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* =========================
+   Login Card Animation Base
+========================= */
+#login-card {
+  opacity: 0;
+  transform: translateY(1.5rem);
+}

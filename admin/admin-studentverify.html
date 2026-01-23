@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Verification | PlacementorAI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../frontend/css/admin-studentverify.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="brand">PlacementorAI</div>
+    <nav>
+      <a href="admin-dashboard.html" class="nav-item">
+        <i class="fa-solid fa-grip"></i> Dashboard
+      </a>
+      <a href="adminverify-student.html" class="nav-item active">
+        <i class="fa-solid fa-user-check"></i> Verify Students
+      </a>
+      <a href="admin-managejob.html" class="nav-item">
+        <i class="fa-solid fa-list-check"></i> Manage Jobs
+      </a>
+    </nav>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-user">
+        <span>Admin</span>
+        <a href="login.html" class="logout-btn">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+      </div>
+    </header>
+
+    <main class="content">
+      <h1>Student Verification</h1>
+      <p class="subtitle">Review and verify student profiles from the database</p>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Roll No</th>
+              <th>Branch</th>
+              <th>CGPA</th>
+              <th>Resume</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="studentTable">
+            </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="../frontend/js/admin-studentverify.js"></script>
+</body>
+</html>

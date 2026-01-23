@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard | PlacementorAI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../frontend/css/admin-dashboard.css">
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="logo">PlacementorAI</div>
+    <a href="../admin/admin-dashboard.html" class="nav-item active">Dashboard</a>
+    <a href="../admin/admin-studentverify.html" class="nav-item">Verify Students</a>
+    <a href="../admin/admin-managejob.html" class="nav-item">Manage Jobs</a>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div style="font-weight: 600; color: #4f46e5;">Administrator</div>
+      <div class="logout" onclick="logout()">Logout</div>
+    </div>
+
+    <div class="content">
+      <h1>Admin Dashboard</h1>
+      <p class="subtitle">Monitor and manage the entire placement process</p>
+
+      <div class="stats">
+        <div class="card">
+          <div class="muted">Total Students</div>
+          <div class="stat-value" id="totalStudents">0</div>
+        </div>
+        <div class="card">
+          <div class="muted">Verified Students</div>
+          <div class="stat-value" id="verifiedStudents" style="color: #16a34a;">0</div>
+        </div>
+        <div class="card">
+          <div class="muted">Active Jobs</div>
+          <div class="stat-value" id="activeJobs" style="color: #4f46e5;">0</div>
+        </div>
+        <div class="card">
+          <div class="muted">Pending Approvals</div>
+          <div class="stat-value" id="pendingApprovals" style="color: #f59e0b;">0</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Quick Actions</h3><br>
+        <div class="grid-2">
+          <a href="admin-studentverify.html"><button class="btn btn-primary">Verify Students</button></a>
+          <a href="admin-managejob.html"><button class="btn btn-outline">Manage Jobs</button></a>
+        </div>
+      </div>
+      <br>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Pending Student Verifications</h3><br>
+          <div id="pendingStudentsList"></div>
+        </div>
+        <div class="card">
+          <h3>Pending Job Approvals</h3><br>
+          <div id="pendingJobsList"></div>
+        </div>
+      </div>
+      <br>
+
+      <div class="card">
+        <h3>Placement Statistics</h3><br>
+        <div class="grid-3 center">
+          <div class="card shadow-none">
+            <div class="stat-value" id="totalApplications">0</div>
+            <div class="muted">Total Applications</div>
+          </div>
+          <div class="card shadow-none">
+            <div class="stat-value" id="shortlisted">0</div>
+            <div class="muted">Shortlisted</div>
+          </div>
+          <div class="card shadow-none">
+            <div class="stat-value" id="successRate">0%</div>
+            <div class="muted">Success Rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../frontend/js/admin-dashboard.js"></script>
+</body>
+</html>

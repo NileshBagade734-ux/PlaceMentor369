@@ -1,0 +1,45 @@
+:root {
+  --primary: #4f46e5;
+  --bg-light: #f8fafc;
+  --border: #e2e8f0;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --success: #16a34a;
+  --danger: #dc2626;
+}
+
+body { background: var(--bg-light); font-family: 'Inter', sans-serif; display: flex; margin: 0; }
+
+/* Sidebar */
+.sidebar { width: 260px; background: white; border-right: 1px solid var(--border); height: 100vh; padding: 24px 0; }
+.brand { font-size: 22px; font-weight: 800; color: var(--primary); padding: 0 24px 30px; }
+.nav-item { display: flex; align-items: center; padding: 12px 24px; color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+.nav-item.active { background: #eff6ff; color: var(--primary); border-right: 4px solid var(--primary); }
+.nav-item i { margin-right: 12px; }
+
+/* Main Content */
+.main-wrapper { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
+.topbar { background: white; padding: 16px 40px; border-bottom: 1px solid var(--border); display: flex; justify-content: flex-end; }
+.content { padding: 40px; }
+.header-flex { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
+
+/* Table Card */
+.card { background: white; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 16px; background: #f9fafb; font-size: 12px; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+td { padding: 16px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+
+/* Badges & Buttons */
+.badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.badge-pending { background: #fef3c7; color: #92400e; }
+.badge-verified { background: #dcfce7; color: #166534; }
+
+.action-group { display: flex; gap: 8px; }
+.btn-action { padding: 8px 14px; border-radius: 6px; border: 1px solid var(--border); background: white; cursor: pointer; font-weight: 600; font-size: 12px; transition: 0.2s; }
+.btn-verify { border-color: var(--success); color: var(--success); }
+.btn-verify:hover { background: var(--success); color: white; }
+.btn-reject { border-color: var(--danger); color: var(--danger); }
+.btn-reject:hover { background: var(--danger); color: white; }
+
+.approved-label { color: var(--success); font-weight: bold; font-size: 13px; display: flex; align-items: center; gap: 5px; }
+.btn-reset { background: #f1f5f9; border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px; cursor: pointer; }

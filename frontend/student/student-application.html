@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Applications | PlacementorAI</title>
+
+  <link rel="stylesheet" href="../css/student-application.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">PlacementorAI</div>
+  <button class="logout" onclick="logout()">Logout</button>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <ul>
+      <li onclick="navigate('student-dashboard.html')"><i class="fas fa-th-large"></i> Dashboard</li>
+      <li onclick="navigate('student-profile.html')"><i class="fas fa-user"></i> Profile</li>
+      <li onclick="navigate('student-joblist.html')"><i class="fas fa-briefcase"></i> Jobs</li>
+      <li class="active"><i class="fas fa-file-alt"></i> My Applications</li>
+    </ul>
+  </aside>
+
+  <main class="content">
+    <h1>My Applications</h1>
+    <p class="subtitle">Track all job applications in real time</p>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Role</th>
+            <th>Applied Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="applicationsTable"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script src="../js/student-application.js"></script>
+</body>
+</html>

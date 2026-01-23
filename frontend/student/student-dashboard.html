@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | PlacementorAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/student-dashboard.css">
+</head>
+<body class="bg-slate-50 min-h-screen flex">
+
+    <aside class="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col fixed h-full">
+        <div class="p-6">
+            <h1 class="text-xl font-bold text-indigo-600">PlacementorAI</h1>
+        </div>
+        <nav class="flex-1 px-4 space-y-1">
+            <a href="../student/student-dashboard.html" class="sidebar-item active">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+            </a>
+            <a href="../student/student-profile.html" class="sidebar-item">
+                <i data-lucide="user" class="w-4 h-4"></i> Profile
+            </a>
+            <a href="../student/student-joblist.html" class="sidebar-item">
+                <i data-lucide="briefcase" class="w-4 h-4"></i> Jobs
+            </a>
+            <a href="../student/student-application.html" class="sidebar-item">
+                <i data-lucide="file-text" class="w-4 h-4"></i> My Applications
+            </a>
+        </nav>
+        <div class="p-4 border-t border-slate-100">
+            <button id="logoutBtn" class="logout-btn">
+                <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 md:ml-64 p-6 md:p-10">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h2 id="welcome-msg" class="text-2xl font-bold text-slate-900">Welcome back!</h2>
+                <p class="text-slate-500 text-sm">Track your applications and explore new opportunities</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-medium text-slate-600">Student</span>
+                <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                    <i data-lucide="user" class="w-5 h-5 text-indigo-600"></i>
+                </div>
+            </div>
+        </header>
+
+        <section class="bg-white border border-slate-200 rounded-xl p-6 mb-8 shadow-sm">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <h3 class="font-semibold text-slate-900">Profile Completion</h3>
+                    <p class="text-xs text-slate-500">Keep your profile updated for better reach</p>
+                </div>
+                <span id="completion-label" class="text-lg font-bold text-indigo-600">0%</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div id="progress-bar" class="bg-indigo-600 h-full transition-all duration-1000" style="width: 0%"></div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="stat-card">
+                <div>
+                    <p class="stat-title">Applied Jobs</p>
+                    <p id="stat-applied" class="stat-value">0</p>
+                </div>
+                <div class="icon-box bg-indigo-50 text-indigo-600">
+                    <i data-lucide="briefcase" class="w-5 h-5"></i>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div>
+                    <p class="stat-title">Shortlisted</p>
+                    <p id="stat-shortlisted" class="stat-value">0</p>
+                </div>
+                <div class="icon-box bg-emerald-50 text-emerald-600">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div>
+                    <p class="stat-title">Profile Views</p>
+                    <p class="stat-value">47</p>
+                </div>
+                <div class="icon-box bg-orange-50 text-orange-600">
+                    <i data-lucide="trending-up" class="w-5 h-5"></i>
+                </div>
+            </div>
+        </div>
+
+        <section class="bg-white border border-slate-200 rounded-xl shadow-sm mb-8 overflow-hidden">
+            <div class="p-6 flex justify-between items-center border-b border-slate-100">
+                <h3 class="font-semibold text-slate-900">Recent Applications</h3>
+                <a href="../student/student-application.html" class="text-xs font-semibold text-indigo-600 hover:underline">View All</a>
+            </div>
+            <div class="divide-y divide-slate-100" id="applications-list">
+                </div>
+        </section>
+
+        <section>
+            <h3 class="font-semibold text-slate-900 mb-4">Quick Actions</h3>
+            <div class="flex flex-wrap gap-4">
+                <a href="../student/student-joblist.html" class="btn-primary"><i data-lucide="search" class="w-4 h-4"></i> Browse Jobs</a>
+                <a href="../student/student-profile.html" class="btn-secondary"><i data-lucide="user-cog" class="w-4 h-4"></i> Update Profile</a>
+                <a href="../student/student-application.html" class="btn-secondary"><i data-lucide="activity" class="w-4 h-4"></i> Track Apps</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/student-dashboard.js"></script>
+</body>
+</html>

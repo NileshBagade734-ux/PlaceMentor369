@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | PlacementorAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/student-profile.css">
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+<div class="flex min-h-screen">
+    <aside class="w-64 bg-white border-r border-gray-200 hidden md:block">
+        <div class="p-6">
+            <h1 class="text-2xl font-bold text-blue-600 tracking-tight">PlacementorAI</h1>
+        </div>
+        <nav class="mt-6">
+            <a href="../student/student-dashboard.html" class="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50"><i class="fas fa-th-large mr-3 w-5"></i> Dashboard</a>
+            <a href="../student/student-profile.html" class="sidebar-item active  items-center px-6 py-3 bg-blue-50 text-blue-600 border-r-4 border-blue-600"><i class="fas fa-user mr-3 w-5"></i> Profile</a>
+            <a href="../student/student-joblist.html" class="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50"><i class="fas fa-briefcase mr-3 w-5"></i> Jobs</a>
+            <a href="../student/student-application.html" class="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50"><i class="fas fa-file-alt mr-3 w-5"></i> My Applications</a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 p-4 md:p-8">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-800">My Profile</h2>
+                <p class="text-gray-500">Update your details to stay placement-ready</p>
+            </div>
+        </header>
+
+        <div class="max-w-4xl space-y-6">
+            <section class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Completion Status</h3>
+                    <span class="font-bold text-blue-600" id="completionText">0%</span>
+                </div>
+                <div class="w-full bg-gray-100 h-3 rounded-full overflow-hidden mb-2">
+                    <div id="completionBar" class="h-full bg-blue-600 transition-all duration-700 ease-out" style="width: 0%"></div>
+                </div>
+                <p id="completionMessage" class="text-xs text-gray-500">Add your resume and skills to reach 100%.</p>
+            </section>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <section class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold mb-4">Personal Details</h3>
+                    <div class="space-y-4">
+                        <input type="text" id="fullName" placeholder="Full Name" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="rollNumber" placeholder="Roll Number" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </section>
+
+                <section class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold mb-4">Academic Details</h3>
+                    <div class="space-y-4">
+                        <select id="branch" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select Branch</option>
+                            <option value="CSE">Computer Science</option>
+                            <option value="IT">Information Technology</option>
+                            <option value="ECE">Electronics</option>
+                        </select>
+                        <input type="number" id="cgpa" step="0.01" placeholder="Current CGPA" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </section>
+            </div>
+
+            <section class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 class="font-bold mb-4">Professional Skills</h3>
+                <div class="flex gap-2 mb-4">
+                    <input type="text" id="skillInput" placeholder="Add skill (e.g. Java)" class="flex-1 p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="skillLevel" class="p-2.5 border border-gray-200 rounded-lg bg-white">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Expert</option>
+                    </select>
+                    <button onclick="addSkill()" class="bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transition">Add</button>
+                </div>
+                <div id="skillsContainer" class="flex flex-wrap gap-2"></div>
+            </section>
+<section class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+    <h3 class="font-bold mb-4">Resume & Portfolio</h3>
+    <div id="resumeDropArea" class="border-2 border-dashed border-gray-200 rounded-xl p-10 text-center hover:border-blue-400 hover:bg-blue-50 transition cursor-pointer group relative">
+        <i class="fas fa-cloud-upload-alt text-4xl text-gray-300 group-hover:text-blue-500 mb-3 transition"></i>
+        <p class="text-gray-500 font-medium">Click to upload or drag and drop your resume</p>
+        <p class="text-xs text-gray-400 mt-1">PDF format preferred (Max 2MB)</p>
+        <input type="file" id="resumeInput" accept=".pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+    </div>
+    
+    <div id="resumeActions" class="mt-4 flex gap-3 hidden">
+        <div class="flex-1 p-3 bg-blue-50 rounded-lg flex items-center justify-between">
+            <span id="resumeFileName" class="text-sm text-blue-700 font-medium truncate px-2"></span>
+            <button id="viewPdfBtn" class="text-blue-600 hover:text-blue-800 text-sm font-bold flex items-center gap-2">
+                <i class="fas fa-eye"></i> View PDF
+            </button>
+        </div>
+        <button id="removeResumeBtn" class="p-3 text-red-500 hover:bg-red-50 rounded-lg transition">
+            <i class="fas fa-trash-alt"></i>
+        </button>
+    </div>
+</section>
+            <div class="flex justify-end pt-4">
+                <button id="saveBtn" class="bg-blue-600 text-white px-10 py-3 rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition transform active:scale-95">
+                    Save Profile Changes
+                </button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="../js/student-profile.js"></script>
+</body>
+</html>

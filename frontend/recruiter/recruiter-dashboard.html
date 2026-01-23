@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recruiter Dashboard – PlacementorAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../css/recruiter-dashboard.css" />
+</head>
+<body>
+    <div class="flex min-h-screen">
+        <aside class="w-64 bg-white border-r border-slate-200 p-6 hidden md:block">
+            <h1 class="text-xl font-bold text-indigo-600 mb-10">PlacementorAI</h1>
+            <nav class="space-y-2">
+                <div class="sidebar-item active">
+                    <i data-lucide="layout-dashboard"></i> <span>Dashboard</span>
+                </div>
+                <div class="sidebar-item" onclick="location.href='postjob.html'">
+                    <i data-lucide="plus-circle"></i> <span>Post Job</span>
+                </div>
+                <div class="sidebar-item" onclick="location.href='manage-applicant.html'">
+                    <i data-lucide="users"></i> <span>Manage Applicants</span>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="flex-1 bg-slate-50">
+            <header class="bg-white border-b border-slate-200 px-8 py-4 flex justify-between items-center">
+                <div class="text-slate-400 font-medium">Recruiter Portal</div>
+                <div class="flex items-center gap-6 text-slate-600">
+                    <span class="text-sm font-semibold bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">Recruiter Mode</span>
+                    <button onclick="location.href='login.html'" class="flex items-center gap-2 hover:text-red-600 transition-colors">
+                        <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            <div class="p-8 max-w-6xl mx-auto">
+                <header class="mb-8">
+                    <h2 class="text-2xl font-bold text-slate-800">Overview</h2>
+                    <p class="text-slate-500">Track your hiring progress and active listings</p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="stat-card">
+                        <div>
+                            <p class="stat-label">Jobs Posted</p>
+                            <h3 class="stat-value" id="count-jobs">0</h3>
+                        </div>
+                        <div class="icon-box bg-indigo-50 text-indigo-600"><i data-lucide="briefcase"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div>
+                            <p class="stat-label">Total Applicants</p>
+                            <h3 class="stat-value" id="count-apps">0</h3>
+                        </div>
+                        <div class="icon-box bg-blue-50 text-blue-600"><i data-lucide="users"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div>
+                            <p class="stat-label">Shortlisted</p>
+                            <h3 class="stat-value" id="count-shortlisted">0</h3>
+                        </div>
+                        <div class="icon-box bg-green-50 text-green-600"><i data-lucide="user-check"></i></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <button onclick="location.href='postjob.html'" class="primary-btn">
+                        <i data-lucide="plus-circle"></i> Post New Job
+                    </button>
+                    <button onclick="location.href='manage-applicant.html'" class="secondary-btn">
+                        <i data-lucide="users"></i> View All Applicants
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h3 class="section-title">Active Job Postings</h3>
+                    <div id="jobs-container" class="space-y-4">
+                        </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/recruiter-dashboard.js"></script>
+</body>
+</html>
