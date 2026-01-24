@@ -1,0 +1,23 @@
+{
+  "name": "amentor",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000P\u0000l\u0000a\u0000c\u0000e\u0000M\u0000e\u0000n\u0000t\u0000o\u0000r\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NileshBagade734-ux/PlaceMentor.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NileshBagade734-ux/PlaceMentor/issues"
+  },
+  "homepage": "https://github.com/NileshBagade734-ux/PlaceMentor#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}
