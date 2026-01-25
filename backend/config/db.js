@@ -1,10 +1,8 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
-    // In modern Mongoose versions, you only need the URI
     await mongoose.connect(process.env.MONGO_URI);
-    
     console.log("MongoDB connected");
   } catch (error) {
     console.error("MongoDB connection error:", error.message);
@@ -12,4 +10,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports = connectDB;
+export default connectDB;

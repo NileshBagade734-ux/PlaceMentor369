@@ -1,6 +1,8 @@
-const express = require("express");
+// protectedRoutes.js
+import express from "express";
+import { verifyToken } from "../middlewares/verifyToken.js"; // ✅ note the .js extension
+
 const router = express.Router();
-const verifyToken = require("../middlewares/verifyToken");
 
 router.get("/dashboard", verifyToken, (req, res) => {
   res.json({
@@ -10,4 +12,4 @@ router.get("/dashboard", verifyToken, (req, res) => {
   });
 });
 
-module.exports = router;
+export default router; // ✅ default export for server.js

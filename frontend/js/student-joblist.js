@@ -1,24 +1,34 @@
 /* ==========================================================
-   SHARED STORAGE KEYS
-   ========================================================== */
-const JOBS_KEY = "all_jobs";            
-const RECRUITER_RAW_KEY = "posted_jobs"; 
+   STORAGE KEYS & TOKEN
+========================================================== */
 const USER_KEY = "current_user";        
 const APPLICATION_KEY = "student_applications";
 
+function getToken() {
+    const session = JSON.parse(localStorage.getItem("placementor_session"));
+    return session?.token || null;
+}
+
 /* ==========================================================
-   STUDENT PROFILE (FETCH FROM LOCALSTORAGE OR MOCK)
-   ========================================================== */
-const studentSession = JSON.parse(localStorage.getItem(USER_KEY)) || {
+   SESSION & DATA
+========================================================== */
+let studentSession = JSON.parse(localStorage.getItem(USER_KEY)) || {
     name: "Guest Student",
     cgpa: 9.0,
     branch: "Computer Science",
     skills: ["React", "Node.js", "JavaScript"]
 };
+let skills = [...studentSession.skills];
+let resumeBase64 = localStorage.getItem("student_resume_pdf") || null;
+let appliedJobs = []; // backend fetch
+let allAvailableJobs = [];
 
+/* ==========================================================
+   DEFAULT JOBS (FALLBACK)
+========================================================== */
 const defaultJobs = [
     {
-        id: "job_01",
+        id: "65b1234567890abcdef12345",
         title: "Software Engineer",
         company: "Google",
         cgpa: 8.5,
@@ -29,60 +39,95 @@ const defaultJobs = [
     }
 ];
 
-let allAvailableJobs = [];
-let appliedJobs = JSON.parse(localStorage.getItem(APPLICATION_KEY)) || [];
-
 /* ==========================================================
-   CORE LOGIC: INITIALIZATION
-   ========================================================== */
-function init() {
-    // 1. Update UI Profile Header
-    const infoTag = document.getElementById("student-info");
-    if (infoTag) infoTag.innerText = `${studentSession.branch} | ${studentSession.cgpa} CGPA`;
+   INIT FUNCTION
+========================================================== */
+async function init() {
+    const token = getToken();
+    if (!token) return alert("Login required");
 
-    // 2. Fetch and Normalize Data
-    const approvedJobs = JSON.parse(localStorage.getItem(JOBS_KEY) || "[]");
-    const recruiterRaw = JSON.parse(localStorage.getItem(RECRUITER_RAW_KEY) || "[]");
+    // 1️⃣ Fetch student profile
+    try {
+        const resProfile = await fetch("http://localhost:5000/api/student/profile", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        if (resProfile.ok) {
+            const profile = await resProfile.json();
+            studentSession = {
+                name: profile.name || studentSession.name,
+                cgpa: profile.cgpa || studentSession.cgpa,
+                branch: profile.branch || studentSession.branch,
+                skills: profile.skills || studentSession.skills
+            };
+            skills = [...studentSession.skills];
+        }
+        const infoTag = document.getElementById("student-info");
+        if (infoTag) infoTag.innerText = `${studentSession.branch} | ${studentSession.cgpa} CGPA`;
+    } catch (err) {
+        console.error("Failed to fetch profile:", err);
+    }
 
-    const normalize = (j) => ({
-        id: j.id || `job_${Math.random()}`,
-        title: j.title || "Untitled Role",
-        company: j.company || "Unknown Company",
-        cgpa: parseFloat(j.cgpa || j.cutoff || j.cgpaCutoff || 0),
-        branches: j.branches || [],
-        deadline: j.deadline || "TBD",
-        skills: j.skills || [],
-        description: j.description || j.desc || "No description provided."
-    });
+    // 2️⃣ Fetch all jobs
+    try {
+        const resJobs = await fetch("http://localhost:5000/api/student/jobs", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const jobsData = await resJobs.json();
+        if (jobsData.length > 0) {
+            allAvailableJobs = jobsData.map(job => ({
+                id: job._id,
+                title: job.title,
+                company: job.company,
+                cgpa: job.cgpa || 0,
+                branches: job.branches || [],
+                deadline: job.deadline || "Open",
+                skills: job.skills || [],
+                description: job.description
+            }));
+        } else {
+            console.warn("No jobs found in DB. Using fallback.");
+            allAvailableJobs = defaultJobs;
+        }
+    } catch (err) {
+        console.error("Fetch jobs failed:", err);
+        allAvailableJobs = defaultJobs;
+    }
 
-    // Merge everything (Recruiter posts + Admin approved + Defaults)
-    const combined = [...approvedJobs, ...recruiterRaw, ...defaultJobs];
-    const uniqueMap = new Map();
-    combined.forEach(j => uniqueMap.set(j.id, normalize(j)));
-    allAvailableJobs = Array.from(uniqueMap.values());
+    // 3️⃣ Fetch applied jobs
+    try {
+        const resApps = await fetch("http://localhost:5000/api/student/applications", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        if (resApps.ok) {
+            const apps = await resApps.json();
+            appliedJobs = apps.map(a => a.job._id);
+            localStorage.setItem(APPLICATION_KEY, JSON.stringify(appliedJobs));
+        }
+    } catch (err) {
+        console.error("Failed to fetch applied jobs:", err);
+        appliedJobs = JSON.parse(localStorage.getItem(APPLICATION_KEY)) || [];
+    }
 
-    renderList();
+    renderJobList();
     if (window.lucide) lucide.createIcons();
 }
 
 /* ==========================================================
-   UI COMPONENT: JOB LIST RENDER (LEFT SIDE)
-   ========================================================== */
-function renderList() {
+   RENDER JOB LIST
+========================================================== */
+function renderJobList() {
     const list = document.getElementById("jobs-list");
     if (!list) return;
 
     list.innerHTML = allAvailableJobs.map(job => {
         const isEligible = studentSession.cgpa >= job.cgpa && job.branches.includes(studentSession.branch);
-
         return `
             <div onclick="selectJob('${job.id}')"
-                id="card-${job.id}"
-                class="job-card bg-white p-5 rounded-xl border border-slate-200 cursor-pointer hover:shadow-md transition-all mb-3">
+                 id="card-${job.id}"
+                 class="job-card bg-white p-5 rounded-xl border border-slate-200 cursor-pointer hover:shadow-md transition-all mb-3">
                 <div class="flex justify-between items-start mb-2">
                     <h3 class="font-bold text-slate-900">${job.title}</h3>
-                    <span class="px-2 py-1 text-[10px] font-bold rounded 
-                        ${isEligible ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}">
+                    <span class="px-2 py-1 text-[10px] font-bold rounded ${isEligible ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}">
                         ${isEligible ? "ELIGIBLE" : "INELIGIBLE"}
                     </span>
                 </div>
@@ -97,27 +142,22 @@ function renderList() {
 }
 
 /* ==========================================================
-   UI COMPONENT: JOB DETAIL VIEW (RIGHT SIDE)
-   ========================================================== */
+   SELECT JOB DETAIL
+========================================================== */
 window.selectJob = function(id) {
     const job = allAvailableJobs.find(j => j.id === id);
     const detailPane = document.getElementById("job-details");
     const emptyState = document.getElementById("empty-state");
-
     if (!detailPane || !job) return;
 
-    // Toggle Active State visuals
-    document.querySelectorAll(".job-card").forEach(c => {
-        c.classList.remove("border-indigo-500", "bg-indigo-50", "ring-1", "ring-indigo-500");
-    });
+    document.querySelectorAll(".job-card").forEach(c => c.classList.remove("border-indigo-500", "bg-indigo-50", "ring-1", "ring-indigo-500"));
     const selectedCard = document.getElementById(`card-${id}`);
     if (selectedCard) selectedCard.classList.add("border-indigo-500", "bg-indigo-50", "ring-1", "ring-indigo-500");
 
-    // Switch view from Empty State to Content
     if (emptyState) emptyState.classList.add("hidden");
     detailPane.classList.remove("hidden");
 
-    const isApplied = appliedJobs.some(app => app.id === job.id);
+    const isApplied = appliedJobs.includes(job.id);
     const isEligible = studentSession.cgpa >= job.cgpa && job.branches.includes(studentSession.branch);
 
     detailPane.innerHTML = `
@@ -127,39 +167,30 @@ window.selectJob = function(id) {
                     <h1 class="text-4xl font-black text-slate-900 mb-2">${job.title}</h1>
                     <p class="text-xl text-indigo-600 font-semibold">${job.company}</p>
                 </div>
-
                 <button
                     onclick="handleApply('${job.id}')"
                     ${isApplied || !isEligible ? "disabled" : ""}
                     class="px-10 py-4 rounded-xl font-bold text-white shadow-lg transition-all
-                    ${isApplied ? "bg-slate-300 cursor-not-allowed" : !isEligible ? "bg-red-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-1 active:scale-95"}">
+                        ${isApplied ? "bg-slate-300 cursor-not-allowed" : !isEligible ? "bg-red-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-1 active:scale-95"}">
                     ${isApplied ? "Application Sent" : !isEligible ? "Criteria Not Met" : "Apply Now"}
                 </button>
             </div>
-
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
                 <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
                     <p class="text-xs font-bold text-slate-400 uppercase mb-2">Requirement Check</p>
-                    <p class="text-xl font-bold ${studentSession.cgpa >= job.cgpa ? "text-green-600" : "text-red-500"}">
+                    <p class="text-xl font-bold ${isEligible ? "text-green-600" : "text-red-500"}">
                         Target: ${job.cgpa}+ (Yours: ${studentSession.cgpa})
                     </p>
                 </div>
-
                 <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
                     <p class="text-xs font-bold text-slate-400 uppercase mb-2">Matching Skills</p>
                     <div class="flex flex-wrap gap-2">
-                        ${job.skills.map(skill => {
-                            const hasSkill = studentSession.skills.includes(skill);
-                            return `
-                            <span class="px-2 py-1 text-xs rounded-lg border
-                                ${hasSkill ? "bg-green-50 border-green-200 text-green-700 font-bold" : "bg-white border-slate-200 text-slate-400"}">
-                                ${skill}
-                            </span>`;
-                        }).join("")}
+                        ${job.skills.map(skill => `<span class="px-2 py-1 text-xs rounded-lg border
+                            ${skills.includes(skill) ? "bg-green-50 border-green-200 text-green-700 font-bold" : "bg-white border-slate-200 text-slate-400"}">
+                            ${skill}</span>`).join("")}
                     </div>
                 </div>
             </div>
-
             <div class="prose max-w-none">
                 <h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-800">
                     <i data-lucide="info" class="w-5 h-5 text-indigo-500"></i> Role Description
@@ -173,25 +204,42 @@ window.selectJob = function(id) {
 };
 
 /* ==========================================================
-   LOGIC: APPLY HANDLER
-   ========================================================== */
-window.handleApply = function(jobId) {
-    const job = allAvailableJobs.find(j => j.id === jobId);
-    if (!job || appliedJobs.some(app => app.id === jobId)) return;
+   HANDLE APPLY
+========================================================== */
+window.handleApply = async function(jobId) {
+    const token = getToken();
+    if (!token) return alert("Login required to apply");
 
-    const application = {
-        id: job.id,
-        company: job.company,
-        role: job.title,
-        appliedAt: new Date().toISOString(),
-        status: "Pending"
-    };
+    try {
+        const res = await fetch(`http://localhost:5000/api/student/apply/${jobId}`, {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+        });
 
-    appliedJobs.push(application);
-    localStorage.setItem(APPLICATION_KEY, JSON.stringify(appliedJobs));
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Apply failed");
 
-    alert(`✅ Application Sent to ${job.company}!`);
-    selectJob(jobId); // Refresh detail view to show "Application Sent"
+        alert(`✅ ${data.message}`);
+
+        // Refresh applied jobs from backend
+        const resApps = await fetch("http://localhost:5000/api/student/applications", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        if (resApps.ok) {
+            const apps = await resApps.json();
+            appliedJobs = apps.map(a => a.job._id);
+            localStorage.setItem(APPLICATION_KEY, JSON.stringify(appliedJobs));
+        }
+
+        selectJob(jobId);
+
+    } catch (err) {
+        console.error(err);
+        alert(`❌ ${err.message}`);
+    }
 };
 
+/* ==========================================================
+   DOM READY INIT
+========================================================== */
 document.addEventListener("DOMContentLoaded", init);
