@@ -35,8 +35,7 @@ const defaultJobs = [
     branches: ["Computer Science", "Information Technology"],
     deadline: "2026-02-15",
     skills: ["React", "Node.js", "Go"],
-    description:
-      "Develop large-scale cloud applications and solve complex infrastructure problems."
+    description: "Develop large-scale cloud applications and solve complex infrastructure problems."
   }
 ];
 
@@ -54,6 +53,7 @@ async function init() {
     const resProfile = await fetch("http://localhost:5000/api/student/profile", {
       headers: { "Authorization": `Bearer ${token}` }
     });
+
     if (resProfile.ok) {
       const profile = await resProfile.json();
       studentSession = {
@@ -86,7 +86,7 @@ async function init() {
         title: job.title,
         company: job.company,
         cgpa: job.cgpa || 0,
-        branches: job.branches || [],
+        branch: job.branch || [],
         deadline: job.deadline ? new Date(job.deadline).toLocaleDateString() : "Open",
         skills: job.skillsRequired || [],
         description: job.description
@@ -107,6 +107,7 @@ async function init() {
     const resApps = await fetch("http://localhost:5000/api/student/applications", {
       headers: { "Authorization": `Bearer ${token}` }
     });
+
     if (resApps.ok) {
       const apps = await resApps.json();
       appliedJobs = apps.map(a => a.job._id);
@@ -130,9 +131,18 @@ function renderJobList() {
   const list = document.getElementById("jobs-list");
   if (!list) return;
 
+  const studentCGPA = studentSession.cgpa || 0;
+  const studentBranch = studentSession.branch || "";
+
   list.innerHTML = allAvailableJobs
     .map(job => {
-      const isEligible = studentSession.cgpa >= job.cgpa && job.branches.includes(studentSession.branch);
+      // ✅ Eligibility logic fixed
+      const isEligible =
+        studentCGPA >= (job.cgpa || 0) &&
+        (!job.branches || job.branches.length === 0 || job.branches.includes(studentBranch));
+
+      const isApplied = appliedJobs.includes(job.id);
+
       return `
         <div onclick="selectJob('${job.id}')"
              id="card-${job.id}"
@@ -176,8 +186,12 @@ window.selectJob = function(id) {
   if (emptyState) emptyState.classList.add("hidden");
   detailPane.classList.remove("hidden");
 
+  const studentCGPA = studentSession.cgpa || 0;
+  const studentBranch = studentSession.branch || "";
+  const isEligible =
+    studentCGPA >= (job.cgpa || 0) &&
+    (!job.branches || job.branches.length === 0 || job.branches.includes(studentBranch));
   const isApplied = appliedJobs.includes(job.id);
-  const isEligible = studentSession.cgpa >= job.cgpa && job.branches.includes(studentSession.branch);
 
   detailPane.innerHTML = `
     <div class="animate-in fade-in slide-in-from-bottom-4 duration-300">
