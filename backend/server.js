@@ -7,6 +7,7 @@ import cors from "cors";
 // Routes
 import studentRoutes from "./routes/studentRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import recruiterRoutes from "./routes/recruiterRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -39,6 +40,7 @@ app.use("/api/auth", authRoutes);
 
 // Student routes
 app.use("/api/student", studentRoutes);
+app.use("/api/recruiter", recruiterRoutes);
 
 // 404 Route
 app.use((req, res) => {

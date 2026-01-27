@@ -125,6 +125,7 @@ if (jobForm) {
     // ✅ Prepare payload
     const payload = {
       title: document.getElementById("title")?.value.trim(),
+      company: document.getElementById("company")?.value.trim(),
       description: document.getElementById("description")?.value.trim(),
       skillsRequired: Array.from(skillsSet),
       cgpa: parseFloat(document.getElementById("cgpa")?.value) || 0,

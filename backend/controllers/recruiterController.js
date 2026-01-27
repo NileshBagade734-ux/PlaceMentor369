@@ -1,186 +1,143 @@
-// backend/controllers/recruiterController.js
-import Job from "../models/Job.js";
+import Job from "../models/job.js";
 import Application from "../models/application.js";
-import Recruiter from "../models/Recruiter.js";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 
-/* ===================================================
-   RECRUITER REGISTER
-=================================================== */
-export const registerRecruiter = async (req, res) => {
-  try {
-    const { name, email, password, company } = req.body;
-
-    // Check if email exists
-    const existing = await Recruiter.findOne({ email });
-    if (existing)
-      return res.status(400).json({ message: "Email already exists" });
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create recruiter
-    const recruiter = await Recruiter.create({
-      name,
-      email,
-      password: hashedPassword,
-      company
-    });
-
-    // JWT token
-    const token = jwt.sign(
-      { id: recruiter._id, role: "recruiter" },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    res.status(201).json({ recruiter, token });
-  } catch (err) {
-    console.error("Register Error:", err.message);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-/* ===================================================
-   RECRUITER LOGIN
-=================================================== */
-export const loginRecruiter = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const recruiter = await Recruiter.findOne({ email });
-    if (!recruiter)
-      return res.status(400).json({ message: "Invalid credentials" });
-
-    const isMatch = await bcrypt.compare(password, recruiter.password);
-    if (!isMatch)
-      return res.status(400).json({ message: "Invalid credentials" });
-
-    const token = jwt.sign(
-      { id: recruiter._id, role: "recruiter" },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    res.status(200).json({ recruiter, token });
-  } catch (err) {
-    console.error("Login Error:", err.message);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-/* ===================================================
-   CREATE / POST JOB
-=================================================== */
+/* ======================================================
+   CREATE JOB (Recruiter posts a job)
+   POST /api/recruiter/jobs
+====================================================== */
 export const createJob = async (req, res) => {
   try {
+    const recruiterId = req.user._id;
+
     const {
       title,
+      company,
       description,
-      skillsRequired,
-      salary,
       cgpa,
       branches,
+      skillsRequired,
       deadline,
-      location
+      location,
+      salary
     } = req.body;
-
-    const recruiter = await Recruiter.findById(req.user.id);
-    if (!recruiter)
-      return res.status(404).json({ message: "Recruiter not found" });
+if (!title || !company || !description || !deadline) {
+  return res.status(400).json({
+    message: "Missing required fields",
+    missing: { title, company, description, deadline }
+  });
+}
 
     const job = await Job.create({
       title,
-      company: recruiter.company,
+      company,
       description,
-      skillsRequired: skillsRequired || [],
-      salary: salary || "",
-      cgpa: cgpa || 0,
-      branches: branches || [],
+      cgpa,
+      branches,
+      skillsRequired,
       deadline,
-      location: location || "Remote",
-      recruiter: req.user.id
+      recruiter: recruiterId,
+      status: "approved" // 🔥 for now auto-approve
     });
 
-    res.status(201).json(job);
+    res.status(201).json({
+      success: true,
+      message: "Job posted successfully",
+      job
+    });
   } catch (err) {
-    console.error("Create Job Error:", err.message);
-    res.status(500).json({ message: "Server error" });
+    console.error("Create Job Error:", err);
+    res.status(500).json({ message: "Server error while creating job" });
   }
 };
 
-/* ===================================================
-   GET RECRUITER'S JOBS
-=================================================== */
+/* ======================================================
+   GET RECRUITER JOBS
+   GET /api/recruiter/jobs
+====================================================== */
 export const getRecruiterJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ recruiter: req.user.id }).populate({
-      path: "applicants",
-      populate: { path: "student", select: "name branch cgpa skills" }
-    });
+    const jobs = await Job.find({ recruiter: req.user._id })
+      .sort({ createdAt: -1 });
 
     res.status(200).json(jobs);
   } catch (err) {
-    console.error("Get Jobs Error:", err.message);
-    res.status(500).json({ message: "Server error" });
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch recruiter jobs" });
   }
 };
 
-/* ===================================================
-   GET APPLICANTS FOR A JOB
-=================================================== */
+/* ======================================================
+   GET JOB APPLICANTS
+   GET /api/recruiter/jobs/:id/applicants
+====================================================== */
 export const getJobApplicants = async (req, res) => {
   try {
-    const job = await Job.findById(req.params.id).populate({
-      path: "applicants",
-      populate: { path: "student", select: "name branch cgpa skills" }
-    });
+    const jobId = req.params.id;
 
-    if (!job) return res.status(404).json({ message: "Job not found" });
+    const applications = await Application.find({ job: jobId })
+      .populate("student", "name email profile cgpa branch")
+      .populate("job", "title company");
 
-    res.status(200).json(job.applicants);
+    res.status(200).json(applications);
   } catch (err) {
-    console.error("Get Applicants Error:", err.message);
-    res.status(500).json({ message: "Server error" });
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch applicants" });
   }
 };
 
-/* ===================================================
-   DELETE JOB
-=================================================== */
-export const deleteJob = async (req, res) => {
-  try {
-    const job = await Job.findOneAndDelete({
-      _id: req.params.id,
-      recruiter: req.user.id
-    });
-
-    if (!job) return res.status(404).json({ message: "Job not found" });
-
-    res.status(200).json({ message: "Job deleted successfully" });
-  } catch (err) {
-    console.error("Delete Job Error:", err.message);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-/* ===================================================
-   UPDATE APPLICANT STATUS
-=================================================== */
+/* ======================================================
+   UPDATE APPLICATION STATUS
+   PATCH /api/recruiter/applications/status
+====================================================== */
 export const updateApplicantStatus = async (req, res) => {
   try {
     const { applicationId, status } = req.body;
 
-    const app = await Application.findById(applicationId);
-    if (!app) return res.status(404).json({ message: "Application not found" });
+    if (!["Shortlisted", "Rejected"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
 
-    app.status = status;
-    await app.save();
+    const application = await Application.findById(applicationId);
 
-    res.status(200).json({ message: "Status updated", application: app });
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    application.status = status;
+    await application.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Application ${status}`,
+      application
+    });
   } catch (err) {
-    console.error("Update Status Error:", err.message);
-    res.status(500).json({ message: "Server error" });
+    console.error(err);
+    res.status(500).json({ message: "Failed to update status" });
+  }
+};
+
+/* ======================================================
+   DELETE JOB
+   DELETE /api/recruiter/jobs/:id
+====================================================== */
+export const deleteJob = async (req, res) => {
+  try {
+    const job = await Job.findOne({
+      _id: req.params.id,
+      recruiter: req.user._id
+    });
+
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    await Application.deleteMany({ job: job._id });
+    await job.deleteOne();
+
+    res.status(200).json({ message: "Job deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete job" });
   }
 };
