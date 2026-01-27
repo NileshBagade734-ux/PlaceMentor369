@@ -2,14 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login – PlacementorAI</title>
+  <meta http-equiv="Content-Security-Policy"
+content="
+default-src 'self';
+script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com;
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' https://fonts.gstatic.com;
+img-src 'self' https://img.icons8.com data:;
+connect-src 'self' http://localhost:5000 https://unpkg.com;
+">
 
+
+  <!-- Tailwind, icons, GSAP & fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="../frontend/css/login.css">
 </head>
 
@@ -24,7 +32,7 @@
 </header>
 
 <main class="flex-1 flex items-center justify-center px-6 py-12">
-  <div id="login-card" class="w-full max-w-md opacity-0 translate-y-6">
+  <div id="login-card" class="w-full max-w-md opacity-0 translate-y-6 transition-all duration-500">
 
     <div class="text-center mb-6">
       <h2 class="text-3xl font-semibold text-gray-900 dark:text-white mb-2">Welcome Back</h2>
@@ -34,45 +42,56 @@
     <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border border-slate-200 dark:border-gray-700">
       <form id="loginForm" class="space-y-4">
         
+        <!-- Role -->
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">I am a...</label>
-          <select id="userRole" required class="input-field cursor-pointer">
+          <select id="role" required
+            class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer">
+            <option value="" disabled selected>Select your role</option>
             <option value="student">Student</option>
             <option value="recruiter">Recruiter</option>
             <option value="admin">Placement Officer (Admin)</option>
           </select>
         </div>
 
+        <!-- Email -->
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">Email Address</label>
-          <input id="email" type="email" required placeholder="you@example.com" class="input-field">
+          <input id="email" type="email" required placeholder="you@example.com"
+            class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
         </div>
 
+        <!-- Password -->
         <div class="relative">
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
-          <input id="password" type="password" required placeholder="••••••••" class="input-field">
+          <input id="password" type="password" required placeholder="••••••••"
+            class="mt-1 w-full px-4 py-3 pr-12 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
           <button type="button" id="togglePassword" class="absolute right-4 top-[38px] text-gray-400 hover:text-indigo-600">
             <i data-lucide="eye" id="eyeIcon"></i>
           </button>
         </div>
 
-        <button type="submit" id="loginBtn" class="primary-btn mt-2">
+        <!-- Submit -->
+        <button type="submit" id="loginBtn"
+          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 rounded-xl flex justify-center items-center gap-2 transition active:scale-95 disabled:opacity-50">
           <i data-lucide="log-in"></i>
           <span id="btnText">Sign In</span>
         </button>
 
+        <!-- OR -->
         <div class="flex items-center my-4">
           <hr class="flex-grow border-gray-300 dark:border-gray-600">
           <span class="px-2 text-gray-400 text-sm">OR</span>
           <hr class="flex-grow border-gray-300 dark:border-gray-600">
         </div>
 
+        <!-- Social Login -->
         <div class="flex gap-4">
-          <button type="button" class="social-btn">
-            <img src="https://img.icons8.com/color/20/google-logo.png" alt="Google"> Google
+          <button type="button" class="flex-1 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-600 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition dark:text-white text-sm">
+            <img src="https://img.icons8.com/color/20/google-logo.png" alt="Google" /> Google
           </button>
-          <button type="button" class="social-btn">
-            <img src="https://img.icons8.com/ios-glyphs/20/github.png" class="dark:invert" alt="GitHub"> GitHub
+          <button type="button" class="flex-1 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-600 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition dark:text-white text-sm">
+            <img src="https://img.icons8.com/ios-glyphs/20/github.png" class="dark:invert" alt="GitHub" /> GitHub
           </button>
         </div>
       </form>
@@ -85,7 +104,15 @@
   </div>
 </main>
 
-<script src="../frontend/js/login.js"></script>
+
+
+    <script src="../frontend//js/login.js"></script>
+  document.addEventListener("DOMContentLoaded", () => {
+    if(window.lucide) lucide.createIcons();
+    gsap.to("#login-card", { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" });
+  });
+</script>
+
 
 </body>
 </html>

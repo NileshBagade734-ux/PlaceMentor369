@@ -1,7 +1,8 @@
+// backend/routes/recruiterRoutes.js
 import express from "express";
+import { verifyToken } from "../middlewares/verifyToken.js";
+import { recruiterOnly } from "../middlewares/roleMiddleware.js";
 import {
-  registerRecruiter,
-  loginRecruiter,
   createJob,
   getRecruiterJobs,
   getJobApplicants,
@@ -9,22 +10,22 @@ import {
   updateApplicantStatus
 } from "../controllers/recruiterController.js";
 
-import { verifyToken } from "../middlewares/verifyToken.js";
-import { recruiterOnly } from "../middlewares/roleMiddleware.js";
-
 const router = express.Router();
 
-// 🔒 Auth routes
-router.post("/register", registerRecruiter);
-router.post("/login", loginRecruiter);
-
-// 🔒 Job routes (protected)
+// ------------------ Jobs Routes ------------------
+// Create a new job
 router.post("/jobs", verifyToken, recruiterOnly, createJob);
+
+// Get all jobs posted by this recruiter
 router.get("/jobs", verifyToken, recruiterOnly, getRecruiterJobs);
+
+// Get applicants for a specific job
 router.get("/jobs/:id/applicants", verifyToken, recruiterOnly, getJobApplicants);
+
+// Delete a job
 router.delete("/jobs/:id", verifyToken, recruiterOnly, deleteJob);
 
-// 🔒 Update application status
-router.patch("/applications", verifyToken, recruiterOnly, updateApplicantStatus);
+// Update applicant status (optional route)
+router.patch("/applications/status", verifyToken, recruiterOnly, updateApplicantStatus);
 
 export default router;

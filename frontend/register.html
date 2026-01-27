@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://127.0.0.1:5500; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' ws://127.0.0.1:5500 http://127.0.0.1:5500;">
-    </head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy"
+content="
+default-src 'self';
+script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com;
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' https://fonts.gstatic.com;
+img-src 'self' https://img.icons8.com data:;
+connect-src 'self' http://localhost:5000 https://unpkg.com;
+">
+
   <title>Register – PlacementorAI</title>
 
+  <!-- Tailwind & icons & fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -25,7 +33,7 @@
 </header>
 
 <main class="flex-1 flex items-center justify-center px-6 py-12">
-  <div id="register-card" class="w-full max-w-md opacity-0 translate-y-6">
+  <div id="register-card" class="w-full max-w-md opacity-0 translate-y-6 transition-all duration-500">
 
     <div class="text-center mb-6">
       <h2 class="text-3xl font-semibold text-gray-900 dark:text-white mb-2">Create Account</h2>
@@ -34,12 +42,14 @@
 
     <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border border-slate-200 dark:border-gray-700">
       <form id="registerForm" class="space-y-4">
+        <!-- Full Name -->
         <div>
           <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Full Name</label>
-          <input id="fullName" type="text" required placeholder="Nilesh Bagade"
+          <input id="name" type="text" required placeholder="Nilesh Bagade"
             class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
         </div>
 
+        <!-- Email -->
         <div>
           <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
           <input id="email" type="email" required placeholder="nilesh345@gmail.com"
@@ -47,6 +57,7 @@
           <p id="emailError" class="text-red-500 text-sm hidden mt-1">Please enter a valid email.</p>
         </div>
 
+        <!-- Password -->
         <div class="relative">
           <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
           <input id="password" type="password" required placeholder="••••••••"
@@ -57,6 +68,7 @@
           <p id="passwordError" class="text-red-500 text-sm hidden mt-1">Password must be at least 8 characters.</p>
         </div>
 
+        <!-- Role -->
         <div>
           <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Role</label>
           <select id="role" required
@@ -68,26 +80,12 @@
           </select>
         </div>
 
+        <!-- Submit -->
         <button type="submit" id="submitBtn"
           class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 rounded-xl flex justify-center items-center gap-2 transition active:scale-95 disabled:opacity-50">
           <i data-lucide="user-plus"></i>
           <span id="btnText">Create Account</span>
         </button>
-
-        <div class="flex items-center my-4">
-          <hr class="flex-grow border-gray-300 dark:border-gray-600">
-          <span class="px-2 text-gray-400 text-sm">OR</span>
-          <hr class="flex-grow border-gray-300 dark:border-gray-600">
-        </div>
-
-        <div class="flex gap-4">
-          <button type="button" class="flex-1 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-600 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition dark:text-white text-sm">
-            <img src="https://img.icons8.com/color/20/google-logo.png" alt="Google" /> Google
-          </button>
-          <button type="button" class="flex-1 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-600 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition dark:text-white text-sm">
-            <img src="https://img.icons8.com/ios-glyphs/20/github.png" class="dark:invert" alt="GitHub" /> GitHub
-          </button>
-        </div>
       </form>
     </div>
 
@@ -98,7 +96,8 @@
   </div>
 </main>
 
-<script src="../frontend/js/register.js"></script>
+<!-- REGISTER JS: Backend Connected -->
+<script src="../frontend/js/register.js" defer></script>
 
 </body>
 </html>

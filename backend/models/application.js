@@ -2,24 +2,28 @@ import mongoose from "mongoose";
 
 const applicationSchema = new mongoose.Schema(
   {
+    // Student who applied
     student: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Auth user
+      ref: "User", // role = student
       required: true
     },
 
+    // Job being applied for
     job: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Job",
       required: true
     },
 
+    // Application status
     status: {
       type: String,
       enum: ["Pending", "Shortlisted", "Rejected"],
       default: "Pending"
     },
 
+    // When student applied
     appliedAt: {
       type: Date,
       default: Date.now
@@ -30,9 +34,11 @@ const applicationSchema = new mongoose.Schema(
   }
 );
 
-/* 🔒 Prevent duplicate application (1 student → 1 job) */
+/* 🔒 Prevent duplicate applications
+   (1 student → 1 job only once)
+*/
 applicationSchema.index({ student: 1, job: 1 }, { unique: true });
 
-const Application = mongoose.models.Application || mongoose.model("Application", applicationSchema);
-
-export default Application;
+// 🔁 Nodemon / hot-reload safe export
+export default mongoose.models.Application ||
+  mongoose.model("Application", applicationSchema);

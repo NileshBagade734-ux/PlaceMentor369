@@ -1,39 +1,24 @@
-// backend/routes/studentRoutes.js
 import express from "express";
+import { protect } from "../middlewares/authMiddleware.js";
 import {
   getProfile,
-  updateProfile,
-  getAppliedJobs,
+  saveProfile,
+  getJobs,
   applyJob,
-  getStudentJobs
+  getApplications
 } from "../controllers/studentController.js";
-
-import { protect } from "../middlewares/authMiddleware.js";
-import { authorize } from "../middlewares/roleMiddleware.js";
 
 const router = express.Router();
 
-/* ================================
-   STUDENT PROFILE ROUTES
-================================ */
+// Profile
+router.get("/profile", protect, getProfile);
+router.patch("/profile", protect, saveProfile);
 
-// get student profile
-router.get("/profile", protect, authorize("student"), getProfile);
+// Jobs
+router.get("/jobs", protect, getJobs);
+router.post("/apply/:jobId", protect, applyJob);
 
-// update/create student profile
-router.post("/profile", protect, authorize("student"), updateProfile);
-
-/* ================================
-   JOBS & APPLICATIONS
-================================ */
-
-// list all available jobs
-router.get("/jobs", protect, authorize("student"), getStudentJobs);
-
-// apply for a job
-router.post("/apply/:jobId", protect, authorize("student"), applyJob);
-
-// get my applied jobs
-router.get("/applications", protect, authorize("student"), getAppliedJobs);
+// Applications
+router.get("/applications", protect, getApplications);
 
 export default router;

@@ -1,48 +1,63 @@
-/* ==========================================================
-   CONFIG: Use the same key across all files
-   ========================================================== */
-const JOBS_KEY = "all_jobs"; 
-const APPLICATIONS_KEY = "student_applications";
+const API_URL = "http://localhost:5000/api/recruiter/jobs";
 
-/**
- * RECRUITER DASHBOARD LOGIC
- */
-function initDashboard() {
-    // 1. Fetch data using the correct SHARED key
-    const allJobs = JSON.parse(localStorage.getItem(JOBS_KEY) || "[]");
-    const allApplications = JSON.parse(localStorage.getItem(APPLICATIONS_KEY) || "[]");
+// Get token from localStorage
+const token = localStorage.getItem("token"); // ya jo frontend me login ke time save kiya tha
 
-    // 2. Calculate Stats
-    const jobsCount = allJobs.length;
-    const appsCount = allApplications.length;
-    const shortlistedCount = allApplications.filter(app => app.status === "Shortlisted").length;
+async function initDashboard() {
+    try {
+        const res = await fetch(API_URL, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
 
-    // 3. Update Stats UI
-    if(document.getElementById("count-jobs")) document.getElementById("count-jobs").textContent = jobsCount;
-    if(document.getElementById("count-apps")) document.getElementById("count-apps").textContent = appsCount;
-    if(document.getElementById("count-shortlisted")) document.getElementById("count-shortlisted").textContent = shortlistedCount;
+        if (res.status === 403) {
+            alert("⚠️ Access Forbidden! Login again.");
+            return window.location.href = "login.html";
+        }
 
-    // 4. Render Jobs List
-    renderJobs(allJobs, allApplications);
+        let allJobs = [];
+        if (res.ok) {
+            allJobs = await res.json(); // backend se jobs array
+        } else {
+            console.warn("No jobs found in DB. Using fallback.");
+            allJobs = JSON.parse(localStorage.getItem("all_jobs") || "[]");
+        }
+
+        // Get applications
+        const allApplications = JSON.parse(localStorage.getItem("student_applications") || "[]");
+
+        // Stats
+        const jobsCount = allJobs.length;
+        const appsCount = allApplications.length;
+        const shortlistedCount = allApplications.filter(app => app.status === "Shortlisted").length;
+
+        if(document.getElementById("count-jobs")) document.getElementById("count-jobs").textContent = jobsCount;
+        if(document.getElementById("count-apps")) document.getElementById("count-apps").textContent = appsCount;
+        if(document.getElementById("count-shortlisted")) document.getElementById("count-shortlisted").textContent = shortlistedCount;
+
+        // Render
+        renderJobs(allJobs, allApplications);
+
+    } catch (err) {
+        console.error("Error fetching jobs:", err);
+    }
 }
 
 function renderJobs(jobs, apps) {
     const container = document.getElementById("jobs-container");
     if (!container) return;
-    
+
     if (jobs.length === 0) {
-        container.innerHTML = `
-            <div class="text-center py-10 border-2 border-dashed border-slate-200 rounded-xl">
-                <p class="text-slate-400">You haven't posted any jobs yet.</p>
-            </div>`;
+        container.innerHTML = `<div class="text-center py-10 border-2 border-dashed border-slate-200 rounded-xl">
+            <p class="text-slate-400">You haven't posted any jobs yet.</p>
+        </div>`;
         return;
     }
 
-    // Show latest jobs first
     container.innerHTML = [...jobs].reverse().map(job => {
-        // Count applications for this specific job
         const specificApps = apps.filter(a => a.role === job.title && a.company === job.company).length;
-
         return `
             <div class="flex items-center justify-between p-5 border border-slate-100 rounded-xl hover:border-indigo-200 hover:bg-indigo-50/30 transition-all">
                 <div>
@@ -60,7 +75,7 @@ function renderJobs(jobs, apps) {
                         <button onclick="viewApplicants('${job.title}')" class="bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-50 shadow-sm transition-colors">
                             Manage
                         </button>
-                        <button onclick="deleteJob('${job.id}')" class="text-slate-400 hover:text-red-500 p-2 transition-colors">
+                        <button onclick="deleteJob('${job._id}')" class="text-slate-400 hover:text-red-500 p-2 transition-colors">
                             <i data-lucide="trash-2" class="w-5 h-5"></i>
                         </button>
                     </div>
@@ -72,23 +87,27 @@ function renderJobs(jobs, apps) {
     if (window.lucide) lucide.createIcons();
 }
 
-/**
- * DELETE JOB
- */
-window.deleteJob = function(jobId) {
+window.deleteJob = async function(jobId) {
     if(!confirm("Are you sure you want to delete this job posting?")) return;
-    
-    let jobs = JSON.parse(localStorage.getItem(JOBS_KEY) || "[]");
-    jobs = jobs.filter(j => j.id !== jobId);
-    localStorage.setItem(JOBS_KEY, JSON.stringify(jobs));
-    
-    initDashboard(); // Refresh UI
+
+    try {
+        const res = await fetch(`http://localhost:5000/api/recruiter/jobs/${jobId}`, {
+            method: "DELETE",
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!res.ok) throw new Error("Failed to delete job");
+
+        initDashboard();
+    } catch (err) {
+        console.error(err);
+        alert("Failed to delete job. Try again.");
+    }
 };
 
 window.viewApplicants = function(jobTitle) {
     localStorage.setItem("filter_job_title", jobTitle);
     location.href = 'manage-applicants.html';
-}
+};
 
-// Run on load
 document.addEventListener("DOMContentLoaded", initDashboard);

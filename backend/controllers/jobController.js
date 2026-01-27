@@ -1,5 +1,5 @@
-import Job from "../models/job.js";
-import Student from "../models/student.js";
+import Job from "../models/User.js";
+import Student from "../models/Student.js";
 
 /* ============================
    RECRUITER: CREATE JOB

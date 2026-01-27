@@ -1,55 +1,85 @@
-/* ==========================================================
- * FRONTEND: Safe Session & Token Handling for Placementor
- ==========================================================*/
-
-// Storage keys
+// ============================
+// CONSTANTS & SESSION
+// ============================
+const API_BASE = "http://localhost:5000/api/student";
+;
 const SESSION_KEY = "placementor_session";
-const USER_KEY = "current_user";
-const APPLICATION_KEY = "student_applications";
-const JOBS_KEY = "all_jobs";
 
-// Safe token retrieval
-function getToken() {
+function getSession() {
     const session = JSON.parse(localStorage.getItem(SESSION_KEY));
-    if (!session || !session.token) return null;
-    return session.token;
+    if (!session || !session.token || session.user.role !== "student") return null;
+    return session;
 }
 
-// Safe user retrieval
-function getUser() {
-    const session = JSON.parse(localStorage.getItem(SESSION_KEY));
-    return session?.user || null;
+const session = getSession();
+if (!session) {
+    alert("Login required!");
+    window.location.href = "../login.html";
 }
 
-let token = getToken();
-let user = getUser();
+const { token, user } = session;
 
-let studentSession = JSON.parse(localStorage.getItem(USER_KEY)) || {
-    name: "",
-    branch: "",
-    cgpa: 0,
-    skills: []
-};
+// ============================
+// PROFILE ELEMENTS
+// ============================
+const fullNameInput = document.getElementById("fullName");
+const rollInput = document.getElementById("rollNumber");
+const branchSelect = document.getElementById("branch");
+const cgpaInput = document.getElementById("cgpa");
 
-let skills = [...studentSession.skills.map(s => ({ name: s, level: "Intermediate" }))];
-let resumeBase64 = localStorage.getItem("student_resume_pdf") || null;
-let appliedJobs = JSON.parse(localStorage.getItem(APPLICATION_KEY)) || [];
-let allAvailableJobs = [];
+const skillsContainer = document.getElementById("skillsContainer");
+const skillInput = document.getElementById("skillInput");
+const skillLevelSelect = document.getElementById("skillLevel");
 
-/* ==========================================================
- * SKILLS LOGIC
- ==========================================================*/
+const resumeInput = document.getElementById("resumeInput");
+const resumeActions = document.getElementById("resumeActions");
+const resumeFileName = document.getElementById("resumeFileName");
+const viewPdfBtn = document.getElementById("viewPdfBtn");
+const removeResumeBtn = document.getElementById("removeResumeBtn");
+
+const saveBtn = document.getElementById("saveBtn");
+const completionBar = document.getElementById("completionBar");
+const completionText = document.getElementById("completionText");
+const completionMessage = document.getElementById("completionMessage");
+
+// ============================
+// STATE
+// ============================
+let skills = [];
+let resumeBase64 = null;
+
+// ============================
+// UTILITY FUNCTIONS
+// ============================
+function updateCompletion() {
+    const filled = [
+        fullNameInput.value.trim(),
+        rollInput.value.trim(),
+        branchSelect.value,
+        cgpaInput.value,
+        skills.length > 0,
+        resumeBase64
+    ].filter(Boolean).length;
+
+    const percent = Math.floor((filled / 6) * 100);
+    completionBar.style.width = percent + "%";
+    completionText.textContent = percent + "%";
+    completionMessage.innerHTML = percent === 100
+        ? '<span class="text-green-600 font-bold">✔ Profile Complete</span>'
+        : 'Complete all fields to unlock jobs';
+}
+
+// ============================
+// SKILLS LOGIC
+// ============================
 function renderSkills() {
-    const skillsContainer = document.getElementById('skillsContainer');
-    if (!skillsContainer) return;
-
-    skillsContainer.innerHTML = '';
-    skills.forEach((skill, index) => {
-        const tag = document.createElement('div');
+    skillsContainer.innerHTML = "";
+    skills.forEach((s, i) => {
+        const tag = document.createElement("div");
         tag.className = 'flex items-center bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full text-sm font-medium border border-blue-100';
         tag.innerHTML = `
-            ${skill.name} <span class="ml-1 opacity-60 text-[10px]">(${skill.level})</span>
-            <button onclick="removeSkill(${index})" class="ml-2 hover:text-red-500">
+            ${s.name} <span class="ml-1 opacity-60 text-[10px]">(${s.level})</span>
+            <button onclick="removeSkill(${i})" class="ml-2 hover:text-red-500">
                 <i class="fas fa-times"></i>
             </button>
         `;
@@ -58,44 +88,30 @@ function renderSkills() {
     updateCompletion();
 }
 
-function addSkill() {
-    const skillInput = document.getElementById('skillInput');
-    const skillLevelSelect = document.getElementById('skillLevel');
+window.addSkill = function () {
     const val = skillInput.value.trim();
     if (!val || skills.some(s => s.name.toLowerCase() === val.toLowerCase())) return;
-
     skills.push({ name: val, level: skillLevelSelect.value });
-    skillInput.value = '';
+    skillInput.value = "";
     renderSkills();
 }
 
-window.removeSkill = function(index) {
-    skills.splice(index, 1);
+window.removeSkill = function (i) {
+    skills.splice(i, 1);
     renderSkills();
 }
 
-/* ==========================================================
- * RESUME LOGIC
- ==========================================================*/
-const resumeInput = document.getElementById('resumeInput');
-const resumeActions = document.getElementById('resumeActions');
-const resumeFileName = document.getElementById('resumeFileName');
-const viewPdfBtn = document.getElementById('viewPdfBtn');
-const removeResumeBtn = document.getElementById('removeResumeBtn');
-
-resumeInput?.addEventListener('change', function () {
-    const file = this.files[0];
-    if (!file || file.type !== "application/pdf") return;
-
-    if (file.size > 2 * 1024 * 1024) {
-        alert("PDF must be under 2MB");
-        return;
-    }
+// ============================
+// RESUME LOGIC
+// ============================
+resumeInput?.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file || file.type !== "application/pdf") return alert("Only PDFs allowed!");
+    if (file.size > 2 * 1024 * 1024) return alert("Max 2MB");
 
     const reader = new FileReader();
-    reader.onload = e => {
-        resumeBase64 = e.target.result;
-        localStorage.setItem("student_resume_pdf", resumeBase64);
+    reader.onload = () => {
+        resumeBase64 = reader.result;
         showResumeUI(file.name);
         updateCompletion();
     };
@@ -103,239 +119,100 @@ resumeInput?.addEventListener('change', function () {
 });
 
 function showResumeUI(name) {
-    if (!resumeActions || !resumeFileName) return;
-    resumeActions.classList.remove('hidden');
+    resumeActions.classList.remove("hidden");
     resumeFileName.textContent = name || "Saved_Resume.pdf";
 }
 
-viewPdfBtn?.addEventListener('click', e => {
+viewPdfBtn?.addEventListener("click", (e) => {
     e.preventDefault();
     if (!resumeBase64) return;
-
     const win = window.open();
     win.document.write(`<iframe src="${resumeBase64}" style="width:100%;height:100vh" frameborder="0"></iframe>`);
 });
 
-removeResumeBtn?.addEventListener('click', () => {
+removeResumeBtn?.addEventListener("click", () => {
     resumeBase64 = null;
-    localStorage.removeItem("student_resume_pdf");
     resumeInput.value = "";
-    resumeActions.classList.add('hidden');
+    resumeActions.classList.add("hidden");
     updateCompletion();
 });
 
-/* ==========================================================
- * PROFILE COMPLETION BAR
- ==========================================================*/
-function updateCompletion() {
-    const bar = document.getElementById('completionBar');
-    const text = document.getElementById('completionText');
-    const msg = document.getElementById('completionMessage');
+// ============================
+// LOAD PROFILE FROM BACKEND
+// ============================
+async function loadProfile() {
+    try {
+        const res = await fetch(`${API_BASE}/profile`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error("Failed to fetch profile");
+        const profile = await res.json();
 
-    const fields = [
-        document.getElementById('fullName')?.value.trim(),
-        document.getElementById('rollNumber')?.value.trim(),
-        document.getElementById('branch')?.value,
-        document.getElementById('cgpa')?.value,
-        skills.length > 0,
-        resumeBase64 !== null
-    ];
+        fullNameInput.value = profile.name || "";
+        rollInput.value = profile.roll || "";
+        cgpaInput.value = profile.cgpa || "";
 
-    const percent = Math.floor((fields.filter(Boolean).length / fields.length) * 100);
+        Array.from(branchSelect.options).forEach(o => {
+            if (o.text === profile.branch) o.selected = true;
+        });
 
-    if (bar) bar.style.width = percent + "%";
-    if (text) text.textContent = percent + "%";
-    if (msg) msg.innerHTML = percent === 100
-        ? '<span class="text-green-600 font-bold">✔ Profile Complete</span>'
-        : 'Complete all fields to unlock jobs';
+        skills = (profile.skills || []).map(s => ({ name: s, level: "Intermediate" }));
+        renderSkills();
 
-    localStorage.setItem("profile_completion", percent);
+        if (profile.resume) {
+            resumeBase64 = profile.resume;
+            showResumeUI("Saved_Resume.pdf");
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Failed to load profile");
+    } finally {
+        updateCompletion();
+    }
 }
 
-/* ==========================================================
- * SAVE PROFILE TO BACKEND
- ==========================================================*/
-const saveBtn = document.getElementById('saveBtn');
-saveBtn?.addEventListener('click', async () => {
-    if (!token) return alert("Login required to save profile");
-
-    const branchSelect = document.getElementById('branch');
-    const branchName = branchSelect?.options[branchSelect.selectedIndex].text || "";
-
+// ============================
+// SAVE PROFILE
+// ============================
+saveBtn?.addEventListener("click", async () => {
     const payload = {
-        name: document.getElementById('fullName')?.value.trim() || "",
-        roll: document.getElementById('rollNumber')?.value.trim() || "",
-        branch: branchName,
-        cgpa: parseFloat(document.getElementById('cgpa')?.value) || 0,
+        name: fullNameInput.value.trim(),
+        roll: rollInput.value.trim(),
+        branch: branchSelect.value,
+        cgpa: parseFloat(cgpaInput.value) || 0,
         college: "GH Raisoni",
         skills: skills.map(s => s.name),
         resume: resumeBase64
     };
 
     try {
-        saveBtn.innerHTML = "Saving...";
+        saveBtn.innerText = "Saving...";
         saveBtn.disabled = true;
 
-        const res = await fetch("http://localhost:5000/api/student/profile", {
-            method: "POST",
+        const res = await fetch(`${API_BASE}/profile`, {
+            method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify(payload)
         });
 
         if (!res.ok) throw new Error("Save failed");
 
-        localStorage.setItem("student_profile", JSON.stringify(payload));
-        saveBtn.innerHTML = "✔ Saved";
-
-        setTimeout(() => {
-            saveBtn.innerHTML = "Save Profile";
-            saveBtn.disabled = false;
-        }, 2000);
+        alert("✅ Profile saved successfully!");
     } catch (err) {
-        alert("Save failed ❌");
+        console.error(err);
+        alert("❌ Save failed");
+    } finally {
+        saveBtn.innerText = "Save Profile Changes";
         saveBtn.disabled = false;
-        saveBtn.innerHTML = "Save Profile";
-        console.error(err);
     }
 });
 
-/* ==========================================================
- * INITIALIZE PROFILE DATA & JOBS
- ==========================================================*/
-document.addEventListener("DOMContentLoaded", async () => {
-    // Load profile from localStorage
-    document.getElementById('fullName').value = studentSession.name || "";
-    document.getElementById('rollNumber').value = studentSession.roll || "";
-    document.getElementById('cgpa').value = studentSession.cgpa || "";
-    
-    const branchOptions = document.getElementById('branch')?.options || [];
-    for (let i = 0; i < branchOptions.length; i++) {
-        if (branchOptions[i].text === studentSession.branch) {
-            branchOptions[i].selected = true;
-            break;
-        }
-    }
-
-    renderSkills();
-    if (resumeBase64) showResumeUI("Saved_Resume.pdf");
-    updateCompletion();
-
-    if (!token) return;
-
-    try {
-        // Fetch profile
-        const resProfile = await fetch("http://localhost:5000/api/student/profile", {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        if (resProfile.ok) {
-            const profile = await resProfile.json();
-            document.getElementById('fullName').value = profile.name || "";
-            document.getElementById('rollNumber').value = profile.roll || "";
-            document.getElementById('cgpa').value = profile.cgpa || "";
-
-            for (let i = 0; i < branchOptions.length; i++) {
-                if (branchOptions[i].text === profile.branch) {
-                    branchOptions[i].selected = true;
-                    break;
-                }
-            }
-
-            skills = (profile.skills || []).map(s => ({ name: s, level: "Intermediate" }));
-            renderSkills();
-
-            if (profile.resume) {
-                resumeBase64 = profile.resume;
-                localStorage.setItem("student_resume_pdf", resumeBase64);
-                showResumeUI("Saved_Resume.pdf");
-            }
-        }
-
-        // Fetch jobs
-        const resJobs = await fetch("http://localhost:5000/api/student/jobs", {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        const data = await resJobs.json();
-        allAvailableJobs = data.jobs || [];
-
-    } catch(err){
-        console.error("Initialization failed", err);
-    }
-
-    renderJobList();
+// ============================
+// INIT
+// ============================
+document.addEventListener("DOMContentLoaded", () => {
+    loadProfile();
 });
-
-/* ==========================================================
- * JOB LIST + APPLY LOGIC
- ==========================================================*/
-function renderJobList() {
-    const list = document.getElementById("jobs-list");
-    if (!list) return;
-
-    list.innerHTML = allAvailableJobs.map(job => {
-        const isEligible = studentSession.cgpa >= job.cgpa && job.branches.includes(studentSession.branch);
-        return `
-            <div onclick="selectJob('${job.id}')" id="card-${job.id}" class="job-card bg-white p-5 rounded-xl border border-slate-200 cursor-pointer hover:shadow-md transition-all mb-3">
-                <div class="flex justify-between items-start mb-2">
-                    <h3 class="font-bold text-slate-900">${job.title}</h3>
-                    <span class="px-2 py-1 text-[10px] font-bold rounded ${isEligible ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}">
-                        ${isEligible ? "ELIGIBLE" : "INELIGIBLE"}
-                    </span>
-                </div>
-                <p class="text-sm text-slate-500">${job.company}</p>
-            </div>
-        `;
-    }).join("");
-}
-
-window.selectJob = function(id) {
-    const job = allAvailableJobs.find(j => j.id === id);
-    if (!job) return;
-
-    const detailPane = document.getElementById("job-details");
-    if (!detailPane) return;
-
-    const isApplied = appliedJobs.some(app => app.id === job.id);
-    const isEligible = studentSession.cgpa >= job.cgpa && job.branches.includes(studentSession.branch);
-
-    detailPane.innerHTML = `
-        <h1 class="text-2xl font-bold">${job.title}</h1>
-        <p>${job.company}</p>
-        <p>${job.description}</p>
-        <button onclick="handleApply('${job.id}')" ${isApplied || !isEligible ? "disabled" : ""}>
-            ${isApplied ? "Application Sent" : !isEligible ? "Criteria Not Met" : "Apply Now"}
-        </button>
-    `;
-};
-
-window.handleApply = async function(jobId) {
-    if (!token) return alert("Login required to apply");
-
-    const job = allAvailableJobs.find(j => j.id === jobId);
-    if (!job) return;
-
-    try {
-        const res = await fetch(`http://localhost:5000/api/student/apply/${jobId}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "Apply failed");
-
-        alert(`✅ Application Sent to ${job.company}!`);
-
-        // Refresh applied jobs
-        const resApps = await fetch("http://localhost:5000/api/student/applications", {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        appliedJobs = resApps.ok ? await resApps.json() : [];
-        localStorage.setItem(APPLICATION_KEY, JSON.stringify(appliedJobs));
-
-        window.selectJob(jobId);
-    } catch(err){
-        console.error(err);
-        alert(err.message);
-    }
-};
