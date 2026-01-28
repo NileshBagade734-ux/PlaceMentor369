@@ -12,11 +12,12 @@ const applicationSchema = new mongoose.Schema(
       ref: "Job",
       required: true
     },
-    status: {
-      type: String,
-      enum: ["Pending", "Shortlisted", "Rejected"],
-      default: "Pending"
-    },
+   status: {
+  type: String,
+  enum: ["pending", "verified", "rejected"],
+  default: "pending"
+},
+
     appliedAt: {
       type: Date,
       default: Date.now

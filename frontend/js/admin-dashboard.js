@@ -1,60 +1,128 @@
-function updateDashboard() {
-    // 1. Fetch data from your specific keys
-    const students = JSON.parse(localStorage.getItem("all_students") || "[]");
-    const jobs = JSON.parse(localStorage.getItem("posted_jobs") || "[]");
-    const applications = JSON.parse(localStorage.getItem("student_applications") || "[]");
+const API_BASE = "http://localhost:5000/api/admin";
 
-    // 2. Top Stats
-    document.getElementById("totalStudents").innerText = students.length;
-    document.getElementById("verifiedStudents").innerText = students.filter(s => s.status === 'verified').length;
-    document.getElementById("activeJobs").innerText = jobs.filter(j => j.status === 'Active').length;
-    
-    // Count pending students + jobs with "Pending" status
-    const pendingCount = students.filter(s => s.status === 'pending').length + 
-                         jobs.filter(j => j.status === 'Pending' || j.status === 'pending').length;
-    document.getElementById("pendingApprovals").innerText = pendingCount;
-
-    // 3. Render Pending Students (e.g., Amit Kumar)
-    const studentContainer = document.getElementById("pendingStudentsList");
-    const pendingStudents = students.filter(s => s.status === 'pending');
-    
-    studentContainer.innerHTML = pendingStudents.length ? pendingStudents.map(s => `
-        <div class="list-item">
-            <div>
-                <strong>${s.name}</strong>
-                <div class="muted">${s.branch} • CGPA: ${s.cgpa}</div>
-            </div>
-            <button class="btn btn-outline" style="width:auto; padding: 6px 12px;" onclick="location.href='adminverify-student.html'">Review</button>
-        </div>
-    `).join('') : '<p class="muted center">No pending students</p>';
-
-    // 4. Render Pending Jobs (e.g., Cloud Engineer)
-    const jobContainer = document.getElementById("pendingJobsList");
-    const pendingJobs = jobs.filter(j => j.status === 'Pending' || j.status === 'pending');
-
-    jobContainer.innerHTML = pendingJobs.length ? pendingJobs.map(j => `
-        <div class="list-item">
-            <div>
-                <strong>${j.title}</strong>
-                <div class="muted">${j.company}</div>
-            </div>
-            <button class="btn btn-outline" style="width:auto; padding: 6px 12px;" onclick="location.href='adminjob-management.html'">Review</button>
-        </div>
-    `).join('') : '<p class="muted center">No pending jobs</p>';
-
-    // 5. Placement Stats
-    const shortlistedCount = applications.filter(a => a.status === 'Shortlisted' || a.status === 'shortlisted').length;
-    document.getElementById("totalApplications").innerText = applications.length;
-    document.getElementById("shortlisted").innerText = shortlistedCount;
-    
-    const rate = students.length > 0 ? Math.round((shortlistedCount / students.length) * 100) : 0;
-    document.getElementById("successRate").innerText = rate + "%";
+/* =========================
+   SESSION / TOKEN
+========================= */
+function getToken() {
+  const session = JSON.parse(localStorage.getItem("placementor_session"));
+  return session?.token;
 }
 
+/* =========================
+   LOAD DASHBOARD STATS
+========================= */
+async function loadDashboard() {
+  try {
+    const res = await fetch(`${API_BASE}/dashboard`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    });
+
+    if (!res.ok) throw new Error("Dashboard fetch failed");
+
+    const data = await res.json();
+
+    // TOP STATS
+    document.getElementById("totalStudents").innerText = data.totalStudents;
+    document.getElementById("verifiedStudents").innerText = data.verifiedStudents;
+    document.getElementById("activeJobs").innerText = data.activeJobs;
+    document.getElementById("pendingApprovals").innerText = data.pendingApprovals;
+
+    // PLACEMENT STATS
+    document.getElementById("totalApplications").innerText = data.totalApplications;
+    document.getElementById("shortlisted").innerText = data.shortlisted;
+    document.getElementById("successRate").innerText = data.successRate + "%";
+
+    // LOAD SIDEBAR LISTS
+    await loadPendingStudents();
+    await loadPendingJobs();
+
+  } catch (err) {
+    console.error("Dashboard load failed:", err);
+    alert("Admin access denied or server error");
+    window.location.href = "../login.html";
+  }
+}
+
+/* =========================
+   LOAD PENDING STUDENTS
+========================= */
+async function loadPendingStudents() {
+  try {
+    const res = await fetch(`${API_BASE}/students`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    });
+
+    const students = await res.json();
+    const pending = students.filter(s => s.status === "pending");
+
+    const container = document.getElementById("pendingStudentsList");
+    if (!container) return;
+
+    container.innerHTML = pending.length
+      ? pending.map(s => `
+          <div class="list-item">
+            <strong>${s.name}</strong>
+            <div class="muted">${s.branch} • CGPA: ${s.cgpa}</div>
+          </div>
+        `).join("")
+      : `<p class="muted center">No pending students</p>`;
+
+  } catch (err) {
+    console.error("Pending students load failed:", err);
+  }
+}
+
+/* =========================
+   LOAD PENDING JOBS
+========================= */
+async function loadPendingJobs() {
+  try {
+    const res = await fetch(`${API_BASE}/jobs`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    });
+
+    const jobs = await res.json();
+    const pendingJobs = jobs.filter(j => j.status === "pending");
+
+    const container = document.getElementById("pendingJobsList");
+    if (!container) return;
+
+    container.innerHTML = pendingJobs.length
+      ? pendingJobs.map(j => `
+          <div class="list-item">
+            <strong>${j.title}</strong>
+            <div class="muted">${j.recruiter?.company || "Company"}</div>
+          </div>
+        `).join("")
+      : `<p class="muted center">No pending jobs</p>`;
+
+  } catch (err) {
+    console.error("Pending jobs load failed:", err);
+  }
+}
+
+/* =========================
+   REAL-TIME REFRESH LISTENER
+========================= */
+window.addEventListener("storage", (event) => {
+  if (event.key === "dashboard_refresh") {
+    loadDashboard();
+  }
+});
+
+/* =========================
+   LOGOUT
+========================= */
 function logout() {
-    if(confirm("Logout from Admin Panel?")) window.location.href = "../login.html";
+  if (confirm("Logout from Admin Panel?")) {
+    localStorage.removeItem("placementor_session");
+    window.location.href = "../login.html";
+  }
 }
 
-// Run on load and whenever storage changes
-document.addEventListener("DOMContentLoaded", updateDashboard);
-window.addEventListener('storage', updateDashboard);
+/* =========================
+   INITIALIZE
+========================= */
+document.addEventListener("DOMContentLoaded", () => {
+  loadDashboard();
+});

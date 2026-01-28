@@ -1,36 +1,29 @@
 import express from "express";
-import {
-  createJob,
-  getJobs,
-  updateJob,
-  deleteJob,
-  getStudents,
-  verifyStudent,
-  getAllApplications
-} from "../controllers/adminController.js";
-
 import { protect } from "../middlewares/authMiddleware.js";
-import { authorize } from "../middlewares/roleMiddleware.js";
+import { adminOnly } from "../middlewares/roleMiddleware.js";
+import {
+  getDashboardStats,
+  getAllStudents,
+  verifyStudent,
+  rejectStudent,
+  getAllJobs,
+  approveJob,
+  deleteJob
+} from "../controllers/adminController.js";
 
 const router = express.Router();
 
-/* =========================
-   JOB ROUTES
-========================= */
-router.post("/jobs", protect, authorize("admin"), createJob);
-router.get("/jobs", protect, authorize("admin"), getJobs);
-router.put("/jobs/:jobId", protect, authorize("admin"), updateJob);
-router.delete("/jobs/:jobId", protect, authorize("admin"), deleteJob);
+/* DASHBOARD */
+router.get("/dashboard", protect, adminOnly, getDashboardStats);
 
-/* =========================
-   STUDENT ROUTES
-========================= */
-router.get("/students", protect, authorize("admin"), getStudents);
-router.put("/students/verify/:studentId", protect, authorize("admin"), verifyStudent);
+/* STUDENTS */
+router.get("/students", protect, adminOnly, getAllStudents);
+router.patch("/students/:id/verify", protect, adminOnly, verifyStudent);
+router.patch("/students/:id/reject", protect, adminOnly, rejectStudent);
 
-/* =========================
-   APPLICATIONS ROUTES
-========================= */
-router.get("/applications", protect, authorize("admin"), getAllApplications);
+/* JOBS */
+router.get("/jobs", protect, adminOnly, getAllJobs);
+router.patch("/jobs/:id/approve", protect, adminOnly, approveJob);
+router.delete("/jobs/:id", protect, adminOnly, deleteJob);
 
 export default router;
