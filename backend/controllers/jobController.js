@@ -1,71 +1,96 @@
-import Job from "../models/User.js";
-import Student from "../models/Student.js";
+import Job from "../models/Job.js";
+import Application from "../models/application.js";
 
-/* ============================
-   RECRUITER: CREATE JOB
-============================ */
+/* CREATE JOB */
 export const createJob = async (req, res) => {
   try {
-    const { title, company, location, description, skillsRequired, salary } = req.body;
+    const recruiterId = req.user._id;
+    const { title, company, description, cgpa, branch, skillsRequired, deadline, location, salary } = req.body;
 
-    if (!title || !company) {
-      return res.status(400).json({ message: "Title and Company are required" });
+    if (!title || !company || !description || !deadline) {
+      return res.status(400).json({ message: "Missing required fields" });
     }
 
     const job = await Job.create({
       title,
       company,
-      location,
       description,
+      cgpa,
+      branches: branch, // ✅ fixed typo
       skillsRequired,
+      deadline,
+      location,
       salary,
-      recruiter: req.user.id
+      recruiter: recruiterId,
+      status: "approved" // auto-approve
     });
 
-    res.status(201).json(job);
+    res.status(201).json({ success: true, message: "Job posted successfully", job });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Job creation failed" });
+    console.error("Create Job Error:", err);
+    res.status(500).json({ message: "Server error while creating job" });
   }
 };
 
-/* ============================
-   STUDENT: GET ALL JOBS
-============================ */
-export const getJobs = async (req, res) => {
+/* GET RECRUITER JOBS */
+export const getRecruiterJobs = async (req, res) => {
   try {
-    const jobs = await Job.find()
-      .sort({ createdAt: -1 })
-      .populate("recruiter", "name email"); // recruiter info
-
-    res.json(jobs);
+    const jobs = await Job.find({ recruiter: req.user._id }).sort({ createdAt: -1 });
+    res.status(200).json(jobs);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to fetch jobs" });
+    res.status(500).json({ message: "Failed to fetch recruiter jobs" });
   }
 };
 
-/* ============================
-   RECRUITER: VIEW APPLICANTS
-============================ */
-export const getApplicants = async (req, res) => {
+/* GET JOB APPLICANTS */
+export const getJobApplicants = async (req, res) => {
   try {
-    const job = await Job.findById(req.params.id)
-      .populate({
-        path: "applicants",
-        populate: { path: "user", select: "name email" } // populate student basic info
-      });
+    const jobId = req.params.id;
 
-    if (!job) return res.status(404).json({ message: "Job not found" });
+    const applications = await Application.find({ job: jobId })
+      .populate("student", "name email cgpa branch resume") // 🔥 fixed populate
+      .populate("job", "title company");
 
-    // Ensure only the recruiter who created the job can see applicants
-    if (job.recruiter.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Not authorized to view applicants" });
-    }
-
-    res.json({ job: job.title, applicants: job.applicants });
+    res.status(200).json(applications);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to fetch applicants" });
+  }
+};
+
+/* UPDATE APPLICATION STATUS */
+export const updateApplicantStatus = async (req, res) => {
+  try {
+    const { applicationId, status } = req.body;
+    if (!["Shortlisted", "Rejected"].includes(status))
+      return res.status(400).json({ message: "Invalid status" });
+
+    const application = await Application.findById(applicationId);
+    if (!application) return res.status(404).json({ message: "Application not found" });
+
+    application.status = status;
+    await application.save();
+
+    res.status(200).json({ success: true, message: `Application ${status}`, application });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to update status" });
+  }
+};
+
+/* DELETE JOB */
+export const deleteJob = async (req, res) => {
+  try {
+    const job = await Job.findOne({ _id: req.params.id, recruiter: req.user._id });
+    if (!job) return res.status(404).json({ message: "Job not found" });
+
+    await Application.deleteMany({ job: job._id });
+    await job.deleteOne();
+
+    res.status(200).json({ message: "Job deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete job" });
   }
 };

@@ -1,4 +1,4 @@
-import Job from "../models/job.js";
+import Job from "../models/Job.js";
 import Application from "../models/application.js";
 
 /* ======================================================
@@ -14,29 +14,30 @@ export const createJob = async (req, res) => {
       company,
       description,
       cgpa,
-      branches,
+      branch,
       skillsRequired,
       deadline,
       location,
       salary
     } = req.body;
-if (!title || !company || !description || !deadline) {
-  return res.status(400).json({
-    message: "Missing required fields",
-    missing: { title, company, description, deadline }
-  });
-}
+
+    if (!title || !company || !description || !deadline) {
+      return res.status(400).json({
+        message: "Missing required fields",
+        missing: { title, company, description, deadline }
+      });
+    }
 
     const job = await Job.create({
       title,
       company,
       description,
       cgpa,
-      branches,
+      branch,
       skillsRequired,
       deadline,
       recruiter: recruiterId,
-      status: "approved" // 🔥 for now auto-approve
+      status: "approved" // auto-approve for now
     });
 
     res.status(201).json({
@@ -56,9 +57,7 @@ if (!title || !company || !description || !deadline) {
 ====================================================== */
 export const getRecruiterJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ recruiter: req.user._id })
-      .sort({ createdAt: -1 });
-
+    const jobs = await Job.find({ recruiter: req.user._id }).sort({ createdAt: -1 });
     res.status(200).json(jobs);
   } catch (err) {
     console.error(err);
@@ -72,15 +71,23 @@ export const getRecruiterJobs = async (req, res) => {
 ====================================================== */
 export const getJobApplicants = async (req, res) => {
   try {
-    const jobId = req.params.id;
+    const jobId = req.params.id; // ✅ get from URL
 
     const applications = await Application.find({ job: jobId })
-      .populate("student", "name email profile cgpa branch")
-      .populate("job", "title company");
+      .populate({
+        path: "student",
+        select: "name email branch cgpa resume"
+      })
+      .populate({
+        path: "job",
+        select: "title"
+      });
+
+    console.log("Applications fetched:", JSON.stringify(applications, null, 2)); // check
 
     res.status(200).json(applications);
   } catch (err) {
-    console.error(err);
+    console.error("Get applicants error:", err);
     res.status(500).json({ message: "Failed to fetch applicants" });
   }
 };
@@ -93,26 +100,37 @@ export const updateApplicantStatus = async (req, res) => {
   try {
     const { applicationId, status } = req.body;
 
+    if (!applicationId || !status) {
+      return res.status(400).json({ message: "Application ID and status required" });
+    }
+
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(applicationId)) {
+      return res.status(400).json({ message: "Invalid application ID" });
+    }
+
     if (!["Shortlisted", "Rejected"].includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
     }
 
     const application = await Application.findById(applicationId);
-
-    if (!application) {
-      return res.status(404).json({ message: "Application not found" });
-    }
+    if (!application) return res.status(404).json({ message: "Application not found" });
 
     application.status = status;
     await application.save();
 
-    res.status(200).json({
-      success: true,
-      message: `Application ${status}`,
-      application
+    // ✅ Populate student & job for frontend
+    const populatedApp = await application.populate({
+      path: "student",
+      select: "name email branch cgpa resume"
+    }).populate({
+      path: "job",
+      select: "title"
     });
+
+    res.status(200).json({ success: true, message: `Application ${status}`, application: populatedApp });
   } catch (err) {
-    console.error(err);
+    console.error("Update status error:", err);
     res.status(500).json({ message: "Failed to update status" });
   }
 };
@@ -123,14 +141,8 @@ export const updateApplicantStatus = async (req, res) => {
 ====================================================== */
 export const deleteJob = async (req, res) => {
   try {
-    const job = await Job.findOne({
-      _id: req.params.id,
-      recruiter: req.user._id
-    });
-
-    if (!job) {
-      return res.status(404).json({ message: "Job not found" });
-    }
+    const job = await Job.findOne({ _id: req.params.id, recruiter: req.user._id });
+    if (!job) return res.status(404).json({ message: "Job not found" });
 
     await Application.deleteMany({ job: job._id });
     await job.deleteOne();

@@ -1,5 +1,5 @@
 import express from "express";
-import { protect } from "../middlewares/authMiddleware.js";
+import { verifyToken } from "../middlewares/verifyToken.js";
 import {
   getProfile,
   saveProfile,
@@ -10,15 +10,20 @@ import {
 
 const router = express.Router();
 
-// Profile
-router.get("/profile", protect, getProfile);
-router.patch("/profile", protect, saveProfile);
+// Get logged-in student profile
+router.get("/profile", verifyToken, getProfile);
 
-// Jobs
-router.get("/jobs", protect, getJobs);
-router.post("/apply/:jobId", protect, applyJob);
+// Save/update student profile
+router.patch("/profile", verifyToken, saveProfile);
 
-// Applications
-router.get("/applications", protect, getApplications);
+// Get all approved jobs
+router.get("/jobs", verifyToken, getJobs);
+
+// Apply for a job
+// backend/routes/studentRoutes.js
+router.post("/apply/:jobId", verifyToken, applyJob);
+
+// Get all applications of this student
+router.get("/applications", verifyToken, getApplications);
 
 export default router;

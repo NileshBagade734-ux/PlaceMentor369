@@ -9,7 +9,7 @@ const jobSchema = new mongoose.Schema({
   skillsRequired: [String],
   salary: String,
   cgpa: { type: Number, default: 0 },
-  branches: [String],
+  branch: [String],
   recruiter: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   createdAt: { type: Date, default: Date.now }

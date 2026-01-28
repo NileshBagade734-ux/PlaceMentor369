@@ -1,6 +1,7 @@
 /* ==========================================================
    STORAGE KEYS & TOKEN
 ========================================================== */
+const API = "http://localhost:5000/api/student";
 const USER_KEY = "current_user";
 const APPLICATION_KEY = "student_applications";
 
@@ -246,26 +247,48 @@ window.selectJob = function(id) {
 /* ==========================================================
    HANDLE APPLY
 ========================================================== */
-window.handleApply = async function(jobId) {
-  const token = getToken();
-  if (!token) return alert("Login required to apply");
+window.handleApply = async function (jobId) {
+  console.log("🆔 jobId received:", jobId);
+
+  const token = getToken(); // ✅ FIX
+
+  if (!token) {
+    alert("Login required");
+    return;
+  }
+
+  if (!jobId) {
+    alert("Invalid Job ID");
+    return;
+  }
 
   try {
-    const res = await fetch(`http://localhost:5000/api/student/apply/${jobId}`, {
+    const res = await fetch(`${API}/apply/${jobId}`, {
       method: "POST",
-      headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      }
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Apply failed");
 
-    alert(`✅ ${data.message}`);
-    await init(); // refresh jobs and applied list
+    if (!res.ok) {
+      throw new Error(data.message || "Apply failed");
+    }
+
+    alert("✅ Applied successfully");
+
+    // Optional: prevent re-apply instantly
+    appliedJobs.push(jobId);
+    localStorage.setItem(APPLICATION_KEY, JSON.stringify(appliedJobs));
+
   } catch (err) {
     console.error("Apply Error:", err);
-    alert(`❌ ${err.message}`);
+    alert(err.message);
   }
 };
+
 
 /* ==========================================================
    DOM READY INIT

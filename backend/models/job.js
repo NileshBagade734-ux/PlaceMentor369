@@ -29,7 +29,7 @@ const jobSchema = new mongoose.Schema(
     },
 
     // Eligible branches
-    branches: [
+    branch: [
       {
         type: String
       }

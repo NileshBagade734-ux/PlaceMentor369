@@ -3,7 +3,7 @@
  *********************************/
 const API_URL = "http://localhost:5000/api/recruiter/jobs";
 
-// Get token from localStorage (saved during login)
+// Get session and token
 const session = JSON.parse(localStorage.getItem("placementor_session"));
 if (!session || !session.token || session.user.role !== "recruiter") {
   alert("Session invalid. Please login again.");
@@ -141,6 +141,7 @@ window.deleteJob = async function(jobId) {
  * VIEW APPLICANTS
  *********************************/
 window.viewApplicants = function(jobId) {
+    console.log("Storing jobId:", jobId)
   localStorage.setItem("filter_job_id", jobId);
-  location.href = "manage-applicants.html";
+  location.href = "manage-applicant.html";
 };

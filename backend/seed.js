@@ -23,18 +23,17 @@ async function seed() {
       });
     }
 
-    const job = await Job.create({
-       id: "65b1234567890abcdef12345",
-      title: "Software Engineer",
-      company: "Google",
-      description: "Develop cloud applications.",
-      cgpa: 8.0,
-      branches: ["Computer Science", "Information Technology"],
-      skillsRequired: ["React", "Node.js", "JavaScript"],
-      deadline: new Date("2026-02-28"),
-      recruiter: recruiter._id,
-      status: "approved"
-    });
+ const job = await Job.create({
+  title: "Software Engineer",
+  company: "Google",
+  description: "Develop cloud applications.",
+  cgpa: 8.0,
+  branch: ["Computer Science", "Information Technology"],
+  skillsRequired: ["React", "Node.js", "JavaScript"],
+  deadline: new Date("2026-02-28"),
+  recruiter: recruiter._id,
+  status: "approved"
+});
 
     console.log("✅ Job seeded successfully");
     console.log("🆔 Job ID:", job._id.toString());
