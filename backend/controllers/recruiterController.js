@@ -1,5 +1,5 @@
 import Job from "../models/Job.js";
-import Application from "../models/Application.js";
+import Application from "../models/application.js";
 
 /* ======================================================
    CREATE JOB (Recruiter posts a job)
@@ -109,9 +109,9 @@ export const updateApplicantStatus = async (req, res) => {
       return res.status(400).json({ message: "Invalid application ID" });
     }
 
-    if (!["shortlisted", "rejected"].includes(status)) {
-      return res.status(400).json({ message: "Invalid status" });
-    }
+   if (!["shortlisted", "rejected"].includes(status)) {
+  return res.status(400).json({ message: "Invalid status" });
+}
 
     const application = await Application.findById(applicationId);
     if (!application) return res.status(404).json({ message: "Application not found" });

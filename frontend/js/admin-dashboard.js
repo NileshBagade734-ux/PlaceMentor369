@@ -52,7 +52,10 @@ async function loadPendingStudents() {
       headers: { Authorization: `Bearer ${getToken()}` }
     });
 
+    if (!res.ok) throw new Error("Failed to fetch students");
+
     const students = await res.json();
+
     const pending = students.filter(s => s.status === "pending");
 
     const container = document.getElementById("pendingStudentsList");
@@ -63,6 +66,7 @@ async function loadPendingStudents() {
           <div class="list-item">
             <strong>${s.name}</strong>
             <div class="muted">${s.branch} • CGPA: ${s.cgpa}</div>
+            <button class="btn btn-outline" onclick="verifyStudent('${s._id}')">Verify</button>
           </div>
         `).join("")
       : `<p class="muted center">No pending students</p>`;
@@ -81,6 +85,8 @@ async function loadPendingJobs() {
       headers: { Authorization: `Bearer ${getToken()}` }
     });
 
+    if (!res.ok) throw new Error("Failed to fetch jobs");
+
     const jobs = await res.json();
     const pendingJobs = jobs.filter(j => j.status === "pending");
 
@@ -92,12 +98,57 @@ async function loadPendingJobs() {
           <div class="list-item">
             <strong>${j.title}</strong>
             <div class="muted">${j.recruiter?.company || "Company"}</div>
+            <button class="btn btn-outline" onclick="approveJob('${j._id}')">Approve</button>
           </div>
         `).join("")
       : `<p class="muted center">No pending jobs</p>`;
 
   } catch (err) {
     console.error("Pending jobs load failed:", err);
+  }
+}
+
+/* =========================
+   VERIFY STUDENT
+========================= */
+async function verifyStudent(id) {
+  try {
+    const res = await fetch(`${API_BASE}/students/${id}/verify`, {
+      method: "PATCH",
+      headers: { 
+        "Authorization": `Bearer ${getToken()}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (!res.ok) throw new Error("Student verification failed");
+
+    await loadDashboard(); // refresh all stats
+  } catch (err) {
+    console.error(err);
+    alert("Failed to verify student: " + err.message);
+  }
+}
+
+/* =========================
+   APPROVE JOB
+========================= */
+async function approveJob(id) {
+  try {
+    const res = await fetch(`${API_BASE}/jobs/${id}/approve`, {
+      method: "PATCH",
+      headers: { 
+        "Authorization": `Bearer ${getToken()}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (!res.ok) throw new Error("Job approval failed");
+
+    await loadDashboard(); // refresh all stats
+  } catch (err) {
+    console.error(err);
+    alert("Failed to approve job: " + err.message);
   }
 }
 

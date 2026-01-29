@@ -1,6 +1,6 @@
 import Student from "../models/Student.js";
 import Job from "../models/Job.js";
-import Application from "../models/Application.js";
+import Application from "../models/application.js"; // make sure case matches
 
 /* ===========================
    DASHBOARD STATS
@@ -10,18 +10,19 @@ export const getDashboardStats = async (req, res) => {
     const totalStudents = await Student.countDocuments();
     const verifiedStudents = await Student.countDocuments({ status: "verified" });
     const pendingStudents = await Student.countDocuments({
-  $or: [
-    { status: "pending" },
-    { status: { $exists: false } } // old records safety
-  ]
-});
-
+      $or: [
+        { status: "pending" },
+        { status: { $exists: false } } // safety for old records
+      ]
+    });
 
     const activeJobs = await Job.countDocuments({ status: "approved" });
     const pendingJobs = await Job.countDocuments({ status: "pending" });
 
     const totalApplications = await Application.countDocuments();
-    const shortlisted = await Application.countDocuments({ status: "shortlisted" });
+
+    // 🔹 Include old "verified" as "shortlisted"
+   const shortlisted = await Application.countDocuments({ status: { $regex: /^shortlisted$/i } });
 
     const successRate =
       totalStudents > 0 ? Math.round((shortlisted / totalStudents) * 100) : 0;
@@ -43,8 +44,6 @@ export const getDashboardStats = async (req, res) => {
 /* ===========================
    STUDENTS
 =========================== */
-
-/* GET ALL STUDENTS */
 export const getAllStudents = async (req, res) => {
   try {
     const students = await Student.find().sort({ createdAt: -1 });
@@ -54,14 +53,12 @@ export const getAllStudents = async (req, res) => {
   }
 };
 
-
-/* VERIFY STUDENT */
 export const verifyStudent = async (req, res) => {
   try {
     const student = await Student.findByIdAndUpdate(
       req.params.id,
       { status: "verified" },
-      { new: true }  // ✅ returns updated document
+      { new: true }
     );
 
     if (!student) return res.status(404).json({ message: "Student not found" });
@@ -73,18 +70,19 @@ export const verifyStudent = async (req, res) => {
   }
 };
 
-
-
-
-/* REJECT STUDENT */
 export const rejectStudent = async (req, res) => {
   try {
-    const student = await Student.findByIdAndUpdate(req.params.id, { status: "rejected" }, { new: true });
+    const student = await Student.findByIdAndUpdate(
+      req.params.id,
+      { status: "rejected" },
+      { new: true }
+    );
     res.status(200).json(student);
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 /* ===========================
    JOBS
 =========================== */
@@ -104,7 +102,6 @@ export const approveJob = async (req, res) => {
       { status: "approved" },
       { new: true }
     );
-
     res.status(200).json({ message: "Job approved", job });
   } catch (err) {
     res.status(500).json({ message: "Approval failed" });
