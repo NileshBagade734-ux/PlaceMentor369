@@ -1,23 +1,28 @@
 import express from "express";
 import { verifyToken } from "../middlewares/verifyToken.js";
 import { recruiterOnly } from "../middlewares/roleMiddleware.js";
+
 import {
   createJob,
   getRecruiterJobs,
-  getJobApplicants,
+  getAllRecruiterApplications,
   deleteJob,
-  updateApplicantStatus
+  updateApplicantStatus,
+  getRecruiterDashboardStats
 } from "../controllers/recruiterController.js";
 
 const router = express.Router();
 
-// Jobs routes
+// ---------------- DASHBOARD ----------------
+router.get("/dashboard", verifyToken, recruiterOnly, getRecruiterDashboardStats);
+
+// ---------------- JOBS ----------------
 router.post("/jobs", verifyToken, recruiterOnly, createJob);
 router.get("/jobs", verifyToken, recruiterOnly, getRecruiterJobs);
-router.get("/jobs/:id/applicants", verifyToken, recruiterOnly, getJobApplicants);
 router.delete("/jobs/:id", verifyToken, recruiterOnly, deleteJob);
 
-// ✅ Update applicant status
+// ---------------- APPLICATIONS ----------------
+router.get("/applications", verifyToken, recruiterOnly, getAllRecruiterApplications);
 router.patch("/applications/status", verifyToken, recruiterOnly, updateApplicantStatus);
 
 export default router;

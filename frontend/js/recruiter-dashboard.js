@@ -1,9 +1,12 @@
 /*********************************
- * CONFIG
+ * RECRUITER DASHBOARD JS
  *********************************/
-const API_URL = "http://localhost:5000/api/recruiter/jobs";
 
-// Get session and token
+// ---------------- CONFIG ----------------
+const JOBS_API = "http://localhost:5000/api/recruiter/jobs";
+const APPS_API = "http://localhost:5000/api/recruiter/applications";
+
+// Get session & token
 const session = JSON.parse(localStorage.getItem("placementor_session"));
 if (!session || !session.token || session.user.role !== "recruiter") {
   alert("Session invalid. Please login again.");
@@ -11,58 +14,52 @@ if (!session || !session.token || session.user.role !== "recruiter") {
 }
 const token = session.token;
 
-/*********************************
- * INIT DASHBOARD
- *********************************/
+// ---------------- INIT ----------------
 document.addEventListener("DOMContentLoaded", initDashboard);
 
 async function initDashboard() {
   try {
-    // Fetch all jobs posted by recruiter
-    const res = await fetch(API_URL, {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      }
+    // -------- FETCH JOBS --------
+    const jobsRes = await fetch(JOBS_API, {
+      headers: { Authorization: `Bearer ${token}` }
     });
+    if (!jobsRes.ok) throw new Error("Failed to fetch jobs");
+    const jobs = await jobsRes.json();
 
-    if (res.status === 401 || res.status === 403) {
-      alert("Session expired or access denied. Login again.");
-      return window.location.href = "login.html";
-    }
+    // -------- FETCH APPLICATIONS --------
+    const appsRes = await fetch(APPS_API, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!appsRes.ok) throw new Error("Failed to fetch applications");
+    const applications = await appsRes.json();
 
-    const jobs = await res.json();
-
-    // Load all student applications from localStorage (or empty array)
-    const allApplications = JSON.parse(localStorage.getItem("student_applications") || "[]");
-
-    // Stats
+    // -------- STATS --------
     const jobsCount = jobs.length;
-    const appsCount = allApplications.length;
-    const shortlistedCount = allApplications.filter(a => a.status === "Shortlisted").length;
+    const appsCount = applications.length;
+    const shortlistedCount = applications.filter(
+      a => a.status?.toLowerCase() === "shortlisted"
+    ).length;
 
-    // Update stats in DOM
-    if (document.getElementById("count-jobs")) document.getElementById("count-jobs").textContent = jobsCount;
-    if (document.getElementById("count-apps")) document.getElementById("count-apps").textContent = appsCount;
-    if (document.getElementById("count-shortlisted")) document.getElementById("count-shortlisted").textContent = shortlistedCount;
+    // -------- UPDATE DOM STATS --------
+    document.getElementById("count-jobs").textContent = jobsCount;
+    document.getElementById("count-apps").textContent = appsCount;
+    document.getElementById("count-shortlisted").textContent = shortlistedCount;
 
-    // Render jobs in dashboard
-    renderJobs(jobs, allApplications);
+    // -------- RENDER JOBS --------
+    renderJobs(jobs, applications);
 
   } catch (err) {
-    console.error("Error initializing dashboard:", err);
+    console.error("Dashboard error:", err);
     alert("Failed to load dashboard. Refresh the page.");
   }
 }
 
-/*********************************
- * RENDER JOBS
- *********************************/
+// ---------------- RENDER JOBS ----------------
 function renderJobs(jobs, apps) {
   const container = document.getElementById("jobs-container");
   if (!container) return;
 
-  if (!Array.isArray(jobs) || jobs.length === 0) {
+  if (!jobs.length) {
     container.innerHTML = `
       <div class="text-center py-10 border-2 border-dashed border-slate-200 rounded-xl">
         <p class="text-slate-400">You haven't posted any jobs yet.</p>
@@ -78,7 +75,6 @@ function renderJobs(jobs, apps) {
   };
 
   container.innerHTML = [...jobs].reverse().map(job => {
-    // Count applications for this job
     const specificApps = apps.filter(a => a.job?._id === job._id).length;
     const badge = statusColors[job.status?.toLowerCase()] || "bg-slate-50 text-slate-600 border-slate-200";
 
@@ -113,18 +109,15 @@ function renderJobs(jobs, apps) {
   if (window.lucide) lucide.createIcons();
 }
 
-/*********************************
- * DELETE JOB
- *********************************/
+// ---------------- DELETE JOB ----------------
 window.deleteJob = async function(jobId) {
   if(!confirm("Are you sure you want to delete this job?")) return;
 
   try {
-    const res = await fetch(`${API_URL}/${jobId}`, {
+    const res = await fetch(`${JOBS_API}/${jobId}`, {
       method: "DELETE",
       headers: { 
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
+        "Authorization": `Bearer ${token}`
       }
     });
 
@@ -135,13 +128,10 @@ window.deleteJob = async function(jobId) {
     console.error("Delete job error:", err);
     alert("Failed to delete job. Try again.");
   }
-};
+}
 
-/*********************************
- * VIEW APPLICANTS
- *********************************/
+// ---------------- VIEW APPLICANTS ----------------
 window.viewApplicants = function(jobId) {
-    console.log("Storing jobId:", jobId)
   localStorage.setItem("filter_job_id", jobId);
   location.href = "manage-applicant.html";
-};
+}

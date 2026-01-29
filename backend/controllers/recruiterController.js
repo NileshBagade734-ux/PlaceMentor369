@@ -3,30 +3,15 @@ import Application from "../models/application.js";
 import mongoose from "mongoose"; 
 
 /* ======================================================
-   CREATE JOB (Recruiter posts a job)
-   POST /api/recruiter/jobs
+   CREATE JOB
 ====================================================== */
 export const createJob = async (req, res) => {
   try {
     const recruiterId = req.user._id;
-
-    const {
-      title,
-      company,
-      description,
-      cgpa,
-      branch,
-      skillsRequired,
-      deadline,
-      location,
-      salary
-    } = req.body;
+    const { title, company, description, cgpa, branch, skillsRequired, deadline } = req.body;
 
     if (!title || !company || !description || !deadline) {
-      return res.status(400).json({
-        message: "Missing required fields",
-        missing: { title, company, description, deadline }
-      });
+      return res.status(400).json({ message: "Missing required fields" });
     }
 
     const job = await Job.create({
@@ -38,112 +23,115 @@ export const createJob = async (req, res) => {
       skillsRequired,
       deadline,
       recruiter: recruiterId,
-      status: "approved" // auto-approve for now
+      status: "approved"
     });
 
-    res.status(201).json({
-      success: true,
-      message: "Job posted successfully",
-      job
-    });
+    res.status(201).json({ success: true, job });
   } catch (err) {
-    console.error("Create Job Error:", err);
-    res.status(500).json({ message: "Server error while creating job" });
+    console.error(err);
+    res.status(500).json({ message: "Create job failed" });
   }
 };
 
 /* ======================================================
    GET RECRUITER JOBS
-   GET /api/recruiter/jobs
 ====================================================== */
 export const getRecruiterJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ recruiter: req.user.id })
-      .populate("applicants"); // ✅ applicants ko populate karo
+    const jobs = await Job.find({ recruiter: req.user.id });
     res.json(jobs);
   } catch (err) {
-    console.error("FETCH JOBS ERROR:", err);
     res.status(500).json({ message: "Failed to fetch jobs" });
   }
 };
 
 /* ======================================================
-   GET JOB APPLICANTS
-   GET /api/recruiter/jobs/:id/applicants
+   GET ALL APPLICATIONS (ALL JOBS)
 ====================================================== */
-export const getJobApplicants = async (req, res) => {
+export const getAllRecruiterApplications = async (req, res) => {
   try {
-    const { id: jobId } = req.params;
+    const jobs = await Job.find({ recruiter: req.user.id }).select("_id");
+    const jobIds = jobs.map(j => j._id);
 
-    if (!mongoose.Types.ObjectId.isValid(jobId)) {
-      return res.status(400).json({ message: "Invalid Job ID" });
-    }
-
-    const applications = await Application.find({ job: jobId })
-      .populate({
-        path: "student",
-        select: "name roll branch cgpa resume"
-      })
-      .populate({
-        path: "job",
-        select: "title"
-      });
-
-    console.log("Applications fetched:", applications);
+    const applications = await Application.find({ job: { $in: jobIds } })
+      .populate("student", "name branch cgpa resume")
+      .populate("job", "title");
 
     res.status(200).json(applications);
   } catch (err) {
-    console.error("Get applicants error:", err);
-    res.status(500).json({ message: "Failed to fetch applicants" });
+    res.status(500).json({ message: "Failed to fetch applications" });
   }
 };
 
 /* ======================================================
    UPDATE APPLICATION STATUS
-   PATCH /api/recruiter/applications/status
 ====================================================== */
 export const updateApplicantStatus = async (req, res) => {
   try {
-    const { applicationId, status } = req.body;
+    let { applicationId, status } = req.body;
+    status = status.toLowerCase();
 
-    if (!applicationId || !status) {
-      return res.status(400).json({ message: "Application ID and status required" });
-    }
-
-    // Validate ObjectId
     if (!mongoose.Types.ObjectId.isValid(applicationId)) {
       return res.status(400).json({ message: "Invalid application ID" });
     }
 
-   if (!["shortlisted", "rejected"].includes(status)) {
-  return res.status(400).json({ message: "Invalid status" });
-}
+    if (!["shortlisted", "rejected"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
 
     const application = await Application.findById(applicationId);
-    if (!application) return res.status(404).json({ message: "Application not found" });
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
 
     application.status = status;
     await application.save();
 
-    // ✅ Populate student & job for frontend
-    const populatedApp = await application.populate({
-      path: "student",
-      select: "name email branch cgpa resume"
-    }).populate({
-      path: "job",
-      select: "title"
-    });
+    await application.populate([
+      { path: "student", select: "name branch cgpa resume" },
+      { path: "job", select: "title" }
+    ]);
 
-    res.status(200).json({ success: true, message: `Application ${status}`, application: populatedApp });
+    res.status(200).json({ success: true, application });
   } catch (err) {
-    console.error("Update status error:", err);
+    console.error(err);
     res.status(500).json({ message: "Failed to update status" });
   }
 };
 
 /* ======================================================
+   🔥 DASHBOARD STATS (THIS FIXES YOUR ISSUE)
+   GET /api/recruiter/dashboard
+====================================================== */
+export const getRecruiterDashboardStats = async (req, res) => {
+  try {
+    const recruiterId = req.user.id;
+
+    const jobs = await Job.find({ recruiter: recruiterId }).select("_id");
+    const jobIds = jobs.map(j => j._id);
+
+    const totalApplicants = await Application.countDocuments({
+      job: { $in: jobIds }
+    });
+
+    const shortlisted = await Application.countDocuments({
+      job: { $in: jobIds },
+      status: "shortlisted"
+    });
+
+    res.status(200).json({
+      jobsPosted: jobIds.length,
+      totalApplicants,
+      shortlisted
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Dashboard stats failed" });
+  }
+};
+
+/* ======================================================
    DELETE JOB
-   DELETE /api/recruiter/jobs/:id
 ====================================================== */
 export const deleteJob = async (req, res) => {
   try {
@@ -153,9 +141,8 @@ export const deleteJob = async (req, res) => {
     await Application.deleteMany({ job: job._id });
     await job.deleteOne();
 
-    res.status(200).json({ message: "Job deleted successfully" });
+    res.json({ success: true });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to delete job" });
+    res.status(500).json({ message: "Delete job failed" });
   }
 };

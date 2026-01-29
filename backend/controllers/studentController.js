@@ -95,9 +95,7 @@ export const applyJob = async (req, res) => {
     console.log("🧰 application created:", application);
 
     // ⚡ UPDATE JOB DOCUMENT: push application ID
-    job.applicants.push(application._id);
-    await job.save();
-    console.log("🧰 Job applicants updated:", job.applicants);
+   
 
     res.status(201).json({
       success: true,
