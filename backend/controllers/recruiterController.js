@@ -1,5 +1,6 @@
 import Job from "../models/Job.js";
 import Application from "../models/application.js";
+import mongoose from "mongoose"; 
 
 /* ======================================================
    CREATE JOB (Recruiter posts a job)
@@ -57,11 +58,12 @@ export const createJob = async (req, res) => {
 ====================================================== */
 export const getRecruiterJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ recruiter: req.user._id }).sort({ createdAt: -1 });
-    res.status(200).json(jobs);
+    const jobs = await Job.find({ recruiter: req.user.id })
+      .populate("applicants"); // ✅ applicants ko populate karo
+    res.json(jobs);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to fetch recruiter jobs" });
+    console.error("FETCH JOBS ERROR:", err);
+    res.status(500).json({ message: "Failed to fetch jobs" });
   }
 };
 
@@ -71,19 +73,23 @@ export const getRecruiterJobs = async (req, res) => {
 ====================================================== */
 export const getJobApplicants = async (req, res) => {
   try {
-    const jobId = req.params.id; // ✅ get from URL
+    const { id: jobId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(jobId)) {
+      return res.status(400).json({ message: "Invalid Job ID" });
+    }
 
     const applications = await Application.find({ job: jobId })
       .populate({
         path: "student",
-        select: "name email branch cgpa resume"
+        select: "name roll branch cgpa resume"
       })
       .populate({
         path: "job",
         select: "title"
       });
 
-    console.log("Applications fetched:", JSON.stringify(applications, null, 2)); // check
+    console.log("Applications fetched:", applications);
 
     res.status(200).json(applications);
   } catch (err) {

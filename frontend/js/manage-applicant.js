@@ -139,8 +139,9 @@ async function updateStatus(applicationId, status) {
       throw new Error(errData.message || "Status update failed");
     }
 
-    // Refresh table
-    loadApplicants();
+    // ✅ Refresh applicants table after status change
+    await loadApplicants(); // yeh function phir se backend se applicants fetch karega
+
   } catch (err) {
     console.error("Update status error:", err);
     alert("❌ Failed to update application status: " + err.message);

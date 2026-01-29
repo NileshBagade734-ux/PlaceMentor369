@@ -1,3 +1,4 @@
+// backend/models/application.js
 import mongoose from "mongoose";
 
 const applicationSchema = new mongoose.Schema(
@@ -5,35 +6,36 @@ const applicationSchema = new mongoose.Schema(
     student: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Student",
-      required: true
+      required: true,
     },
     job: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Job",
-      required: true
+      required: true,
     },
     status: {
       type: String,
-      enum: ["pending", "shortlisted", "rejected"], // only these values allowed
-      default: "pending"
+      enum: ["applied", "shortlisted", "rejected", "verified"],
+      default: "applied",
     },
     appliedAt: {
       type: Date,
-      default: Date.now
-    }
+      default: Date.now,
+    },
   },
   { timestamps: true }
 );
 
-// Prevent duplicate applications
-applicationSchema.index({ student: 1, job: 1 }, { unique: true });
-
-// 🔹 Pre-save hook: handle old "verified" status for backwards compatibility
-applicationSchema.pre('save', function(next) {
+// 🔹 Pre-save hook: automatically convert old "verified" status → "shortlisted"
+applicationSchema.pre("save", function () {
   if (this.status === "verified") {
-    this.status = "shortlisted"; // auto convert old verified → shortlisted
+    this.status = "shortlisted";
   }
-  next();
 });
 
-export default mongoose.models.Application || mongoose.model("Application", applicationSchema);
+// 🔹 Prevent duplicate application per student-job pair
+applicationSchema.index({ student: 1, job: 1 }, { unique: true });
+
+// 🔹 Export the model
+const Application = mongoose.model("Application", applicationSchema);
+export default Application;

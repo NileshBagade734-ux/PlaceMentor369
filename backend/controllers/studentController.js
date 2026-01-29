@@ -1,22 +1,28 @@
+import mongoose from "mongoose";
 import Student from "../models/Student.js";
 import Job from "../models/Job.js";
-import Application from "../models/application.js";
+import Application from "../models/application.js"; // make sure file name matches exactly
 
-/* GET STUDENT PROFILE */
+/* ============================
+   GET STUDENT PROFILE
+============================ */
 export const getProfile = async (req, res) => {
   try {
     const student = await Student.findOne({ user: req.user.id });
-    res.json(student || {});
+    res.status(200).json(student || {});
   } catch (err) {
     console.error("GET PROFILE ERROR:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
 
-/* SAVE PROFILE */
+/* ============================
+   SAVE/UPDATE STUDENT PROFILE
+============================ */
 export const saveProfile = async (req, res) => {
   try {
     const { name, roll, branch, cgpa, college, skills, resume } = req.body;
+
     let student = await Student.findOne({ user: req.user.id });
     if (!student) student = new Student({ user: req.user.id });
 
@@ -36,77 +42,98 @@ export const saveProfile = async (req, res) => {
   }
 };
 
-/* GET JOBS */
+/* ============================
+   GET ALL APPROVED JOBS
+============================ */
 export const getJobs = async (req, res) => {
   try {
     const jobs = await Job.find({ status: "approved" });
-    res.json(jobs);
+    res.status(200).json(jobs);
   } catch (err) {
-    console.error(err);
+    console.error("GET JOBS ERROR:", err);
     res.status(500).json({ message: "Failed to fetch jobs" });
   }
 };
 
-/* APPLY JOB */
+/* ============================
+   APPLY FOR JOB
+============================ */
 export const applyJob = async (req, res) => {
   try {
+    console.log("🆔 req.user:", req.user);
+    console.log("🆔 req.params.jobId:", req.params.jobId);
+
     const { jobId } = req.params;
 
+    if (!mongoose.Types.ObjectId.isValid(jobId)) {
+      return res.status(400).json({ message: "Invalid Job ID" });
+    }
+
     const job = await Job.findById(jobId);
+    console.log("🧰 job found:", job);
     if (!job) return res.status(404).json({ message: "Job not found" });
 
-    // ✅ Find student profile
     const studentProfile = await Student.findOne({ user: req.user.id });
-    if (!studentProfile)
+    console.log("🧰 studentProfile found:", studentProfile);
+    if (!studentProfile) {
       return res.status(400).json({ message: "Complete your profile first" });
+    }
 
-    // 🔒 Prevent duplicate
+    // ✅ Check if already applied
     const exists = await Application.findOne({
       student: studentProfile._id,
       job: jobId
     });
-    if (exists)
-      return res.status(400).json({ message: "Already applied" });
+    console.log("🧰 existing application:", exists);
+    if (exists) return res.status(400).json({ message: "Already applied" });
 
-    // ✅ Correct application reference
+    // ✅ Create new application
     const application = await Application.create({
       student: studentProfile._id,
       job: jobId
     });
+    console.log("🧰 application created:", application);
 
-    // Push to job applicants array
+    // ⚡ UPDATE JOB DOCUMENT: push application ID
     job.applicants.push(application._id);
     await job.save();
+    console.log("🧰 Job applicants updated:", job.applicants);
 
-    res.status(201).json({ message: "Application sent successfully", application });
+    res.status(201).json({
+      success: true,
+      message: "Application sent successfully",
+      application
+    });
+
   } catch (err) {
-    console.error("APPLY JOB ERROR:", err);
+    console.error("🔥 APPLY JOB ERROR:", err);
     res.status(500).json({ message: "Failed to apply" });
   }
 };
 
-/* GET STUDENT APPLICATIONS */
+/* ============================
+   GET STUDENT APPLICATIONS
+============================ */
 export const getApplications = async (req, res) => {
   try {
     const studentProfile = await Student.findOne({ user: req.user.id });
+    if (!studentProfile) return res.status(400).json({ message: "Profile not found" });
 
-    if (!studentProfile)
-      return res.status(400).json({ message: "Profile not found" });
-
-    const apps = await Application.find({ student: studentProfile._id })
-      .populate({
-        path: "job",
-        select: "title company"
-      });
+    const apps = await Application.find({ student: studentProfile._id }).populate({
+      path: "job",
+      select: "title company"
+    });
 
     res.status(200).json(apps);
   } catch (err) {
-    console.error(err);
+    console.error("GET APPLICATIONS ERROR:", err);
     res.status(500).json({ message: "Failed to fetch applications" });
   }
 };
 
-/* GET JOB APPLICATIONS FOR RECRUITER */
+/* ============================
+   GET JOB APPLICATIONS FOR RECRUITER
+============================ */
 export const getJobApplications = async (req, res) => {
   try {
     const { jobId } = req.params;
@@ -116,9 +143,9 @@ export const getJobApplications = async (req, res) => {
       select: "name email branch cgpa resume"
     });
 
-    res.json(applications);
+    res.status(200).json(applications);
   } catch (err) {
-    console.error(err);
+    console.error("GET JOB APPLICATIONS ERROR:", err);
     res.status(500).json({ message: "Failed to fetch applications" });
   }
 };
