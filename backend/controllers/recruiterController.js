@@ -7,7 +7,13 @@ import mongoose from "mongoose";
 ====================================================== */
 export const createJob = async (req, res) => {
   try {
-    const recruiterId = req.user._id;
+    console.log("REQ.USER:", req.user);
+    console.log("REQ.BODY:", req.body);
+
+    const recruiterId = req.user.id; // ✅ fixed here
+
+    if (!recruiterId) return res.status(400).json({ message: "Recruiter ID missing" });
+
     const { title, company, description, cgpa, branch, skillsRequired, deadline } = req.body;
 
     if (!title || !company || !description || !deadline) {
@@ -21,17 +27,19 @@ export const createJob = async (req, res) => {
       cgpa,
       branch,
       skillsRequired,
-      deadline,
+      deadline: new Date(deadline),
       recruiter: recruiterId,
       status: "approved"
     });
 
     res.status(201).json({ success: true, job });
   } catch (err) {
-    console.error(err);
+    console.error("CREATE JOB ERROR:", err);
     res.status(500).json({ message: "Create job failed" });
   }
 };
+
+
 
 /* ======================================================
    GET RECRUITER JOBS
