@@ -9,6 +9,37 @@
     cursor: pointer;
     transition: 0.2s;
 }
+/* ===== Sidebar Items ===== */
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.sidebar-item:hover {
+    background-color: #f8fafc;
+    color: #4f46e5;
+    transform: translateX(4px);
+}
+
+.sidebar-item.active {
+    background-color: #eef2ff;
+    color: #4f46e5;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .sidebar-item span {
+        display: none;
+    }
+}
 
 .nav-item:hover { background: #f1f5f9; color: #4f46e5; }
 .nav-item.active { background: #eef2ff; color: #4f46e5; font-weight: 700; }

@@ -12,16 +12,31 @@ body {
     font-family: 'Inter', -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
 }
-
-/* Sidebar Links */
-.sidebar-link {
-    transition: all 0.2s ease;
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
     font-weight: 500;
+    color: #64748b; /* slate-500 */
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
 }
 
-.sidebar-link i {
-    font-size: 1.1rem;
+.sidebar-item:hover {
+    background-color: #f8fafc;
+    color: #4f46e5;
+    transform: translateX(4px);
 }
+
+.sidebar-item.active {
+    background-color: #eef2ff; /* indigo-50 */
+    color: #4f46e5; /* indigo-600 */
+    font-weight: 600;
+}
+
 
 /* Form Styling */
 input, select {

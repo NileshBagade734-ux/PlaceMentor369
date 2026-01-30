@@ -16,25 +16,35 @@
 <body class="bg-slate-50 overflow-hidden">
 
 <div class="flex h-screen">
-  <aside class="w-64 bg-white border-r border-slate-200 p-6 hidden lg:flex flex-col">
+<aside class="w-64 bg-white border-r border-slate-200 p-6 hidden lg:flex flex-col">
     <h1 class="text-xl font-bold text-indigo-600 mb-10 flex items-center gap-2">
-      <i data-lucide="zap"></i> Placementor
+        <i data-lucide="zap"></i>
+        <span>Placementor</span>
     </h1>
-        <nav class="flex-1 px-4 space-y-1">
-            <a href="../student/student-dashboard.html" class="sidebar-item active">
-                <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
-            </a>
-            <a href="../student/student-profile.html" class="sidebar-item">
-                <i data-lucide="user" class="w-4 h-4"></i> Profile
-            </a>
-            <a href="../student/student-joblist.html" class="sidebar-item">
-                <i data-lucide="briefcase" class="w-4 h-4"></i> Jobs
-            </a>
-            <a href="../student/student-application.html" class="sidebar-item">
-                <i data-lucide="file-text" class="w-4 h-4"></i> My Applications
-            </a>
-        </nav>
-  </aside>
+
+    <nav class="flex-1 px-4 space-y-1">
+        <a href="../student/student-dashboard.html" class="sidebar-item">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="../student/student-profile.html" class="sidebar-item">
+            <i data-lucide="user" class="w-4 h-4"></i>
+            <span>Profile</span>
+        </a>
+
+        <a href="../student/student-joblist.html" class="sidebar-item active">
+            <i data-lucide="briefcase" class="w-4 h-4"></i>
+            <span>Jobs</span>
+        </a>
+
+        <a href="../student/student-application.html" class="sidebar-item">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+            <span>My Applications</span>
+        </a>
+    </nav>
+</aside>
+
 
   <main class="flex-1 flex overflow-hidden">
     <section class="w-full md:w-2/5 border-r border-slate-200 overflow-y-auto p-6">
@@ -57,5 +67,9 @@
 </div>
 
 <script src="../js/student-joblist.js"></script>
+<script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
+
+<!-- Botpress Chatbot Scripts -->
 </body>
 </html>

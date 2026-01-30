@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>PlacementorAI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
     /* BASE */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Inter, sans-serif; }
@@ -27,8 +29,20 @@
     .hero p { font-size: 18px; color: #6b7280; line-height: 1.5; }
 
     .features { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; margin: 30px 0; }
-    .feature { display: flex; gap: 12px; background: #fff; padding: 14px; border-radius: 12px; align-items: center; }
-    .feature h4 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.feature {
+  display: flex;
+  gap: 12px;
+  background: #fff;
+  padding: 14px;
+  border-radius: 12px;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}    .feature h4 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
     .feature p { font-size: 14px; color: #6b7280; }
 
     .cta { display: flex; gap: 14px; margin-top: 20px; }
@@ -36,10 +50,21 @@
 
     /* HERO IMAGE */
     .hero-right { position: relative; }
-    .hero-right img { width: 100%; height: auto; display: block; border-radius: 20px; }
+.hero-right img {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: cover;
+  display: block;
+  border-radius: 20px;
+}
     .stats-card { position: absolute; bottom: -32px; left: -32px; background: #ffffff; padding: 16px 20px; border-radius: 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 10; }
     .stats-card strong { font-size: 24px; font-weight: 700; color: #111827; }
     .stats-card span { display: block; font-size: 14px; color: #6b7280; }
+    .stats-card div {
+  text-align: center;
+}
+
 
     /* FOOTER */
     footer { background: #0f172a; color: #cbd5f5; padding: 50px 0; }
@@ -62,6 +87,15 @@
       .cta { flex-direction: column; }
       .stats-card { left: 50%; transform: translateX(-50%); bottom: -24px; }
     }
+     .btn i {
+  margin-left: 6px;
+  font-size: 14px;
+}
+footer h3,
+footer h4 {
+  color: #ffffff;
+}
+
   </style>
 </head>
 <body>
@@ -69,14 +103,16 @@
 <!-- HEADER -->
 <header class="header">
   <div class="container nav">
-    <div class="logo">🧠 <span>PlacementorAI</span></div>
+    <div class="logo"><i class="fa-solid fa-arrow-up-right-dots"></i> <span>PlacementorAI</span></div>
     <nav>
       <a href="#">Home</a>
       <a href="contact.html">Contact</a>
       <a href="register.html">Sign Up</a>
       <a href="login.html" class="login">Login</a>
-      <button class="btn primary">Get Started</button>
-    </nav>
+<a href="register.html" class="btn primary">
+  Get Started
+  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+</a>    </nav>
   </div>
 </header>
 
@@ -87,20 +123,18 @@
     <h1>Manage Jobs, Applications,<br/>and Placements Effortlessly</h1>
     <p>Post jobs, apply to opportunities, and track the hiring process in one centralized platform. Students build profiles, recruiters manage applicants, admins monitor stats.</p>
     <div class="features">
-      <div class="feature">🎯<div><h4>Job Listings</h4><p>Students can explore and apply to jobs</p></div></div>
-      <div class="feature">📄<div><h4>Profile Management</h4><p>Students manage academic & skill profiles</p></div></div>
-      <div class="feature">🧑‍💼<div><h4>Applicant Tracking</h4><p>Recruiters track and shortlist candidates easily</p></div></div>
-      <div class="feature">✅<div><h4>Status Updates</h4><p>Track application progress in real-time</p></div></div>
+      <div class="feature">     <i class="fa-solid fa-clipboard-list"></i>
+
+<div><h4>Job Listings</h4><p>Students can explore and apply to jobs</p></div></div>
+      <div class="feature"><i class="fa-regular fa-id-card"></i><div><h4>Profile Management</h4><p>Students manage academic & skill profiles</p></div></div>
+      <div class="feature"><i class="fa-solid fa-user-check"></i><div><h4>Applicant Tracking</h4><p>Recruiters track and shortlist candidates easily</p></div></div>
+      <div class="feature"><i class="fa-solid fa-circle-check"></i></i><div><h4>Status Updates</h4><p>Track application progress in real-time</p></div></div>
     </div>
-    <div class="cta">
-      <button class="btn primary" onclick="openModal('student')">Login as Student</button>
-      <button class="btn secondary" onclick="openModal('recruiter')">Login as Recruiter</button>
-    </div>
-    <small>Demo credentials: any email & password</small>
+    
   </div>
   <div class="hero-right">
     <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b" alt="students"/>
-    <div class="stats-card">🏆<div><strong>3,000+</strong><span>Students Placed</span></div></div>
+    <div class="stats-card"><div><strong>3,000+</strong><span>Students Placed</span></div></div>
   </div>
 </section>
 
