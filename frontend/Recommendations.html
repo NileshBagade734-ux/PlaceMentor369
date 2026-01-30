@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Recommendations – PlacementorAI</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom right, #eef2ff, #ffffff);
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 50px 20px;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+
+    /* Course Selection */
+    .course-select {
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .course-select label {
+      font-weight: 600;
+    }
+
+    .course-select select {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font-size: 14px;
+      outline: none;
+    }
+
+    /* Video Sections */
+    .section-title {
+      font-size: 22px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .videos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+      margin-bottom: 50px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 200px;
+      border-radius: 14px;
+      border: none;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+    }
+
+    /* Back Button */
+    .back-btn {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 10px 18px;
+      background: #4f46e5;
+      color: #ffffff;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <h1>AI-Recommended Learning Path</h1>
+    <p class="subtitle">
+      Personalized video recommendations based on your selected course and placement goals
+    </p>
+
+    <!-- Course Selector -->
+    <div class="course-select">
+      <label for="course">Choose Course:</label>
+      <select id="course" onchange="loadVideos()">
+        <option value="powerbi">Power BI</option>
+        <option value="dsa">Data Structures & Algorithms</option>
+        <option value="datascience">Data Science</option>
+        <option value="webdev">Web Development</option>
+      </select>
+    </div>
+
+    <!-- Videos Load Here -->
+    <div id="video-section"></div>
+
+    <a href="index.html" class="back-btn">
+      ← Back to Dashboard
+    </a>
+
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    function loadVideos() {
+      const course = document.getElementById("course").value;
+      const section = document.getElementById("video-section");
+
+      let content = "";
+
+      if (course === "powerbi") {
+        content = `
+          <h2 class="section-title"> Power BI Learning Path</h2>
+          <div class="videos">
+            <iframe src="https://www.youtube.com/embed/TmhQCQr_DCA" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/AGrl-H87pRU" allowfullscreen></iframe>
+          </div>
+        `;
+      }
+
+      if (course === "dsa") {
+        content = `
+          <h2 class="section-title"> DSA Learning Path</h2>
+          <div class="videos">
+            <iframe src="https://www.youtube.com/embed/8hly31xKli0" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/RBSGKlAvoiM" allowfullscreen></iframe>
+          </div>
+        `;
+      }
+
+      if (course === "datascience") {
+        content = `
+          <h2 class="section-title"> Data Science Learning Path</h2>
+          <div class="videos">
+            <iframe src="https://www.youtube.com/embed/X3paOmcrTjQ" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/ua-CiDNNj30" allowfullscreen></iframe>
+          </div>
+        `;
+      }
+
+      if (course === "webdev") {
+        content = `
+          <h2 class="section-title"> Web Development Learning Path</h2>
+          <div class="videos">
+            <iframe src="https://www.youtube.com/embed/HGTJBPNC-Gw" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/Q33KBiDriJY" allowfullscreen></iframe>
+          </div>
+        `;
+      }
+
+      section.innerHTML = content;
+    }
+
+    // Load default videos
+    loadVideos();
+  </script>
+
+</body>
+</html>

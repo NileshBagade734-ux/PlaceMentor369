@@ -5,27 +5,31 @@
   <title>Recruiter | Manage Applicants</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/manage-applicant.css">
+
 </head>
 <body class="bg-slate-50">
   <div class="flex min-h-screen">
     <aside class="w-64 bg-white border-r border-slate-200 p-6 hidden md:block">
       <h1 class="text-xl font-bold text-indigo-600 mb-10">PlacementorAI</h1>
-     <nav class="space-y-2">
-  <!-- Dashboard Link -->
-  <a href="recruiter-dashboard.html" class="nav-link flex items-center gap-3 p-3 text-slate-600 hover:bg-indigo-50 rounded-xl cursor-pointer">
+     <nav class="menu space-y-2">
+
+  <a href="recruiter-dashboard.html">
     <i data-lucide="layout-dashboard"></i> Dashboard
   </a>
 
-  <!-- Post Job Link (for recruiter only) -->
-  <a href="postjob.html" class="nav-link flex items-center gap-3 p-3 text-slate-600 hover:bg-indigo-50 rounded-xl cursor-pointer">
+  <a href="postjob.html">
     <i data-lucide="plus-circle"></i> Post Job
   </a>
+<a href="manage-applicant.html" class="nav-link active">
+  <i data-lucide="users"></i>
+  <span>Manage Applicants</span>
+</a>
 
-  <!-- Manage Applicants Link -->
-  <a href="manage-applicant.html" class="nav-link flex items-center gap-3 p-3 text-slate-600 hover:bg-indigo-50 rounded-xl cursor-pointer">
-    <i data-lucide="users"></i> Manage Applicants
-  </a>
 </nav>
+
+
 
     </aside>
 
@@ -54,9 +58,9 @@
     </main>
   </div>
   <script src="../js/manage-applicant.js"></script>
-  <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
-<script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
+  <script>
+  lucide.createIcons();
+</script>
 
-<!-- Botpress Chatbot Scripts -->
 </body>
 </html>

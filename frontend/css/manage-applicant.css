@@ -14,8 +14,41 @@ body { background-color: var(--bg-light); color: var(--text-main); display: flex
 /* Dashboard Sidebar Structure */
 .sidebar { width: 260px; background: white; border-right: 1px solid var(--border); padding: 20px; position: fixed; height: 100vh; }
 .logo { font-size: 1.5rem; font-weight: bold; color: var(--primary); margin-bottom: 40px; }
-.menu a { display: flex; align-items: center; padding: 12px; text-decoration: none; color: var(--text-muted); border-radius: 8px; margin-bottom: 8px; }
+.menu a {
+  display: flex;
+  align-items: flex-start;      /* 🔑 IMPORTANT */
+  gap: 12px;
+padding: 14px 32px 14px 16px;
+  text-decoration: none;
+  color: var(--text-muted);
+  border-radius: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+  
+  width: 100%;
+
+
+}
+
 .menu a.active { background: #eef2ff; color: var(--primary); font-weight: 600; }
+/* Sidebar icon default */
+/* Sidebar icon default */
+/* Lucide icons */
+.menu a svg {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;              /* 🔑 aligns with first text line */
+  stroke: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.menu a.active svg {
+  stroke: var(--primary);
+}
+
+
+
+
 
 /* Main Content Adjustments */
 .main-content { margin-left: 260px; width: calc(100% - 260px); }
@@ -32,3 +65,6 @@ body { background-color: var(--bg-light); color: var(--text-main); display: flex
 .btn-red { border-color: #ef4444; color: #dc2626; background: white; }
 .btn-green:hover { background: #16a34a; color: white; }
 .btn-red:hover { background: #dc2626; color: white; }
+.menu a span {
+  white-space: nowrap;      /* ❗ KEY FIX */
+}

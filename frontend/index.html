@@ -49,7 +49,11 @@
     .cta button { flex: 1; text-align: center; }
 
     /* HERO IMAGE */
-    .hero-right { position: relative; }
+.hero-right {
+  position: relative;
+  top: -8px;
+}
+
 .hero-right img {
   width: 100%;
   height: auto;
@@ -58,7 +62,30 @@
   display: block;
   border-radius: 20px;
 }
-    .stats-card { position: absolute; bottom: -32px; left: -32px; background: #ffffff; padding: 16px 20px; border-radius: 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 10; }
+
+
+
+/* ADD THIS RIGHT HERE 👇 */
+.hero-img-wrapper {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.hero-img-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom right,
+    rgba(79,70,229,0.08),
+    rgba(255,255,255,0.02)
+  );
+}
+
+
+
+    .stats-card { position: absolute; bottom: -32px; left: -32px; background: #ffffff; padding: 16px 20px; border-radius: 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 12px 24px rgba(0,0,0,0.12); z-index: 10; }
     .stats-card strong { font-size: 24px; font-weight: 700; color: #111827; }
     .stats-card span { display: block; font-size: 14px; color: #6b7280; }
     .stats-card div {
@@ -95,6 +122,52 @@ footer h3,
 footer h4 {
   color: #ffffff;
 }
+.feature-wide {
+  grid-column: span 2;        /* covers both columns */
+  background: #ffffff;
+  padding: 18px 22px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-wide:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+}
+.feature-wide:hover .fa-arrow-right {
+  transform: translateX(4px);
+  transition: transform 0.2s ease;
+}
+
+
+.feature-wide--big {
+  width: calc(100% + 300px);
+  margin-left: -1px;
+}
+
+/* Make last wide box text same as normal feature boxes */
+.feature-wide h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.feature-wide p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.ai-icon {
+  color: #4f46e5;               /* same as primary button */
+  background: #eef2ff;          /* soft indigo bg */
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 16px;
+}
 
   </style>
 </head>
@@ -128,14 +201,36 @@ footer h4 {
 <div><h4>Job Listings</h4><p>Students can explore and apply to jobs</p></div></div>
       <div class="feature"><i class="fa-regular fa-id-card"></i><div><h4>Profile Management</h4><p>Students manage academic & skill profiles</p></div></div>
       <div class="feature"><i class="fa-solid fa-user-check"></i><div><h4>Applicant Tracking</h4><p>Recruiters track and shortlist candidates easily</p></div></div>
-      <div class="feature"><i class="fa-solid fa-circle-check"></i></i><div><h4>Status Updates</h4><p>Track application progress in real-time</p></div></div>
+      <div class="feature"><i class="fa-solid fa-circle-check"></i><div><h4>Status Updates</h4><p>Track application progress in real-time</p></div></div>
+<a href="recommendations.html" style="text-decoration:none; color:inherit;">
+  <div class="feature-wide feature-wide--big">
+<i class="fa-solid fa-brain ai-icon"></i>
+    <div>
+      <h4>AI-Recommended Learning Path</h4>
+      <p>
+        Get curated videos and resources based on your course, skills, and career goals
+      </p>
+      
     </div>
+    <i class="fa-solid fa-arrow-right" style="margin-left:auto; color:#000000;"></i>
+  </div>
+</a>
+ </div>
     
   </div>
   <div class="hero-right">
+  <div class="hero-img-wrapper">
     <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b" alt="students"/>
-    <div class="stats-card"><div><strong>3,000+</strong><span>Students Placed</span></div></div>
   </div>
+  <div class="stats-card">
+    <div>
+      <strong>3,000+</strong>
+      <span>Students Placed</span>
+    </div>
+  </div>
+</div>
+
+
 </section>
 
 <!-- FOOTER -->
