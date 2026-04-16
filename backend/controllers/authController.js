@@ -1,3 +1,4 @@
+import { validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
@@ -5,6 +6,15 @@ import generateToken from "../utils/generateToken.js";
 // REGISTER
 export const register = async (req, res) => {
   try {
+    
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        errors: errors.array(),
+      });
+    }
+
     const { name, email, password, role } = req.body;
 
     const exists = await User.findOne({ email });
@@ -18,17 +28,18 @@ export const register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role
+      role,
     });
 
     res.status(201).json({
+      success: true,
       token: generateToken(user._id),
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
-      }
+        role: user.role,
+      },
     });
 
   } catch (err) {
@@ -39,6 +50,15 @@ export const register = async (req, res) => {
 // LOGIN
 export const login = async (req, res) => {
   try {
+    
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        errors: errors.array(),
+      });
+    }
+
     const { email, password, role } = req.body;
 
     const user = await User.findOne({ email, role });
@@ -52,13 +72,14 @@ export const login = async (req, res) => {
     }
 
     res.json({
+      success: true,
       token: generateToken(user._id),
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
-      }
+        role: user.role,
+      },
     });
 
   } catch (err) {
