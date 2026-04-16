@@ -12,13 +12,12 @@ img-src 'self' https://img.icons8.com data:;
 connect-src 'self' http://localhost:5000 https://unpkg.com;
 ">
 
-
   <!-- Tailwind, icons, GSAP & fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../frontend/css/login.css">
+  <link rel="stylesheet" href="../css/login.css">
 </head>
 
 <body class="min-h-screen bg-slate-50 dark:bg-gray-900 flex flex-col transition-colors duration-300">
@@ -104,18 +103,24 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
   </div>
 </main>
 
+<!-- ✅ FIXED SCRIPTS -->
 
+<script src="../js/login.js"></script>
 
-    <script src="../frontend//js/login.js"></script>
-  document.addEventListener("DOMContentLoaded", () => {
-    if(window.lucide) lucide.createIcons();
-    gsap.to("#login-card", { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" });
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.lucide) lucide.createIcons();
+  gsap.to("#login-card", {
+    opacity: 1,
+    y: 0,
+    duration: 0.6,
+    ease: "power3.out"
   });
+});
 </script>
+
 <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
-
-<!-- Botpress Chatbot Scripts -->
 
 </body>
 </html>
