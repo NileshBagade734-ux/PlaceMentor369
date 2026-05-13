@@ -259,3 +259,49 @@ footer a {
     bottom: -24px;
   }
 }
+/* DARK MODE */
+
+body.dark-mode {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+body.dark-mode .header,
+body.dark-mode .hero,
+body.dark-mode footer {
+  background: #0f172a !important;
+}
+
+body.dark-mode nav a,
+body.dark-mode .logo,
+body.dark-mode h1,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode p,
+body.dark-mode span {
+  color: #f8fafc !important;
+}
+
+body.dark-mode .feature,
+body.dark-mode .feature-wide,
+body.dark-mode .stats-card,
+body.dark-mode .modal-box {
+  background: #1e293b !important;
+  color: white !important;
+}
+
+body.dark-mode .secondary {
+  background: #334155 !important;
+  color: white !important;
+}
+
+body.dark-mode .badge {
+  background: #312e81 !important;
+  color: #c7d2fe !important;
+}
+
+body.dark-mode .hero p,
+body.dark-mode .feature p,
+body.dark-mode .feature-wide p {
+  color: #cbd5e1 !important;
+}

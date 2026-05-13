@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy"
-content="
+  <meta http-equiv="Content-Security-Policy" content="
 default-src 'self';
 script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com;
+
 style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
 font-src 'self' https://fonts.gstatic.com;
 img-src 'self' https://img.icons8.com data:;
@@ -16,117 +17,180 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
 
   <!-- Tailwind & icons & fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    }
+  </script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../frontend/css/register.css">
+  <link rel="stylesheet" href="css/style.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body,
+    header,
+    section,
+    footer,
+    button,
+    input,
+    textarea,
+    select,
+    a,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    span,
+    label,
+    .bg-white {
+      transition:
+        background-color 0.35s ease,
+        color 0.35s ease,
+        border-color 0.35s ease,
+        box-shadow 0.35s ease;
+    }
+
+    .theme-toggle-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 46px;
+      height: 42px;
+      font-size: 18px;
+      line-height: 1;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .dark .theme-toggle-btn {
+      background: #334155;
+      color: white;
+    }
+  </style>
 </head>
 
 <body class="bg-slate-50 dark:bg-gray-900 min-h-screen flex flex-col transition-colors">
 
-<header class="bg-white dark:bg-gray-800 border-b border-slate-200 dark:border-gray-700">
-  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-center">
+  <header class="bg-white dark:bg-gray-800 border-b border-slate-200 dark:border-gray-700">
+    <header class="bg-white dark:bg-gray-800 border-b border-slate-200 dark:border-gray-700">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+        
+      
     <a href="/" class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
       PlacementorAI
     </a>
-  </div>
-</header>
 
-<main class="flex-1 flex items-center justify-center px-6 py-12">
-  <div id="register-card" class="w-full max-w-md opacity-0 translate-y-6 transition-all duration-500">
-
-    <div class="text-center mb-6">
-      <h2 class="text-3xl font-semibold text-gray-900 dark:text-white mb-2">Create Account</h2>
-      <p class="text-gray-600 dark:text-gray-400">Join PlacementorAI today </p>
+    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+      🌙
+    </button>
     </div>
+  </header>
 
-    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border border-slate-200 dark:border-gray-700">
-      <form id="registerForm" class="space-y-4 needs-validation" novalidate>
-        <!-- Full Name -->
-        <div>
-          <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Full Name</label>
-          <input id="name" type="text" required placeholder="Nilesh Bagade"
-            class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
-          <div class="invalid-feedback">
-            Full name is required.
-          </div>
-          <div class="valid-feedback">
-            Looks good.
-          </div>
-        </div>
+  <main class="flex-1 flex items-center justify-center px-6 py-12">
+    <div id="register-card" class="w-full max-w-md opacity-0 translate-y-6 transition-all duration-500">
 
-        <!-- Email -->
-        <div>
-          <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
-          <input id="email" type="email" required placeholder="nilesh345@gmail.com"
-            class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
-          <div class="invalid-feedback">
-            Please enter a valid email address.
-          </div>
-          <div class="valid-feedback">
-            Valid email.
-          </div>
-          <!-- <p id="emailError" class="text-red-500 text-sm hidden mt-1">Please enter a valid email.</p> -->
-        </div>
+      <div class="text-center mb-6">
+        <h2 class="text-3xl font-semibold text-gray-900 dark:text-white mb-2">Create Account</h2>
+        <p class="text-gray-600 dark:text-gray-400">Join PlacementorAI today </p>
+      </div>
 
-        <!-- Password -->
-        <div class="relative">
-          <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
-          <input id="password" type="password" required placeholder="••••••••"
-            class="mt-1 w-full px-4 py-3 pr-12 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
-          <div class="invalid-feedback">
-            Password must be at least 8 characters.
+      <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border border-slate-200 dark:border-gray-700">
+        <form id="registerForm" class="space-y-4 needs-validation" novalidate>
+          <!-- Full Name -->
+          <div>
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Full Name</label>
+            <input id="name" type="text" required placeholder="Nilesh Bagade"
+              class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
+            <div class="invalid-feedback">
+              Full name is required.
+            </div>
+            <div class="valid-feedback">
+              Looks good.
+            </div>
           </div>
-          <div class="valid-feedback">
-            Strong password.
+
+          <!-- Email -->
+          <div>
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
+            <input id="email" type="email" required placeholder="nilesh345@gmail.com"
+              class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
+            <div class="invalid-feedback">
+              Please enter a valid email address.
+            </div>
+            <div class="valid-feedback">
+              Valid email.
+            </div>
+            <!-- <p id="emailError" class="text-red-500 text-sm hidden mt-1">Please enter a valid email.</p> -->
           </div>
-          <button type="button" id="togglePassword" class="absolute right-4 top-[38px] text-gray-400 hover:text-indigo-600">
-            <i data-lucide="eye" id="eyeIcon"></i>
+
+          <!-- Password -->
+          <div class="relative">
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
+            <input id="password" type="password" required placeholder="••••••••"
+              class="mt-1 w-full px-4 py-3 pr-12 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
+            <div class="invalid-feedback">
+              Password must be at least 8 characters.
+            </div>
+            <div class="valid-feedback">
+              Strong password.
+            </div>
+            <button type="button" id="togglePassword"
+              class="absolute right-4 top-[38px] text-gray-400 hover:text-indigo-600">
+              <i data-lucide="eye" id="eyeIcon"></i>
+            </button>
+            <!-- <p id="passwordError" class="text-red-500 text-sm hidden mt-1">Password must be at least 8 characters.</p> -->
+          </div>
+
+          <!-- Role -->
+          <div>
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Role</label>
+            <select id="role" required
+              class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer form-select">
+              <option value="" disabled selected>Choose your role</option>
+              <option value="student">Student</option>
+              <option value="recruiter">Recruiter</option>
+              <option value="admin">Placement Officer</option>
+            </select>
+            <div class="invalid-feedback">
+              Please select a role.
+            </div>
+            <div class="valid-feedback">
+              Looks good.
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" id="submitBtn"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 rounded-xl flex justify-center items-center gap-2 transition active:scale-95 disabled:opacity-50">
+            <i data-lucide="user-plus"></i>
+            <span id="btnText">Create Account</span>
           </button>
-          <!-- <p id="passwordError" class="text-red-500 text-sm hidden mt-1">Password must be at least 8 characters.</p> -->
-        </div>
+        </form>
+      </div>
 
-        <!-- Role -->
-        <div>
-          <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Role</label>
-          <select id="role" required
-            class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer form-select">
-            <option value="" disabled selected>Choose your role</option>
-            <option value="student">Student</option>
-            <option value="recruiter">Recruiter</option>
-            <option value="admin">Placement Officer</option>
-          </select>
-          <div class="invalid-feedback">
-            Please select a role.
-          </div>
-          <div class="valid-feedback">
-            Looks good.
-          </div>
-        </div>
-
-        <!-- Submit -->
-        <button type="submit" id="submitBtn"
-          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 rounded-xl flex justify-center items-center gap-2 transition active:scale-95 disabled:opacity-50">
-          <i data-lucide="user-plus"></i>
-          <span id="btnText">Create Account</span>
-        </button>
-      </form>
+      <p class="text-center text-sm mt-6 text-gray-600 dark:text-gray-400">
+        Already have an account?
+        <a href="login.html" class="text-indigo-600 font-semibold hover:underline">Log In</a>
+      </p>
     </div>
+  </main>
 
-    <p class="text-center text-sm mt-6 text-gray-600 dark:text-gray-400">
-      Already have an account?
-      <a href="login.html" class="text-indigo-600 font-semibold hover:underline">Log In</a>
-    </p>
-  </div>
-</main>
+  <!-- REGISTER JS: Backend Connected -->
+  <script src="../frontend/js/validation.js"></script>
+  <script src="../frontend/js/register.js" defer></script>
+  <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
+  <script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
 
-<!-- REGISTER JS: Backend Connected -->
- <script src="../frontend/js/validation.js"></script>
-<script src="../frontend/js/register.js" defer></script>
-<script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
-<script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
-
-
+  <script src="js/theme.js"></script>
 </body>
+
 </html>
