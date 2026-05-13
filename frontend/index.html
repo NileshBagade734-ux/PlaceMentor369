@@ -13,14 +13,40 @@
     .container { max-width: 1200px; margin: auto; padding: 0 20px; }
 
     /* HEADER */
-    .header { background: #fff; padding: 16px 0; }
+    .header { background: #fff; padding: 16px 0; border-bottom: 1px solid #f3f4f6; position: sticky; top: 0; z-index: 1000; }
     .nav { display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 22px; font-weight: 700; }
-    nav a { margin: 0 12px; text-decoration: none; color: #374151; font-weight: 500; }
+    .logo { font-size: 22px; font-weight: 700; color: #111827; }
+    .logo span { color: #4f46e5; }
+    nav a { margin: 0 12px; text-decoration: none; color: #374151; font-weight: 500; transition: color 0.2s; }
+    nav a:hover { color: #4f46e5; }
     .login { color: #4f46e5; }
-    .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; }
+    .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; transition: transform 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
     .primary { background: #161533; color: #fff; }
     .secondary { background: #e5e7eb; color: #374151; }
+
+    .hamburger { display: none; cursor: pointer; background: none; border: none; font-size: 24px; color: #1f2937; }
+
+    @media (max-width: 768px) {
+      .hamburger { display: block; }
+      nav { 
+        display: none; 
+        position: absolute; 
+        top: 64px; 
+        left: 0; 
+        width: 100%; 
+        background: #fff; 
+        flex-direction: column; 
+        padding: 20px; 
+        border-bottom: 1px solid #f3f4f6;
+        box-shadow: 0 10px 15px rgba(0,0,0,0.05); 
+        z-index: 999;
+      }
+      nav.active { display: flex; }
+      nav a { margin: 12px 0; width: 100%; text-align: left; }
+      .nav { position: static; }
+      .header { position: relative; }
+    }
 
     /* HERO */
     .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; padding: 80px 0; align-items: center; }
@@ -177,16 +203,22 @@ footer h4 {
 <header class="header">
   <div class="container nav">
     <div class="logo"><i class="fa-solid fa-arrow-up-right-dots"></i> <span>PlacementorAI</span></div>
-    <nav>
+    
+    <button class="hamburger" id="hamburger" aria-label="Toggle Navigation">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <nav id="nav-menu">
       <a href="index.html">Home</a>
       <a href="contact.html">Contact</a>
       <a href="register.html">Sign Up</a>
       <a href="login.html" class="login">Login</a>
 
-<a  href="register.html" class="btn primary">
-  Get Started
-  <i class="fa-solid fa-arrow-up-right-from-square"></i>
-</a>    </nav>
+      <a href="register.html" class="btn primary">
+        Get Started
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+      </a>
+    </nav>
   </div>
 </header>
 
@@ -262,6 +294,22 @@ footer h4 {
 
 <!-- SCRIPTS -->
 <script>
+  // Mobile Menu Toggle
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('nav-menu');
+
+  hamburger.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+    const icon = hamburger.querySelector('i');
+    if (navMenu.classList.contains('active')) {
+      icon.classList.remove('fa-bars');
+      icon.classList.add('fa-xmark');
+    } else {
+      icon.classList.remove('fa-xmark');
+      icon.classList.add('fa-bars');
+    }
+  });
+
   // Modal JS
   const modal = document.getElementById("modal");
   const title = document.getElementById("modal-title");

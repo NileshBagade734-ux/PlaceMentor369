@@ -31,15 +31,8 @@
     }
 
     /* Navbar */
-    .header {
-      background: #fff;
-      padding: 16px 0;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-
+    .header { background: #fff; padding: 16px 0; border-bottom: 1px solid #f3f4f6; position: sticky; top: 0; z-index: 1000; }
+    
     .nav {
       display: flex;
       justify-content: space-between;
@@ -54,6 +47,11 @@
       text-decoration: none;
       color: #374151;
       font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: #4f46e5;
     }
 
     nav a.login {
@@ -67,11 +65,39 @@
       border: none;
       cursor: pointer;
       font-weight: 600;
+      transition: transform 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
     }
 
     .btn.primary {
-      background: #4f46e5;
+      background: #161533;
       color: #fff;
+    }
+
+    .hamburger { display: none; cursor: pointer; background: none; border: none; font-size: 24px; color: #1f2937; }
+
+    @media (max-width: 768px) {
+      .hamburger { display: block; }
+      nav { 
+        display: none; 
+        position: absolute; 
+        top: 64px; 
+        left: 0; 
+        width: 100%; 
+        background: #fff; 
+        flex-direction: column; 
+        padding: 20px; 
+        border-bottom: 1px solid #f3f4f6;
+        box-shadow: 0 10px 15px rgba(0,0,0,0.05); 
+        z-index: 999;
+      }
+      nav.active { display: flex; }
+      nav a { margin: 12px 0; width: 100%; text-align: left; }
+      .nav { position: static; }
+      .header { position: relative; }
     }
 
     section {
@@ -99,8 +125,13 @@
 <!-- Navbar -->
 <header class="header">
   <div class="nav">
-    <div class="text-xl font-bold"><i class="fa-solid fa-arrow-up-right-dots"></i>  PlacementorAI</div>
-    <nav>
+    <div class="logo text-xl font-bold"><i class="fa-solid fa-arrow-up-right-dots"></i> PlacementorAI</div>
+    
+    <button class="hamburger" id="hamburger" aria-label="Toggle Navigation">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <nav id="nav-menu">
       <a href="index.html">Home</a>
       <a href="contact.html">Contact</a>
       <a href="register.html">Sign Up</a>
@@ -256,6 +287,24 @@
 
 <script>
   lucide.createIcons();
+
+  // Mobile Menu Toggle
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('nav-menu');
+
+  if (hamburger) {
+    hamburger.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+      const icon = hamburger.querySelector('i');
+      if (navMenu.classList.contains('active')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-xmark');
+      } else {
+        icon.classList.remove('fa-xmark');
+        icon.classList.add('fa-bars');
+      }
+    });
+  }
 
   gsap.utils.toArray('.fade-in').forEach((el, i) => {
     gsap.to(el, {
