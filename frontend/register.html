@@ -129,13 +129,12 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
             <div class="valid-feedback">
               Valid email.
             </div>
-            <!-- <p id="emailError" class="text-red-500 text-sm hidden mt-1">Please enter a valid email.</p> -->
           </div>
 
           <!-- Password -->
           <div class="relative">
             <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
-            <input id="password" type="password" required placeholder="••••••••"
+            <input id="password" type="password" required placeholder="••••••••" minlength="8"
               class="mt-1 w-full px-4 py-3 pr-12 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
             <div class="invalid-feedback">
               Password must be at least 8 characters.
@@ -147,7 +146,6 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
               class="absolute right-4 top-[38px] text-gray-400 hover:text-indigo-600">
               <i data-lucide="eye" id="eyeIcon"></i>
             </button>
-            <!-- <p id="passwordError" class="text-red-500 text-sm hidden mt-1">Password must be at least 8 characters.</p> -->
           </div>
 
           <!-- Role -->

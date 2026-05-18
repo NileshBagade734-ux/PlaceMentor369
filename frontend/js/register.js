@@ -45,9 +45,7 @@ registerForm.onsubmit = async (e) => {
   const password = passwordInput.value;
 
   // 1️⃣ Validation Logic
-  document.getElementById("passwordError").classList.add("hidden");
-  if (password.length < 8) {
-    document.getElementById("passwordError").classList.remove("hidden");
+  if (password.length < 8 ) {
     return;
   }
 
