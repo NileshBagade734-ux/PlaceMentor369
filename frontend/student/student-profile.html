@@ -84,20 +84,24 @@
     <div id="resumeDropArea" class="border-2 border-dashed border-gray-200 rounded-xl p-10 text-center hover:border-blue-400 hover:bg-blue-50 transition cursor-pointer group relative">
         <i class="fas fa-cloud-upload-alt text-4xl text-gray-300 group-hover:text-blue-500 mb-3 transition"></i>
         <p class="text-gray-500 font-medium">Click to upload or drag and drop your resume</p>
-        <p class="text-xs text-gray-400 mt-1">PDF format preferred (Max 2MB)</p>
-        <input type="file" id="resumeInput" accept=".pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+        <p class="text-xs text-gray-400 mt-1">PDF, DOC, or DOCX (Max 5MB)</p>
+        <input type="file" id="resumeInput" accept=".pdf,.doc,.docx" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
     </div>
     
     <div id="resumeActions" class="mt-4 flex gap-3 hidden">
         <div class="flex-1 p-3 bg-blue-50 rounded-lg flex items-center justify-between">
             <span id="resumeFileName" class="text-sm text-blue-700 font-medium truncate px-2"></span>
             <button id="viewPdfBtn" class="text-blue-600 hover:text-blue-800 text-sm font-bold flex items-center gap-2">
-                <i class="fas fa-eye"></i> View PDF
+                <i class="fas fa-eye"></i> View / Download
             </button>
         </div>
         <button id="removeResumeBtn" class="p-3 text-red-500 hover:bg-red-50 rounded-lg transition">
             <i class="fas fa-trash-alt"></i>
         </button>
+    </div>
+    <div class="mt-4">
+        <p class="text-xs text-gray-400 mb-1">Or paste a resume URL (optional)</p>
+        <input type="url" id="resumeUrl" placeholder="https://drive.google.com/your-resume" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-sm">
     </div>
 </section>
             <div class="flex justify-end pt-4">
