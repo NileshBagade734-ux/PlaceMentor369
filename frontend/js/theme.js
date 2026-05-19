@@ -1,18 +1,27 @@
 const toggleBtn = document.getElementById("theme-toggle");
 
 // Load saved theme
-if (localStorage.getItem("theme") === "dark") {
-  document.documentElement.classList.add("dark");
+if (localStorage.getItem("theme") === "dark-mode") {
+  document.body.classList.add("dark-mode");
 }
 
 if (toggleBtn) {
-  toggleBtn.addEventListener("click", () => {
-    document.documentElement.classList.toggle("dark");
+  toggleBtn.setAttribute("aria-label", "Toggle dark mode");
 
-    if (document.documentElement.classList.contains("dark")) {
-      localStorage.setItem("theme", "dark");
+  toggleBtn.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+
+    if (document.body.classList.contains("dark-mode")) {
+      localStorage.setItem("theme", "dark-mode");
     } else {
       localStorage.setItem("theme", "light");
+    }
+  });
+
+  toggleBtn.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleBtn.click();
     }
   });
 }
