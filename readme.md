@@ -202,4 +202,89 @@ npm run dev
 Backend runs on:
 
 http://localhost:5000
+```
+---
 
+# 📸 Application Screenshots
+
+## 🌐 Landing Page
+
+![Landing Page](assets/screenshots/landing-page.png)
+
+---
+
+## 🔐 Authentication
+
+<table>
+<tr>
+<td align="center">
+
+### Login Page
+<img src="assets/screenshots/login-page.png" width="100%" />
+
+</td>
+
+<td align="center">
+
+### Register Page
+<img src="assets/screenshots/register-page.png" width="100%" />
+
+</td>
+</tr>
+</table>
+
+---
+
+# 🎓 Student Module
+
+## Student Dashboard
+
+![Student Dashboard](assets/screenshots/student-dashboard.png)
+
+---
+
+## Available Jobs
+
+![Student Jobs](assets/screenshots/student-jobs.png)
+
+---
+
+## Student Profile
+
+![Student Profile](assets/screenshots/student-profile.png)
+
+---
+
+# 🧑‍💼 Recruiter Module
+
+## Recruiter Dashboard
+
+![Recruiter Dashboard](assets/screenshots/rec-dashboard.png)
+
+---
+
+## Post Job
+
+![Recruiter Post Job](assets/screenshots/rec-post-job.png)
+
+---
+
+# 🛡️ Admin Module
+
+## Admin Dashboard
+
+![Admin Dashboard](assets/screenshots/admin-dashboard.png)
+
+---
+
+## Job Management
+
+![Admin Job Management](assets/screenshots/admin-job-management.png)
+
+---
+
+## Student Verification
+
+![Admin Student Verification](assets/screenshots/admin-student-verification.png)
+
+---
