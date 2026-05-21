@@ -47,9 +47,7 @@ async function init() {
   const token = getToken();
   if (!token) return alert("Login required");
 
-  // -----------------------------
   // Fetch student profile
-  // -----------------------------
   try {
     const resProfile = await fetch("http://localhost:5000/api/student/profile", {
       headers: { "Authorization": `Bearer ${token}` }
@@ -73,9 +71,7 @@ async function init() {
     console.error("Failed to fetch profile:", err);
   }
 
-  // -----------------------------
   // Fetch all approved jobs
-  // -----------------------------
   try {
     const resJobs = await fetch("http://localhost:5000/api/student/jobs", {
       headers: { "Authorization": `Bearer ${token}` }
@@ -101,9 +97,7 @@ async function init() {
     allAvailableJobs = defaultJobs;
   }
 
-  // -----------------------------
   // Fetch applied jobs
-  // -----------------------------
   try {
     const resApps = await fetch("http://localhost:5000/api/student/applications", {
       headers: { "Authorization": `Bearer ${token}` }
@@ -111,7 +105,8 @@ async function init() {
 
     if (resApps.ok) {
       const apps = await resApps.json();
-      appliedJobs = apps.map(a => a.job._id);
+      // ✅ FIX: use a.job?._id with fallback to handle both populated and unpopulated responses
+      appliedJobs = apps.map(a => a.job?._id || a.job).filter(Boolean);
       localStorage.setItem(APPLICATION_KEY, JSON.stringify(appliedJobs));
     } else {
       appliedJobs = JSON.parse(localStorage.getItem(APPLICATION_KEY)) || [];
@@ -137,7 +132,6 @@ function renderJobList() {
 
   list.innerHTML = allAvailableJobs
     .map(job => {
-      // ✅ Eligibility logic fixed
       const isEligible =
         studentCGPA >= (job.cgpa || 0) &&
         (!job.branches || job.branches.length === 0 || job.branches.includes(studentBranch));
@@ -248,9 +242,7 @@ window.selectJob = function(id) {
    HANDLE APPLY
 ========================================================== */
 window.handleApply = async function (jobId) {
-  console.log("🆔 jobId received:", jobId);
-
-  const token = getToken(); // ✅ FIX
+  const token = getToken();
 
   if (!token) {
     alert("Login required");
@@ -274,21 +266,25 @@ window.handleApply = async function (jobId) {
     const data = await res.json();
 
     if (!res.ok) {
-      throw new Error(data.message || "Apply failed");
+      // ✅ FIX: Show the exact message from the API (covers duplicate application error)
+      alert(data.message || "Apply failed");
+      return;
     }
 
-    alert("✅ Applied successfully");
+    alert("✅ Applied successfully!");
 
-    // Optional: prevent re-apply instantly
+    // ✅ FIX: Update appliedJobs and re-render both the list and detail pane
+    // so the button is immediately disabled without needing a page refresh
     appliedJobs.push(jobId);
     localStorage.setItem(APPLICATION_KEY, JSON.stringify(appliedJobs));
+    renderJobList();       // refreshes the job card list (badge stays correct)
+    selectJob(jobId);      // re-renders the detail pane → button becomes disabled
 
   } catch (err) {
     console.error("Apply Error:", err);
-    alert(err.message);
+    alert("Something went wrong. Please try again.");
   }
 };
-
 
 /* ==========================================================
    DOM READY INIT

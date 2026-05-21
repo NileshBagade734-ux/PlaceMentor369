@@ -15,7 +15,7 @@ const applicationSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["applied", "shortlisted", "rejected", "verified"],
+      enum: ["applied", "shortlisted", "rejected"],
       default: "applied",
     },
     appliedAt: {
@@ -27,15 +27,15 @@ const applicationSchema = new mongoose.Schema(
 );
 
 // 🔹 Pre-save hook: automatically convert old "verified" status → "shortlisted"
-applicationSchema.pre("save", function () {
+applicationSchema.pre("save", function (next) {
   if (this.status === "verified") {
     this.status = "shortlisted";
   }
+  next();
 });
 
-// 🔹 Prevent duplicate application per student-job pair
+// 🔹 Prevent duplicate application per student-job pair (DB-level enforcement)
 applicationSchema.index({ student: 1, job: 1 }, { unique: true });
 
-// 🔹 Export the model
 const Application = mongoose.model("Application", applicationSchema);
 export default Application;
