@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Student from "../models/student.js";
 import Job from "../models/job.js";
-import Application from "../models/application.js"; // make sure file name matches exactly
+import Application from "../models/application.js";
 
 /* ============================
    GET STUDENT PROFILE
@@ -60,51 +60,50 @@ export const getJobs = async (req, res) => {
 ============================ */
 export const applyJob = async (req, res) => {
   try {
-    console.log("🆔 req.user:", req.user);
-    console.log("🆔 req.params.jobId:", req.params.jobId);
-
     const { jobId } = req.params;
 
+    // Validate job ID format
     if (!mongoose.Types.ObjectId.isValid(jobId)) {
       return res.status(400).json({ message: "Invalid Job ID" });
     }
 
+    // Check job exists
     const job = await Job.findById(jobId);
-    console.log("🧰 job found:", job);
     if (!job) return res.status(404).json({ message: "Job not found" });
 
+    // Check student profile exists
     const studentProfile = await Student.findOne({ user: req.user.id });
-    console.log("🧰 studentProfile found:", studentProfile);
     if (!studentProfile) {
       return res.status(400).json({ message: "Complete your profile first" });
     }
 
-    // ✅ Check if already applied
+    // ✅ FIX: Check for existing application before creating a new one
     const exists = await Application.findOne({
       student: studentProfile._id,
-      job: jobId
+      job: jobId,
     });
-    console.log("🧰 existing application:", exists);
-    if (exists) return res.status(400).json({ message: "Already applied" });
+    if (exists) {
+      return res.status(400).json({ message: "You have already applied to this job." });
+    }
 
-    // ✅ Create new application
+    // Create new application
     const application = await Application.create({
       student: studentProfile._id,
-      job: jobId
+      job: jobId,
     });
-    console.log("🧰 application created:", application);
-
-    // ⚡ UPDATE JOB DOCUMENT: push application ID
-   
 
     res.status(201).json({
       success: true,
-      message: "Application sent successfully",
-      application
+      message: "Application submitted successfully",
+      application,
     });
 
   } catch (err) {
-    console.error("🔥 APPLY JOB ERROR:", err);
+    // ✅ FIX: Catch MongoDB duplicate key error as a race-condition fallback
+    if (err.code === 11000) {
+      return res.status(400).json({ message: "You have already applied to this job." });
+    }
+    console.error("APPLY JOB ERROR:", err);
     res.status(500).json({ message: "Failed to apply" });
   }
 };
@@ -119,7 +118,7 @@ export const getApplications = async (req, res) => {
 
     const apps = await Application.find({ student: studentProfile._id }).populate({
       path: "job",
-      select: "title company"
+      select: "title company",
     });
 
     res.status(200).json(apps);
@@ -138,7 +137,7 @@ export const getJobApplications = async (req, res) => {
 
     const applications = await Application.find({ job: jobId }).populate({
       path: "student",
-      select: "name email branch cgpa resume"
+      select: "name email branch cgpa resume",
     });
 
     res.status(200).json(applications);
