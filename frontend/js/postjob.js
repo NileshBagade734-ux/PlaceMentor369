@@ -164,6 +164,8 @@ if (jobForm) {
 /* ==========================================================
    GLOBAL INIT
 ========================================================== */
+"use strict";
+
 document.addEventListener("DOMContentLoaded", () => {
   initBranches();
   renderSkills();
