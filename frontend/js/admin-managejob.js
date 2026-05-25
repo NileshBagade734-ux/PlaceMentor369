@@ -101,4 +101,3 @@ async function deleteJob(id) {
 /* =========================
    INITIALIZE
 ========================= */
-document.addEventListener("DOMContentLoaded", loadAdminJobs);
