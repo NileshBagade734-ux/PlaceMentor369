@@ -43,3 +43,27 @@ td { padding: 16px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
 
 .approved-label { color: var(--success); font-weight: bold; font-size: 13px; display: flex; align-items: center; gap: 5px; }
 .btn-reset { background: #f1f5f9; border: 1px solid var(--border); padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+#backToTop {
+  display: block;
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #4f46e5;
+  color: white;
+  font-size: 22px;
+  text-align: center;
+  line-height: 50px;
+  cursor: pointer;
+  z-index: 99999;
+}
+
+#backToTop:hover {
+  transform: scale(1.1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
