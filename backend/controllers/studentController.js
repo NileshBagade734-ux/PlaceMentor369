@@ -129,6 +129,127 @@ export const getApplications = async (req, res) => {
   }
 };
 
+export const saveJob = async (req, res) => {
+  try {
+    const studentId = req.user.id;
+    const { jobId } = req.params;
+
+const student = await Student.findOne({ user: studentId });
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+    const job = await Job.findById(jobId);
+
+    if (!job) {
+      return res.status(404).json({
+        success: false,
+        message: "Job not found",
+      });
+    }
+
+    // Prevent duplicates
+    const alreadySaved = student.savedJobs.some(
+      (id) => id.toString() === jobId
+    );
+
+    if (alreadySaved) {
+      return res.status(400).json({
+        success: false,
+        message: "Job already saved",
+      });
+    }
+
+    student.savedJobs.push(jobId);
+
+    await student.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Job saved successfully",
+      savedJobs: student.savedJobs,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
+export const removeSavedJob = async (req, res) => {
+  try {
+    const studentId = req.user.id;
+    const { jobId } = req.params;
+
+const student = await Student.findOne({ user: studentId });
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+    student.savedJobs = student.savedJobs.filter(
+      (id) => id.toString() !== jobId
+    );
+
+    await student.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Job removed from saved jobs",
+      savedJobs: student.savedJobs,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
+
+export const getSavedJobs = async (req, res) => {
+  try {
+
+    const student = await Student.findOne({
+  user: req.user.id
+}).populate("savedJobs");
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+    // Remove deleted jobs
+    const validJobs = student.savedJobs.filter(
+      (job) => job !== null
+    );
+
+    res.status(200).json({
+      success: true,
+      savedJobs: validJobs,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
 /* ============================
    GET JOB APPLICATIONS FOR RECRUITER
 ============================ */

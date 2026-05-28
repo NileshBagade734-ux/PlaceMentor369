@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Jobs | PlacementorAI</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet" href="../css/student-dashboard.css">
+</head>
+
+<body class="bg-slate-50 min-h-screen flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col fixed h-full">
+
+        <div class="p-6">
+            <h1 class="text-xl font-bold text-indigo-600">
+                PlacementorAI
+            </h1>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1">
+
+            <a href="../student/student-dashboard.html" class="sidebar-item">
+                Dashboard
+            </a>
+
+            <a href="../student/student-profile.html" class="sidebar-item">
+                Profile
+            </a>
+
+            <a href="../student/student-joblist.html" class="sidebar-item">
+                Jobs
+            </a>
+
+            <a href="../student/student-application.html" class="sidebar-item">
+                My Applications
+            </a>
+
+            <a href="../student/saved-jobs.html"
+               class="sidebar-item active">
+                Saved Jobs
+            </a>
+
+        </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 md:ml-64 p-6 md:p-10">
+
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">
+            Saved Jobs
+        </h2>
+
+        <div
+            id="savedJobsContainer"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+        </div>
+
+    </main>
+
+    <script src="../js/saved-jobs.js"></script>
+
+</body>
+</html>

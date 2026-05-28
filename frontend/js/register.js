@@ -45,11 +45,10 @@ registerForm.onsubmit = async (e) => {
   const password = passwordInput.value;
 
   // 1️⃣ Validation Logic
-  document.getElementById("passwordError").classList.add("hidden");
   if (password.length < 8) {
-    document.getElementById("passwordError").classList.remove("hidden");
-    return;
-  }
+  alert("Password must be at least 8 characters");
+  return;
+}
 
   // 2️⃣ Visual Feedback
   submitBtn.disabled = true;

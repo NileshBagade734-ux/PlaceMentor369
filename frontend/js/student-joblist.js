@@ -23,6 +23,7 @@ let studentSession = JSON.parse(localStorage.getItem(USER_KEY)) || {
 let skills = [...studentSession.skills];
 let appliedJobs = [];
 let allAvailableJobs = [];
+let savedJobs = [];
 
 /* ==========================================================
    DEFAULT JOBS (FALLBACK)
@@ -123,6 +124,33 @@ async function init() {
 
   renderJobList();
   if (window.lucide) lucide.createIcons();
+
+ // -----------------------------
+// Fetch saved jobs
+// -----------------------------
+try {
+
+  const resSaved = await fetch(
+    "http://localhost:5000/api/student/saved-jobs",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+
+  if (resSaved.ok) {
+
+    const savedData = await resSaved.json();
+
+    savedJobs =
+      savedData.savedJobs.map(job => job._id);
+  }
+
+} catch (err) {
+
+  console.error("Failed to fetch saved jobs:", err);
+}
 }
 
 /* ==========================================================
@@ -137,6 +165,7 @@ function renderJobList() {
 
   list.innerHTML = allAvailableJobs
     .map(job => {
+      const isSaved = savedJobs.includes(job.id);
       // ✅ Eligibility logic fixed
       const isEligible =
         studentCGPA >= (job.cgpa || 0) &&
@@ -149,14 +178,46 @@ function renderJobList() {
              id="card-${job.id}"
              class="job-card bg-white p-5 rounded-xl border border-slate-200 cursor-pointer hover:shadow-md transition-all mb-3">
             <div class="flex justify-between items-start mb-2">
-                <h3 class="font-bold text-slate-900">${job.title}</h3>
+
+    <div>
+        <h3 class="font-bold text-slate-900">
+            ${job.title}
+        </h3>
+
+        <p class="text-sm text-slate-500">
+            ${job.company}
+        </p>
+    </div>
+
+    <div class="flex items-center gap-2">
+
+        <button
+            onclick="event.stopPropagation(); toggleBookmark(this, '${job.id}')"
+            class="bookmark-btn text-xl ${
+              isSaved ? "saved" : ""
+            }"
+        >
+            ${isSaved ? "🔖" : "📑"}
+        </button>
+
+        <span class="px-2 py-1 text-[10px] font-bold rounded ${
+          isEligible
+            ? "bg-green-100 text-green-700"
+            : "bg-red-100 text-red-700"
+        }">
+
+            ${isEligible ? "ELIGIBLE" : "INELIGIBLE"}
+
+        </span>
+
+       </div>
+       </div>
                 <span class="px-2 py-1 text-[10px] font-bold rounded ${
                   isEligible ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
                 }">
                     ${isEligible ? "ELIGIBLE" : "INELIGIBLE"}
                 </span>
             </div>
-            <p class="text-sm text-slate-500">${job.company}</p>
             <div class="flex justify-between items-center mt-3">
                 <p class="text-[10px] text-slate-400 uppercase font-medium">Deadline: ${job.deadline}</p>
                 <p class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">REQ: ${job.cgpa}</p>
@@ -293,4 +354,82 @@ window.handleApply = async function (jobId) {
 /* ==========================================================
    DOM READY INIT
 ========================================================== */
+async function saveJob(jobId) {
+
+  try {
+
+    const token = getToken();
+
+    await fetch(
+      `${API}/jobs/${jobId}/save`,
+      {
+        method: "POST",
+
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+  } catch (error) {
+
+    console.log(error);
+  }
+}
+
+async function removeSavedJob(jobId) {
+
+  try {
+
+    const token = getToken();
+
+    await fetch(
+      `${API}/jobs/${jobId}/save`,
+      {
+        method: "DELETE",
+
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+  } catch (error) {
+
+    console.log(error);
+  }
+}
+
+window.toggleBookmark = async function(button, jobId) {
+
+  const isSaved =
+    button.classList.contains("saved");
+
+  // Optimistic UI
+  button.classList.toggle("saved");
+
+  button.innerHTML =
+    isSaved ? "📑" : "🔖";
+
+  try {
+
+    if (isSaved) {
+
+      savedJobs =
+        savedJobs.filter(id => id !== jobId);
+
+      await removeSavedJob(jobId);
+
+    } else {
+
+      savedJobs.push(jobId);
+
+      await saveJob(jobId);
+    }
+
+  } catch (error) {
+
+    console.log(error);
+  }
+};
 document.addEventListener("DOMContentLoaded", init);

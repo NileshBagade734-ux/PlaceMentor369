@@ -40,6 +40,17 @@
         display: none;
     }
 }
+.bookmark-btn {
+  transition: 0.3s ease;
+}
+
+.bookmark-btn:hover {
+  transform: scale(1.2);
+}
+
+.bookmark-btn.saved {
+  color: #facc15;
+}
 
 .nav-item:hover { background: #f1f5f9; color: #4f46e5; }
 .nav-item.active { background: #eef2ff; color: #4f46e5; font-weight: 700; }
