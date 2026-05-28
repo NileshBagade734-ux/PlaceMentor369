@@ -1,83 +1,155 @@
-// login.js
-// -------------------------
-// Initialize Lucide & GSAP
-// -------------------------
+/* ==========================================
+   INIT ICONS
+========================================== */
 lucide.createIcons();
-gsap.to("#login-card", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" });
 
-// -------------------------
-// Elements
-// -------------------------
+/* ==========================================
+   ELEMENTS
+========================================== */
 const loginForm = document.getElementById("loginForm");
+
 const loginBtn = document.getElementById("loginBtn");
+
 const btnText = document.getElementById("btnText");
-const passwordField = document.getElementById("password");
-const passwordToggleBtn = document.getElementById("togglePassword");
-const eyeIcon = document.getElementById("eyeIcon");
 
-// -------------------------
-// Password Toggle
-// -------------------------
-passwordToggleBtn.addEventListener("click", () => {
-  const isPassword = passwordField.type === "password";
-  passwordField.type = isPassword ? "text" : "password";
-  eyeIcon.setAttribute("data-lucide", isPassword ? "eye-off" : "eye");
-  lucide.createIcons();
-});
-
-// -------------------------
-// Login Form Submit
-// -------------------------
+/* ==========================================
+   LOGIN
+========================================== */
 loginForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
 
-  if (!loginForm.checkValidity()) {
-    return; // validation.js will handle UI
-  }
+    e.preventDefault();
 
-  const email = document.getElementById("email")?.value;
-  const password = passwordField?.value;
-  const role = document.getElementById("role")?.value;
+    const role = document
+        .getElementById("role")
+        .value
+        .trim()
+        .toLowerCase();
 
-  if (!email || !password || !role) {
-    return alert("Please fill all fields!");
-  }
+    const email = document
+        .getElementById("email")
+        .value
+        .trim();
 
-  loginBtn.disabled = true;
-  btnText.innerText = "Authenticating...";
+    const password = document
+        .getElementById("password")
+        .value
+        .trim();
 
-  try {
-    const res = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, role })
-    });
+    /* ==========================================
+       VALIDATION
+    ========================================== */
+    if (!role || !email || !password) {
 
-    const data = await res.json();
+        alert("Please fill all fields");
 
-    if (!res.ok) {
-      alert(data.message || "Login failed");
-      return;
+        return;
     }
 
-    localStorage.setItem(
-      "placementor_session",
-      JSON.stringify({ token: data.token, user: data.user })
-    );
+    try {
 
-    if (data.user.role === "admin") {
-      window.location.href = "/admin/admin-dashboard.html";
-    } else if (data.user.role === "recruiter") {
-      window.location.href = "/recruiter/recruiter-dashboard.html";
-    } else {
-      window.location.href = "/student/student-dashboard.html";
+        /* ==========================================
+           BUTTON LOADING
+        ========================================== */
+        loginBtn.disabled = true;
+
+        btnText.innerText = "Signing In...";
+
+        /* ==========================================
+           API CALL
+        ========================================== */
+        const response = await fetch(
+            "http://localhost:5000/api/auth/login",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                },
+
+                body: JSON.stringify({
+                    email,
+                    password,
+                    role
+                }),
+            }
+        );
+
+        const data = await response.json();
+
+        /* ==========================================
+           LOGIN FAILED
+        ========================================== */
+        if (!response.ok) {
+
+            alert(
+                data.message || "Login failed"
+            );
+
+            loginBtn.disabled = false;
+
+            btnText.innerText = "Sign In";
+
+            return;
+        }
+
+        /* ==========================================
+           SAVE SESSION
+        ========================================== */
+        localStorage.setItem(
+            "placementor_session",
+            JSON.stringify({
+                token: data.token,
+                user: data.user,
+            })
+        );
+
+        /* ==========================================
+           REDIRECT
+        ========================================== */
+
+        if (data.user.role === "student") {
+
+            window.location.href =
+                "student/student-dashboard.html";
+
+        }
+
+        else if (
+            data.user.role === "recruiter"
+        ) {
+
+            window.location.href =
+                "recruiter/recruiter-dashboard.html";
+
+        }
+
+        else if (
+            data.user.role === "admin"
+        ) {
+
+            window.location.href =
+                "admin/admin-dashboard.html";
+
+        }
+
+        else {
+
+            alert("Unknown role");
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Login Error:",
+            error
+        );
+
+        alert(
+            "Server error. Please try again."
+        );
+
+        loginBtn.disabled = false;
+
+        btnText.innerText = "Sign In";
     }
-
-  } catch (err) {
-    console.error("Login Error:", err);
-    alert("Server error. Try again later.");
-  } finally {
-    loginBtn.disabled = false;
-    btnText.innerText = "Sign In";
-  }
 });

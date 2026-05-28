@@ -147,3 +147,65 @@ export const getJobApplications = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch applications" });
   }
 };
+
+export const withdrawApplication = async (req, res) => {   
+   try {
+        const studentId = req.user.id;
+        const applicationId = req.params.id;
+
+        const application = await Application.findById(applicationId);
+
+        if (!application) {
+            return res.status(404).json({
+                success: false,
+                message: "Application not found",
+            });
+        }
+
+        // ownership check
+        if (application.student.toString() !== studentId) {
+            return res.status(403).json({
+                success: false,
+                message: "Unauthorized",
+            });
+        }
+
+        // already withdrawn
+        if (application.isWithdrawn) {
+            return res.status(400).json({
+                success: false,
+                message: "Application already withdrawn",
+            });
+        }
+
+        // prevent withdrawal after recruiter review
+        if (
+            application.status === "Shortlisted" ||
+            application.status === "Rejected"
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Cannot withdraw reviewed application",
+            });
+        }
+
+        application.isWithdrawn = true;
+        application.withdrawnAt = new Date();
+
+        await application.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Application withdrawn successfully",
+            application,
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Server Error",
+        });
+    }
+};
