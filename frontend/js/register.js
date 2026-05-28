@@ -45,11 +45,46 @@ registerForm.onsubmit = async (e) => {
   const password = passwordInput.value;
 
   // 1️⃣ Validation Logic
-  document.getElementById("passwordError").classList.add("hidden");
-  if (password.length < 8) {
-    document.getElementById("passwordError").classList.remove("hidden");
-    return;
+  let isValid = true;
+
+  // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!fullName.trim()) {
+    document.getElementById("name").classList.add("is-invalid");
+    isValid = false;
+  } else {
+    document.getElementById("name").classList.remove("is-invalid");
+    document.getElementById("name").classList.add("is-valid");
   }
+
+  if (!emailRegex.test(email)) {
+    document.getElementById("email").classList.add("is-invalid");
+    isValid = false;
+  } else {
+    document.getElementById("email").classList.remove("is-invalid");
+    document.getElementById("email").classList.add("is-valid");
+  }
+
+  const passwordError = document.getElementById("passwordError");
+  passwordError.classList.add("hidden");
+  if (password.length < 8) {
+    passwordError.classList.remove("hidden");
+    document.getElementById("password").classList.add("is-invalid");
+    isValid = false;
+  } else {
+    document.getElementById("password").classList.remove("is-invalid");
+    document.getElementById("password").classList.add("is-valid");
+  }
+
+  if (!role) {
+    document.getElementById("role").classList.add("is-invalid");
+    isValid = false;
+  } else {
+    document.getElementById("role").classList.remove("is-invalid");
+    document.getElementById("role").classList.add("is-valid");
+  }
+
+  if (!isValid) return;
 
   // 2️⃣ Visual Feedback
   submitBtn.disabled = true;
