@@ -154,25 +154,44 @@
 
     /* RESPONSIVE BREAKPOINTS WITH MOBILE DROPDOWN NAVIGATION FIX */
     @media (max-width: 768px) {
-      .menu-toggle { display: block; }
+      .menu-toggle { display: block; position: relative; z-index: 1003; }
       
-      .nav-menu {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 100%;
+      .nav-overlay {
+        position: fixed;
+        top: 0;
         left: 0;
         width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1001;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+      .nav-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .nav-menu {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 280px;
+        height: 100vh;
         background: #ffffff;
-        padding: 20px;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-        border-top: 1px solid #f3f4f6;
-        gap: 16px;
-        text-align: center;
+        padding: 80px 24px 24px 24px;
+        box-shadow: -4px 0 16px rgba(0,0,0,0.1);
+        gap: 20px;
+        text-align: left;
+        z-index: 1002;
+        transition: right 0.3s ease-in-out;
       }
       
-      .nav-menu.active { display: flex; }
-      .nav-menu a { margin: 8px 0; width: 100%; font-size: 16px; }
+      .nav-menu.active { right: 0; }
+      .nav-menu a { margin: 8px 0; width: 100%; font-size: 18px; }
       .nav-menu .btn { width: 100%; justify-content: center; }
 
       .hero { grid-template-columns: 1fr; gap: 30px; text-align: center; }
@@ -196,6 +215,7 @@
   </style>
 </head>
 <body>
+<div class="nav-overlay" id="nav-overlay"></div>
 
 <header class="header">
   <div class="container nav" style="position: relative;">
@@ -347,9 +367,11 @@
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
   const navLinksTarget = document.getElementById('nav-links-target');
   const menuIcon = document.getElementById('menu-icon');
+  const navOverlay = document.getElementById('nav-overlay');
 
-  mobileMenuBtn.addEventListener('click', () => {
+  function toggleMenu() {
     navLinksTarget.classList.toggle('active');
+    navOverlay.classList.toggle('active');
     
     if(navLinksTarget.classList.contains('active')) {
       menuIcon.classList.remove('fa-bars');
@@ -358,7 +380,10 @@
       menuIcon.classList.remove('fa-xmark');
       menuIcon.classList.add('fa-bars');
     }
-  });
+  }
+
+  mobileMenuBtn.addEventListener('click', toggleMenu);
+  navOverlay.addEventListener('click', toggleMenu);
 
   // Modal JS
   const modal = document.getElementById("modal");
