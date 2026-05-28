@@ -5,7 +5,10 @@ import {
   saveProfile,
   getJobs,
   applyJob,
-  getApplications
+  getApplications,
+  saveJob,
+  removeSavedJob,
+  getSavedJobs
 } from "../controllers/studentController.js";
 
 const router = express.Router();
@@ -25,5 +28,24 @@ router.post("/apply/:jobId", verifyToken, applyJob);
 
 // Get all applications of this student
 router.get("/applications", verifyToken, getApplications);
+// Save a job
+router.post(
+  "/jobs/:jobId/save",
+  verifyToken,
+  saveJob
+);
 
+// Remove saved job
+router.delete(
+  "/jobs/:jobId/save",
+  verifyToken,
+  removeSavedJob
+);
+
+// Get all saved jobs
+router.get(
+  "/saved-jobs",
+  verifyToken,
+  getSavedJobs
+);
 export default router;
