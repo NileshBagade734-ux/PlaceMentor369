@@ -8,3 +8,7 @@ node_modules/
 **/.env
 **/.env.*
 
+
+# Uploaded resume files
+backend/uploads/resumes/*
+!backend/uploads/resumes/.gitkeep

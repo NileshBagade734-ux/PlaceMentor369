@@ -2,7 +2,7 @@
 // CONSTANTS & SESSION
 // ============================
 const API_BASE = "http://localhost:5000/api/student";
-;
+const UPLOADS_BASE = "http://localhost:5000/uploads/resumes";
 const SESSION_KEY = "placementor_session";
 
 function getSession() {
@@ -46,7 +46,7 @@ const completionMessage = document.getElementById("completionMessage");
 // STATE
 // ============================
 let skills = [];
-let resumeBase64 = null;
+let savedResumeFilename = null; // filename stored in DB
 
 // ============================
 // UTILITY FUNCTIONS
@@ -58,7 +58,7 @@ function updateCompletion() {
         branchSelect.value,
         cgpaInput.value,
         skills.length > 0,
-        resumeBase64
+        savedResumeFilename
     ].filter(Boolean).length;
 
     const percent = Math.floor((filled / 6) * 100);
@@ -104,34 +104,59 @@ window.removeSkill = function (i) {
 // ============================
 // RESUME LOGIC
 // ============================
-resumeInput?.addEventListener("change", (e) => {
+resumeInput?.addEventListener("change", async (e) => {
     const file = e.target.files[0];
-    if (!file || file.type !== "application/pdf") return alert("Only PDFs allowed!");
-    if (file.size > 2 * 1024 * 1024) return alert("Max 2MB");
+    if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-        resumeBase64 = reader.result;
+    const ext = file.name.split(".").pop().toLowerCase();
+    if (!["pdf", "doc", "docx"].includes(ext)) {
+        return alert("Only PDF, DOC, or DOCX files are allowed.");
+    }
+    if (file.size > 5 * 1024 * 1024) {
+        return alert("File size must be under 5MB.");
+    }
+
+    const formData = new FormData();
+    formData.append("resume", file);
+
+    try {
+        resumeFileName.textContent = "Uploading...";
+        resumeActions.classList.remove("hidden");
+
+        const res = await fetch(`${API_BASE}/resume`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+            body: formData
+        });
+
+        if (!res.ok) throw new Error("Upload failed");
+
+        const data = await res.json();
+        savedResumeFilename = data.filename;
         showResumeUI(file.name);
         updateCompletion();
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+        console.error(err);
+        alert("❌ Resume upload failed. Please try again.");
+        resumeActions.classList.add("hidden");
+    }
 });
 
-function showResumeUI(name) {
+function showResumeUI(displayName) {
     resumeActions.classList.remove("hidden");
-    resumeFileName.textContent = name || "Saved_Resume.pdf";
+    resumeFileName.textContent = displayName || savedResumeFilename || "resume";
+
+    // Update view button to open the actual file URL
+    if (savedResumeFilename) {
+        viewPdfBtn.onclick = (e) => {
+            e.preventDefault();
+            window.open(`${UPLOADS_BASE}/${savedResumeFilename}`, "_blank");
+        };
+    }
 }
 
-viewPdfBtn?.addEventListener("click", (e) => {
-    e.preventDefault();
-    if (!resumeBase64) return;
-    const win = window.open();
-    win.document.write(`<iframe src="${resumeBase64}" style="width:100%;height:100vh" frameborder="0"></iframe>`);
-});
-
 removeResumeBtn?.addEventListener("click", () => {
-    resumeBase64 = null;
+    savedResumeFilename = null;
     resumeInput.value = "";
     resumeActions.classList.add("hidden");
     updateCompletion();
@@ -153,15 +178,23 @@ async function loadProfile() {
         cgpaInput.value = profile.cgpa || "";
 
         Array.from(branchSelect.options).forEach(o => {
-            if (o.text === profile.branch) o.selected = true;
+            if (o.value === profile.branch) o.selected = true;
         });
 
         skills = (profile.skills || []).map(s => ({ name: s, level: "Intermediate" }));
         renderSkills();
 
         if (profile.resume) {
-            resumeBase64 = profile.resume;
-            showResumeUI("Saved_Resume.pdf");
+            // Could be a filename (new) or a legacy base64/URL (old)
+            const isUrl = profile.resume.startsWith("http");
+            const isBase64 = profile.resume.startsWith("data:");
+            if (!isUrl && !isBase64) {
+                savedResumeFilename = profile.resume;
+                showResumeUI(profile.resume);
+            } else if (isUrl) {
+                const resumeUrlInput = document.getElementById("resumeUrl");
+                if (resumeUrlInput) resumeUrlInput.value = profile.resume;
+            }
         }
     } catch (err) {
         console.error(err);
@@ -175,6 +208,7 @@ async function loadProfile() {
 // SAVE PROFILE
 // ============================
 saveBtn?.addEventListener("click", async () => {
+    const resumeUrlInput = document.getElementById("resumeUrl");
     const payload = {
         name: fullNameInput.value.trim(),
         roll: rollInput.value.trim(),
@@ -182,7 +216,7 @@ saveBtn?.addEventListener("click", async () => {
         cgpa: parseFloat(cgpaInput.value) || 0,
         college: "GH Raisoni",
         skills: skills.map(s => s.name),
-        resume: resumeBase64
+        resume: savedResumeFilename || (resumeUrlInput ? resumeUrlInput.value.trim() : "") || ""
     };
 
     try {

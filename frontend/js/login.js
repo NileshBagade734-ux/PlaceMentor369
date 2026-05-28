@@ -66,11 +66,11 @@ loginForm.addEventListener("submit", async (e) => {
     );
 
     if (data.user.role === "admin") {
-      window.location.href = "/admin/admin-dashboard.html";
+      window.location.href = "/frontend/admin/admin-dashboard.html";
     } else if (data.user.role === "recruiter") {
-      window.location.href = "/recruiter/recruiter-dashboard.html";
+      window.location.href = "/frontend/recruiter/recruiter-dashboard.html";
     } else {
-      window.location.href = "/student/student-dashboard.html";
+      window.location.href = "/frontend/student/student-dashboard.html";
     }
 
   } catch (err) {

@@ -147,3 +147,23 @@ export const getJobApplications = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch applications" });
   }
 };
+
+/* ============================
+   UPLOAD RESUME FILE
+============================ */
+export const uploadResumeFile = async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
+
+    await Student.findOneAndUpdate(
+      { user: req.user.id },
+      { resume: req.file.filename },
+      { upsert: true }
+    );
+
+    res.status(200).json({ message: "Resume uploaded", filename: req.file.filename });
+  } catch (err) {
+    console.error("UPLOAD RESUME ERROR:", err);
+    res.status(500).json({ message: "Upload failed" });
+  }
+};
