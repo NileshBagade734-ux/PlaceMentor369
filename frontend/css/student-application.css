@@ -156,3 +156,23 @@ tr:hover td {
     cursor: pointer;
 }
 
+.withdraw-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.withdraw-btn:hover {
+    background: #dc2626;
+}
+
+.status.withdrawn {
+    background: #fee2e2;
+    color: #b91c1c;
+}

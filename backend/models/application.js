@@ -22,6 +22,15 @@ const applicationSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    isWithdrawn: {
+      type: Boolean,
+      default: false,
+    },
+
+    withdrawnAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );

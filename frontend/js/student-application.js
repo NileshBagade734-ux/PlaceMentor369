@@ -3,7 +3,9 @@
 ========================================================== */
 function formatDate(dateString) {
     if (!dateString) return "—";
+
     const date = new Date(dateString);
+
     return date.toLocaleDateString("en-IN", {
         day: "2-digit",
         month: "short",
@@ -12,69 +14,171 @@ function formatDate(dateString) {
 }
 
 /* ==========================================================
-   RENDER APPLICATIONS TABLE (FETCH FROM BACKEND)
+   WITHDRAW APPLICATION
+========================================================== */
+async function withdrawApplication(id) {
+
+    const confirmWithdraw = confirm(
+        "Are you sure you want to withdraw this application?"
+    );
+
+    if (!confirmWithdraw) return;
+
+    try {
+
+        const session = JSON.parse(
+            localStorage.getItem("placementor_session")
+        );
+
+        const token = session?.token;
+
+        const response = await fetch(
+            `http://localhost:5000/api/student/application/${id}/withdraw`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert("Application withdrawn successfully");
+            renderApplications();
+        } else {
+            alert(data.message || "Withdrawal failed");
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert("Server error");
+    }
+}
+
+/* ==========================================================
+   RENDER APPLICATIONS TABLE
 ========================================================== */
 async function renderApplications() {
+
     const tableBody = document.getElementById("applicationsTable");
+
     if (!tableBody) return;
 
     try {
-        // Get token
-        const token = JSON.parse(localStorage.getItem("placementor_session"))?.token;
+
+        const session = JSON.parse(
+            localStorage.getItem("placementor_session")
+        );
+
+        const token = session?.token;
+
         if (!token) {
-            tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:40px; color:#64748b;">Login required.</td></tr>`;
+
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align:center;padding:40px;">
+                        Login required
+                    </td>
+                </tr>
+            `;
+
             return;
         }
 
-        // Fetch applications from backend
-        const res = await fetch("http://localhost:5000/api/student/applications", {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-
-        if (!res.ok) throw new Error("Failed to fetch applications");
+        const res = await fetch(
+            "http://localhost:5000/api/student/applications",
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
 
         const applications = await res.json();
 
         tableBody.innerHTML = "";
 
-        // Empty state
-        if (!Array.isArray(applications) || applications.length === 0) {
+        if (!applications.length) {
+
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="4" style="text-align:center; padding:40px; color:#64748b;">
-                        <i class="fas fa-folder-open" style="font-size:2rem;"></i><br/>
-                        No applications yet.
+                    <td colspan="5" style="text-align:center;padding:40px;">
+                        No applications found
                     </td>
                 </tr>
             `;
+
             return;
         }
 
-        // Render latest applications first
-        applications.slice().reverse().forEach(app => {
-            const statusText = app.status || "Pending";
-            const statusClass = statusText.toLowerCase();
+        applications.reverse().forEach(app => {
+
+            const isReviewed =
+                app.status === "shortlisted" ||
+                app.status === "rejected";
+
+            const showWithdraw =
+                !isReviewed &&
+                !app.isWithdrawn;
+
+            const statusText = app.isWithdrawn
+                ? "Withdrawn"
+                : (app.status || "Pending");
+
+            const statusClass = app.isWithdrawn
+                ? "withdrawn"
+                : (app.status || "pending").toLowerCase();
 
             tableBody.innerHTML += `
                 <tr>
                     <td>${app.job?.company || "—"}</td>
+
                     <td>${app.job?.title || "—"}</td>
-                    <td>${formatDate(app.appliedAt || app.date)}</td>
+
+                    <td>${formatDate(app.createdAt)}</td>
+
                     <td>
                         <span class="status ${statusClass}">
                             ${statusText}
                         </span>
                     </td>
+
+                    <td>
+                        ${
+                            showWithdraw
+                            ? `
+                                <button
+                                    class="withdraw-btn"
+                                    onclick="withdrawApplication('${app._id}')"
+                                >
+                                    Withdraw
+                                </button>
+                              `
+                            : `
+                                <span style="color:gray;">
+                                    —
+                                </span>
+                              `
+                        }
+                    </td>
                 </tr>
             `;
         });
 
-        // Save to localStorage (optional cache)
-        localStorage.setItem("student_applications", JSON.stringify(applications));
-
     } catch (err) {
-        console.error("Error fetching applications:", err);
-        tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:40px; color:#f87171;">Failed to load applications.</td></tr>`;
+
+        console.error("Error:", err);
+
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align:center;padding:40px;color:red;">
+                    Failed to load applications
+                </td>
+            </tr>
+        `;
     }
 }
 
@@ -89,12 +193,16 @@ function navigate(page) {
    LOGOUT
 ========================================================== */
 function logout() {
+
     localStorage.removeItem("placementor_session");
-    localStorage.removeItem("student_applications");
+
     window.location.href = "../login.html";
 }
 
 /* ==========================================================
    INIT
 ========================================================== */
-document.addEventListener("DOMContentLoaded", renderApplications);
+document.addEventListener(
+    "DOMContentLoaded",
+    renderApplications
+);

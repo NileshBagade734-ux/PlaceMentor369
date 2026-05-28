@@ -65,7 +65,20 @@ export const getAllRecruiterApplications = async (req, res) => {
       .populate("student", "name branch cgpa resume")
       .populate("job", "title");
 
-    res.status(200).json(applications);
+    const updatedApplications = applications.map((application) => ({
+      ...application._doc,
+
+      isWithdrawn: application.isWithdrawn,
+
+      withdrawnAt: application.withdrawnAt,
+
+      statusDisplay: application.isWithdrawn
+        ? "Withdrawn"
+        : application.status,
+    }));
+
+    res.status(200).json(updatedApplications);
+
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch applications" });
   }
