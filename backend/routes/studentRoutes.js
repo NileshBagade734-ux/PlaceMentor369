@@ -7,6 +7,10 @@ import {
   applyJob,
   getApplications
 } from "../controllers/studentController.js";
+import {
+  generateQuestions,
+  evaluateAnswers
+} from "../controllers/mockInterviewController.js";
 
 const router = express.Router();
 
@@ -25,5 +29,9 @@ router.post("/apply/:jobId", verifyToken, applyJob);
 
 // Get all applications of this student
 router.get("/applications", verifyToken, getApplications);
+
+// Mock Interview Routes
+router.post("/mock-interview/generate", verifyToken, generateQuestions);
+router.post("/mock-interview/evaluate", verifyToken, evaluateAnswers);
 
 export default router;
