@@ -3,15 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="
-default-src 'self';
-script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com;
 
-style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-font-src 'self' https://fonts.gstatic.com;
-img-src 'self' https://img.icons8.com data:;
-connect-src 'self' http://localhost:5000 https://unpkg.com;
-">
 
   <title>Register – PlacementorAI</title>
 
@@ -25,9 +17,11 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <link rel="stylesheet" href="css/register.css">
   <link rel="stylesheet" href="css/style.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <style>
     body,
     header,
@@ -96,76 +90,51 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
   </header>
 
   <main class="flex-1 flex items-center justify-center px-6 py-12">
-    <div id="register-card" class="w-full max-w-md opacity-0 translate-y-6 transition-all duration-500">
-
+    <div id="register-card" class="w-full max-w-md transition-all duration-500">
       <div class="text-center mb-6">
         <h2 class="text-3xl font-semibold text-gray-900 dark:text-white mb-2">Create Account</h2>
         <p class="text-gray-600 dark:text-gray-400">Join PlacementorAI today </p>
       </div>
 
       <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border border-slate-200 dark:border-gray-700">
-        <form id="registerForm" class="space-y-4 needs-validation" novalidate>
+        <form id="registerForm" class="space-y-4">
           <!-- Full Name -->
           <div>
             <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Full Name</label>
             <input id="name" type="text" required placeholder="Nilesh Bagade"
-              class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
-            <div class="invalid-feedback">
-              Full name is required.
-            </div>
-            <div class="valid-feedback">
-              Looks good.
-            </div>
+              class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
           </div>
 
           <!-- Email -->
           <div>
             <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
             <input id="email" type="email" required placeholder="nilesh345@gmail.com"
-              class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
-            <div class="invalid-feedback">
-              Please enter a valid email address.
-            </div>
-            <div class="valid-feedback">
-              Valid email.
-            </div>
-            <!-- <p id="emailError" class="text-red-500 text-sm hidden mt-1">Please enter a valid email.</p> -->
+              class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
+            <p id="emailError" class="text-red-500 text-sm hidden mt-1">Please enter a valid email.</p>
           </div>
 
           <!-- Password -->
           <div class="relative">
             <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
             <input id="password" type="password" required placeholder="••••••••"
-              class="mt-1 w-full px-4 py-3 pr-12 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
-            <div class="invalid-feedback">
-              Password must be at least 8 characters.
-            </div>
-            <div class="valid-feedback">
-              Strong password.
-            </div>
+              class="mt-1 w-full px-4 py-3 pr-12 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
             <button type="button" id="togglePassword"
               class="absolute right-4 top-[38px] text-gray-400 hover:text-indigo-600">
               <i data-lucide="eye" id="eyeIcon"></i>
             </button>
-            <!-- <p id="passwordError" class="text-red-500 text-sm hidden mt-1">Password must be at least 8 characters.</p> -->
+            <p id="passwordError" class="text-red-500 text-sm hidden mt-1">Password must be at least 8 characters.</p>
           </div>
 
           <!-- Role -->
           <div>
             <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Role</label>
             <select id="role" required
-              class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer form-select">
+              class="mt-1 w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer">
               <option value="" disabled selected>Choose your role</option>
               <option value="student">Student</option>
               <option value="recruiter">Recruiter</option>
               <option value="admin">Placement Officer</option>
             </select>
-            <div class="invalid-feedback">
-              Please select a role.
-            </div>
-            <div class="valid-feedback">
-              Looks good.
-            </div>
           </div>
 
           <!-- Submit -->
@@ -174,6 +143,29 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
             <i data-lucide="user-plus"></i>
             <span id="btnText">Create Account</span>
           </button>
+
+          <!-- Divider -->
+          <div class="flex items-center my-4">
+            <hr class="flex-grow border-gray-300 dark:border-gray-600">
+            <span class="px-2 text-gray-400 text-sm">OR</span>
+            <hr class="flex-grow border-gray-300 dark:border-gray-600">
+          </div>
+
+          <!-- Social -->
+          <div class="flex gap-4">
+
+            <!-- Google Identity Services Container -->
+            <div id="googleBtn" class="flex-1 flex justify-center overflow-hidden rounded-xl"></div>
+
+            <button
+              type="button"
+              class="flex-1 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-600 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition dark:text-white text-sm"
+            >
+              <img src="https://img.icons8.com/ios-glyphs/20/github.png" class="dark:invert" alt="GitHub">
+              GitHub
+            </button>
+
+          </div>
         </form>
       </div>
 

@@ -38,6 +38,9 @@
       transform: scale(1.05);
     }
   </style>
+
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body class="min-h-screen bg-slate-50 dark:bg-gray-900 transition-colors duration-300 flex flex-col">
@@ -157,13 +160,8 @@
           <!-- Social -->
           <div class="flex gap-4">
 
-            <button
-              type="button"
-              class="flex-1 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-600 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition dark:text-white text-sm"
-            >
-              <img src="https://img.icons8.com/color/20/google-logo.png" alt="Google">
-              Google
-            </button>
+            <!-- Google Identity Services Container -->
+            <div id="googleBtn" class="flex-1 flex justify-center overflow-hidden rounded-xl"></div>
 
             <button
               type="button"
