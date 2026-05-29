@@ -53,3 +53,126 @@
 /* Hide scrollbar for clean UI */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+/* Resume Analyzer */
+.analysis-panel {
+    display: grid;
+    gap: 1rem;
+}
+
+.analysis-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.analysis-score-badge {
+    min-width: 110px;
+    border-radius: 1rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(15, 23, 42, 0.75);
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.analysis-score-badge small {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #cbd5e1;
+    margin-top: 0.25rem;
+}
+
+.analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.9rem;
+}
+
+.analysis-card {
+    border-radius: 1rem;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 1rem;
+}
+
+.analysis-card h4 {
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+}
+
+.analysis-list {
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+}
+
+.analysis-list li {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    color: #e2e8f0;
+    line-height: 1.5;
+}
+
+.analysis-list li::before {
+    content: "•";
+    color: #818cf8;
+    font-weight: 900;
+}
+
+.analysis-list.analysis-list--dark {
+    color: #334155;
+}
+
+.analysis-list.analysis-list--dark li {
+    color: #334155;
+}
+
+.analysis-list.analysis-list--dark li::before {
+    color: #4f46e5;
+}
+
+.keyword-chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.keyword-chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.keyword-chip.matched {
+    background: rgba(16, 185, 129, 0.14);
+    color: #6ee7b7;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.keyword-chip.missing {
+    background: rgba(245, 158, 11, 0.12);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.analysis-note {
+    border-radius: 1rem;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.9rem 1rem;
+    color: #cbd5e1;
+    line-height: 1.6;
+}
