@@ -44,6 +44,13 @@ app.use("/api/student", studentRoutes);
 app.use("/api/recruiter", recruiterRoutes);
 app.use("/api/admin", adminRoutes);
 
+// Config route (for public env variables like Google Client ID)
+app.get("/api/config", (req, res) => {
+  res.json({
+    googleClientId: process.env.GOOGLE_CLIENT_ID
+  });
+});
+
 // 404 Route
 app.use((req, res) => {
   res.status(404).json({ message: "❌ Route not found" });
