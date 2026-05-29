@@ -29,7 +29,7 @@ const eyeIcon = document.getElementById("eyeIcon");
 togglePasswordBtn.addEventListener("click", () => {
   const isPassword = passwordInput.type === "password";
   passwordInput.type = isPassword ? "text" : "password";
-  eyeIcon.setAttribute("data-lucide", isPassword ? "eye-off" : "eye");
+  togglePasswordBtn.innerHTML = `<i data-lucide="${isPassword ? 'eye-off' : 'eye'}"></i>`;
   lucide.createIcons();
 });
 
@@ -94,3 +94,76 @@ registerForm.onsubmit = async (e) => {
     btnText.innerText = "Create Account";
   }
 };
+
+// -------------------------
+// Google Auth Logic
+// -------------------------
+window.onload = async function () {
+  if (window.google) {
+    try {
+      const configRes = await fetch("http://localhost:5000/api/config");
+      const config = await configRes.json();
+      
+      if (config.googleClientId) {
+        google.accounts.id.initialize({
+          client_id: config.googleClientId,
+          callback: handleGoogleCredentialResponse
+        });
+        
+        const googleBtnContainer = document.getElementById("googleBtn");
+        if (googleBtnContainer) {
+          google.accounts.id.renderButton(
+            googleBtnContainer,
+            { theme: "outline", size: "large" }
+          );
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load Google Client ID:", err);
+    }
+  }
+};
+
+async function handleGoogleCredentialResponse(response) {
+  try {
+    const res = await fetch("http://localhost:5000/api/auth/google", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ token: response.credential })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Google Login failed");
+      return;
+    }
+
+    if (data.requireRole) {
+      // User doesn't exist, redirect to role selection
+      sessionStorage.setItem("google_registration_token", data.registrationToken);
+      window.location.href = "select-role.html";
+      return;
+    }
+
+    // Login successful
+    localStorage.setItem(
+      "placementor_session",
+      JSON.stringify({ token: data.token, user: data.user })
+    );
+
+    if (data.user.role === "admin") {
+      window.location.href = "/frontend/admin/admin-dashboard.html";
+    } else if (data.user.role === "recruiter") {
+      window.location.href = "/frontend/recruiter/recruiter-dashboard.html";
+    } else {
+      window.location.href = "/frontend/student/student-dashboard.html";
+    }
+  } catch (err) {
+    console.error("Google Login Error:", err);
+    alert("Server error during Google Login. Try again later.");
+  }
+}
+
