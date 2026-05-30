@@ -11,6 +11,23 @@ import recruiterRoutes from "./routes/recruiterRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 
 dotenv.config();
+
+/* ============================
+   ENVIRONMENT VALIDATION
+============================ */
+const requiredEnvVars = ["MONGO_URI", "JWT_SECRET"];
+const missingVars = requiredEnvVars.filter((v) => !process.env[v]);
+
+if (missingVars.length > 0) {
+  console.error(
+    `❌ Missing required environment variables: ${missingVars.join(", ")}`
+  );
+  console.error(
+    "   → Create a .env file in the backend/ directory with MONGO_URI and JWT_SECRET"
+  );
+  process.exit(1);
+}
+
 const app = express();
 
 /* ============================
@@ -21,7 +38,7 @@ const app = express();
 app.use(
   cors({
     origin: true, // dynamically allow any frontend port
-    credentials: true
+    credentials: true,
   })
 );
 
@@ -34,7 +51,13 @@ app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 ============================ */
 
 // Health check
-app.get("/", (req, res) => res.status(200).send("🚀 PlacementorAI Backend Running!"));
+app.get("/", (req, res) =>
+  res.status(200).json({
+    status: "ok",
+    message: "🚀 PlacementorAI Backend Running!",
+    timestamp: new Date().toISOString(),
+  })
+);
 
 // Auth routes
 app.use("/api/auth", authRoutes);
@@ -58,17 +81,42 @@ app.use((err, req, res, next) => {
 /* ============================
    MONGODB + SERVER START
 ============================ */
-/* ============================
-   MONGODB + SERVER START
-============================ */
 const PORT = process.env.PORT || 5000;
 
 mongoose
   .connect(process.env.MONGO_URI) // no options needed in Mongoose v7+
   .then(() => {
     console.log("✅ MongoDB Connected successfully");
-    app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+    const server = app.listen(PORT, () =>
+      console.log(`🚀 Server running on http://localhost:${PORT}`)
+    );
+
+    /* ============================
+       GRACEFUL SHUTDOWN
+    ============================ */
+    const shutdown = async (signal) => {
+      console.log(`\n⚠️  Received ${signal}. Shutting down gracefully...`);
+      server.close(async () => {
+        try {
+          await mongoose.connection.close();
+          console.log("✅ MongoDB connection closed.");
+        } catch (err) {
+          console.error("❌ Error closing MongoDB:", err.message);
+        }
+        process.exit(0);
+      });
+
+      // Force shutdown after 10 seconds if graceful fails
+      setTimeout(() => {
+        console.error("❌ Forced shutdown after timeout.");
+        process.exit(1);
+      }, 10000);
+    };
+
+    process.on("SIGINT", () => shutdown("SIGINT"));
+    process.on("SIGTERM", () => shutdown("SIGTERM"));
   })
   .catch((err) => {
     console.error("❌ MongoDB connection failed:", err.message);
+    process.exit(1);
   });
