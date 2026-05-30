@@ -1,0 +1,73 @@
+name: CI - Backend Lint & Build Check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'package.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'package.json'
+
+jobs:
+  backend-ci:
+    name: Backend CI
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Check for syntax errors
+        working-directory: backend
+        run: node --check server.js
+
+      - name: Verify all model files parse correctly
+        working-directory: backend
+        run: |
+          for file in models/*.js; do
+            echo "Checking $file..."
+            node --check "$file"
+          done
+
+      - name: Verify all controller files parse correctly
+        working-directory: backend
+        run: |
+          for file in controllers/*.js; do
+            echo "Checking $file..."
+            node --check "$file"
+          done
+
+      - name: Verify all route files parse correctly
+        working-directory: backend
+        run: |
+          for file in routes/*.js; do
+            echo "Checking $file..."
+            node --check "$file"
+          done
+
+      - name: Verify all middleware files parse correctly
+        working-directory: backend
+        run: |
+          for file in middlewares/*.js; do
+            echo "Checking $file..."
+            node --check "$file"
+          done
