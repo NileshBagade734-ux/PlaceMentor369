@@ -47,8 +47,9 @@
                 <section class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                     <h3 class="font-bold mb-4">Personal Details</h3>
                     <div class="space-y-4">
-                        <input type="text" id="fullName" placeholder="Full Name" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
-                        <input type="text" id="rollNumber" placeholder="Roll Number" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="fullName" required placeholder="Full Name" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="rollNumber" required placeholder="Roll Number" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="tel" id="mobile" required placeholder="Mobile Number" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </section>
 
@@ -66,7 +67,7 @@
     <option value="CHE">Chemical Engineering</option>
     <option value="AIDS">AI & Data Science</option>
 </select>
-                        <input type="number" id="cgpa" step="0.01" placeholder="Current CGPA" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="number" id="cgpa" step="0.01" required placeholder="Current CGPA" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </section>
             </div>
@@ -114,6 +115,7 @@
     </main>
 </div>
 
+<script src="../js/validationUtils.js"></script>
 <script src="../js/student-profile.js"></script>
 <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>

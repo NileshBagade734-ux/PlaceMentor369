@@ -102,6 +102,16 @@ if (jobForm) {
   jobForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    const isValid = window.ValidationUtils.validateForm(jobForm, [
+      { id: 'title', type: 'empty' },
+      { id: 'company', type: 'empty' },
+      { id: 'description', type: 'empty' },
+      { id: 'cgpa', type: 'cgpa' },
+      { id: 'deadline', type: 'empty' }
+    ]);
+
+    if (!isValid) return;
+
     const selectedBranches = Array.from(
       document.querySelectorAll('input[name="branch"]:checked')
     ).map(cb => cb.value);

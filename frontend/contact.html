@@ -312,11 +312,11 @@
           Raise a Support Ticket
         </h3>
 
-        <form id="supportForm" class="space-y-4">
-          <input class="w-full border px-4 py-2 rounded-lg" placeholder="Your Name" required>
-          <input class="w-full border px-4 py-2 rounded-lg" type="email" placeholder="Your Email" required>
+        <form id="supportForm" class="space-y-4" novalidate>
+          <input id="contactName" class="w-full border px-4 py-2 rounded-lg" placeholder="Your Name" required>
+          <input id="contactEmail" class="w-full border px-4 py-2 rounded-lg" type="email" placeholder="Your Email" required>
 
-          <select class="w-full border px-4 py-2 rounded-lg" required>
+          <select id="contactIssue" class="w-full border px-4 py-2 rounded-lg" required>
             <option value="">Select Issue</option>
             <option>Login Issue</option>
             <option>Application Issue</option>
@@ -324,7 +324,7 @@
             <option>Other</option>
           </select>
 
-          <textarea class="w-full border px-4 py-2 rounded-lg" rows="4"
+          <textarea id="contactDesc" class="w-full border px-4 py-2 rounded-lg" rows="4"
             placeholder="Describe your issue..." required></textarea>
 
           <button class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold">
@@ -406,6 +406,7 @@
 </div>
 
 
+<script src="js/validationUtils.js"></script>
 <script>
   // Mobile Hamburger Toggle Logic
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -440,6 +441,14 @@
 
   document.getElementById("supportForm").addEventListener("submit", e => {
     e.preventDefault();
+    const isValid = window.ValidationUtils.validateForm(e.target, [
+      { id: 'contactName', type: 'empty' },
+      { id: 'contactEmail', type: 'email' },
+      { id: 'contactIssue', type: 'empty' },
+      { id: 'contactDesc', type: 'empty' }
+    ]);
+    if (!isValid) return;
+
     alert("✅ Support ticket submitted successfully!");
     e.target.reset();
   });
