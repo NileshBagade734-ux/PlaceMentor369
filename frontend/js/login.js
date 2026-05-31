@@ -31,17 +31,17 @@ passwordToggleBtn.addEventListener("click", () => {
 loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  if (!loginForm.checkValidity()) {
-    return; // validation.js will handle UI
-  }
+  const isValid = window.ValidationUtils.validateForm(loginForm, [
+    { id: 'role', type: 'empty' },
+    { id: 'email', type: 'email' },
+    { id: 'password', type: 'empty' } // Password in login doesn't strictly need complexity check, but we can use 'empty' or 'password'. We'll use 'empty' so they aren't blocked if they somehow have an old simple password. Wait, let's use 'empty' for login password, 'email' for email, 'empty' for role.
+  ]);
 
-  const email = document.getElementById("email")?.value;
-  const password = passwordField?.value;
+  if (!isValid) return;
+
+  const email = document.getElementById("email")?.value.trim();
+  const password = passwordField?.value.trim();
   const role = document.getElementById("role")?.value;
-
-  if (!email || !password || !role) {
-    return alert("Please fill all fields!");
-  }
 
   loginBtn.disabled = true;
   btnText.innerText = "Authenticating...";

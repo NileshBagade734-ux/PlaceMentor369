@@ -82,7 +82,7 @@
       <!-- Card -->
       <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700">
 
-        <form id="loginForm" class="space-y-5">
+        <form id="loginForm" class="space-y-5" novalidate>
 
           <!-- Role -->
           <div>
@@ -92,6 +92,7 @@
 
             <select
               id="role"
+              required
               class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
             >
               <option value="">Select your role</option>
@@ -110,6 +111,7 @@
             <input
               type="email"
               id="email"
+              required
               placeholder="you@example.com"
               class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
             />
@@ -124,6 +126,7 @@
             <input
               type="password"
               id="password"
+              required
               placeholder="••••••••"
               class="w-full px-4 py-3 pr-12 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
             />
@@ -192,6 +195,7 @@
   <script src="js/theme.js"></script>
   
   <!-- Auth Script -->
+  <script src="js/validationUtils.js"></script>
   <script src="js/login.js"></script>
 
   <!-- Animations -->

@@ -24,6 +24,7 @@ const { token, user } = session;
 // ============================
 const fullNameInput = document.getElementById("fullName");
 const rollInput = document.getElementById("rollNumber");
+const mobileInput = document.getElementById("mobile");
 const branchSelect = document.getElementById("branch");
 const cgpaInput = document.getElementById("cgpa");
 
@@ -55,6 +56,7 @@ function updateCompletion() {
     const filled = [
         fullNameInput.value.trim(),
         rollInput.value.trim(),
+        mobileInput.value.trim(),
         branchSelect.value,
         cgpaInput.value,
         skills.length > 0,
@@ -150,6 +152,7 @@ async function loadProfile() {
 
         fullNameInput.value = profile.name || "";
         rollInput.value = profile.roll || "";
+        mobileInput.value = profile.mobile || "";
         cgpaInput.value = profile.cgpa || "";
 
         Array.from(branchSelect.options).forEach(o => {
@@ -175,9 +178,19 @@ async function loadProfile() {
 // SAVE PROFILE
 // ============================
 saveBtn?.addEventListener("click", async () => {
+    const isValid = window.ValidationUtils.validateForm(document.body, [
+        { id: 'fullName', type: 'empty' },
+        { id: 'rollNumber', type: 'empty' },
+        { id: 'mobile', type: 'mobile' },
+        { id: 'cgpa', type: 'cgpa' }
+    ]);
+
+    if (!isValid) return;
+
     const payload = {
         name: fullNameInput.value.trim(),
         roll: rollInput.value.trim(),
+        mobile: mobileInput.value.trim(),
         branch: branchSelect.value,
         cgpa: parseFloat(cgpaInput.value) || 0,
         college: "GH Raisoni",
