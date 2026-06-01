@@ -14,7 +14,7 @@
     <div class="logo">PlacementorAI</div>
     <div class="nav-right">
       <span>Recruiter</span>
-      <button class="logout-btn" onclick="location.href='../login.html'">
+      <button class="logout-btn" onclick="logout()">
         <i data-lucide="log-out" class="w-4 h-4"></i> Logout
       </button>
     </div>
@@ -97,11 +97,18 @@
 
   <script src="../js/postjob.js"></script>
   <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
-<script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
+  <script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
 
-<!-- Botpress Chatbot Scripts -->
- <script>
-  lucide.createIcons();
-</script>
+  <!-- Botpress Chatbot Scripts -->
+  <script>
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      location.href = '../login.html';
+    }
+  </script>
+  <script>
+    lucide.createIcons();
+  </script>
 </body>
 </html>
