@@ -6,7 +6,11 @@ import generateToken from "../utils/generateToken.js";
 export const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
-
+ if (!name || !email || !password || !role) {
+   return res.status(400).json({
+     message: "Please provide all required fields"
+   });
+  }
     const exists = await User.findOne({ email });
     if (exists) {
       return res.status(400).json({ message: "User already exists" });
