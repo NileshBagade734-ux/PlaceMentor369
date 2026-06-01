@@ -65,17 +65,16 @@ async function loadApplicants(jobId = null) {
  *********************************/
 function renderTable(apps) {
   const tableBody = document.getElementById("recruiter-table-body");
+  const emptyState = document.getElementById("emptyState");
 
   if (!apps.length) {
-    tableBody.innerHTML = `
-      <tr>
-        <td colspan="6" class="p-6 text-center text-slate-400">
-          No applicants yet
-        </td>
-      </tr>
-    `;
+    tableBody.innerHTML = "";
+    emptyState.classList.remove("hidden");
+    lucide.createIcons();
     return;
   }
+
+  emptyState.classList.add("hidden");
 
   tableBody.innerHTML = apps.map(app => {
     const status = app.status || "applied";

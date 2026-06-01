@@ -6,31 +6,24 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="../css/style.css">
-<link rel="stylesheet" href="../css/manage-applicant.css">
-
+  <link rel="stylesheet" href="../css/manage-applicant.css">
 </head>
 <body class="bg-slate-50">
   <div class="flex min-h-screen">
     <aside class="w-64 bg-white border-r border-slate-200 p-6 hidden md:block">
       <h1 class="text-xl font-bold text-indigo-600 mb-10">PlacementorAI</h1>
-     <nav class="menu space-y-2">
-
-  <a href="recruiter-dashboard.html">
-    <i data-lucide="layout-dashboard"></i> Dashboard
-  </a>
-
-  <a href="postjob.html">
-    <i data-lucide="plus-circle"></i> Post Job
-  </a>
-<a href="manage-applicant.html" class="nav-link active">
-  <i data-lucide="users"></i>
-  <span>Manage Applicants</span>
-</a>
-
-</nav>
-
-
-
+      <nav class="menu space-y-2">
+        <a href="recruiter-dashboard.html">
+          <i data-lucide="layout-dashboard"></i> Dashboard
+        </a>
+        <a href="postjob.html">
+          <i data-lucide="plus-circle"></i> Post Job
+        </a>
+        <a href="manage-applicant.html" class="nav-link active">
+          <i data-lucide="users"></i>
+          <span>Manage Applicants</span>
+        </a>
+      </nav>
     </aside>
 
     <main class="flex-1 p-8">
@@ -58,15 +51,32 @@
             </tr>
           </thead>
           <tbody id="recruiter-table-body" class="divide-y divide-slate-100">
-            </tbody>
+          </tbody>
         </table>
+
+        <!-- ✅ Empty State UI -->
+        <div id="emptyState" class="hidden text-center py-16 text-slate-400">
+          <i data-lucide="inbox" class="w-16 h-16 mx-auto mb-4 opacity-30"></i>
+          <h3 class="text-lg font-semibold text-slate-600">
+            No applications received yet
+          </h3>
+          <p class="text-sm mt-1">
+            Post a job to start receiving applications.
+          </p>
+          <a href="postjob.html"
+            class="mt-4 inline-block bg-indigo-600 text-white 
+            px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+            Post a Job →
+          </a>
+        </div>
+
       </div>
     </main>
   </div>
+
   <script src="../js/manage-applicant.js"></script>
   <script>
-  lucide.createIcons();
-</script>
-
+    lucide.createIcons();
+  </script>
 </body>
 </html>
