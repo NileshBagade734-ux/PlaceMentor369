@@ -1,7 +1,11 @@
 const API_BASE = "http://localhost:5000/api";
 
 export async function apiRequest(endpoint, method = "GET", body) {
-  const token = localStorage.getItem("token");
+  // 1. Safely parse the nested token from the main session object
+  const session = JSON.parse(localStorage.getItem("placementor_session"));
+  
+  // 2. Fallback to standalone token string to prevent breaking any other views
+  const token = session?.token || localStorage.getItem("token");
 
   const res = await fetch(API_BASE + endpoint, {
     method,

@@ -36,8 +36,18 @@ async function loadApplications() {
 
     const data = await res.json();
 
-    if (!res.ok || !Array.isArray(data)) {
-      throw new Error("Invalid response");
+    if (!res.ok) {
+      const message = data?.message || "Failed to load applications";
+      if (res.status === 400 && message.toLowerCase().includes("profile")) {
+        alert("Please complete your student profile first.");
+        window.location.href = "../student/student-profile.html";
+        return;
+      }
+      throw new Error(message);
+    }
+
+    if (!Array.isArray(data)) {
+      throw new Error("Unexpected response format");
     }
 
     localStorage.setItem(APPLICATION_KEY, JSON.stringify(data));
@@ -46,7 +56,7 @@ async function loadApplications() {
 
   } catch (err) {
     console.error("Dashboard error:", err);
-    alert("Failed to load applications. Please refresh.");
+    alert(err.message || "Failed to load applications. Please refresh.");
   }
 }
 

@@ -87,7 +87,7 @@ async function init() {
         title: job.title,
         company: job.company,
         cgpa: job.cgpa || 0,
-        branch: job.branch || [],
+        branches: job.branch || [],
         deadline: job.deadline ? new Date(job.deadline).toLocaleDateString() : "Open",
         skills: job.skillsRequired || [],
         description: job.description
@@ -137,11 +137,7 @@ function renderJobList() {
 
   list.innerHTML = allAvailableJobs
     .map(job => {
-      // ✅ Eligibility logic fixed
-      const isEligible =
-        studentCGPA >= (job.cgpa || 0) &&
-        (!job.branches || job.branches.length === 0 || job.branches.includes(studentBranch));
-
+      const eligibility = checkEligibility(studentSession, job);
       const isApplied = appliedJobs.includes(job.id);
 
       return `
@@ -149,17 +145,20 @@ function renderJobList() {
              id="card-${job.id}"
              class="job-card bg-white p-5 rounded-xl border border-slate-200 cursor-pointer hover:shadow-md transition-all mb-3">
             <div class="flex justify-between items-start mb-2">
-                <h3 class="font-bold text-slate-900">${job.title}</h3>
+                <div>
+                  <h3 class="font-bold text-slate-900">${job.title}</h3>
+                  <p class="text-sm text-slate-500">${job.company}</p>
+                </div>
                 <span class="px-2 py-1 text-[10px] font-bold rounded ${
-                  isEligible ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                  eligibility.eligible ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
                 }">
-                    ${isEligible ? "ELIGIBLE" : "INELIGIBLE"}
+                    ${eligibility.eligible ? "Eligible ✔" : "Not Eligible ❌"}
                 </span>
             </div>
-            <p class="text-sm text-slate-500">${job.company}</p>
-            <div class="flex justify-between items-center mt-3">
-                <p class="text-[10px] text-slate-400 uppercase font-medium">Deadline: ${job.deadline}</p>
-                <p class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">REQ: ${job.cgpa}</p>
+            <div class="flex flex-wrap gap-3 items-center mt-3 text-[10px]">
+                <span class="text-slate-400 uppercase font-medium">Deadline: ${job.deadline}</span>
+                <span class="text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded">Min CGPA: ${job.cgpa}</span>
+                <span class="text-slate-700 bg-slate-100 px-2 py-0.5 rounded">Branches: ${job.branches?.join(", ") || "Any"}</span>
             </div>
         </div>
       `;
@@ -187,51 +186,86 @@ window.selectJob = function(id) {
   if (emptyState) emptyState.classList.add("hidden");
   detailPane.classList.remove("hidden");
 
-  const studentCGPA = studentSession.cgpa || 0;
-  const studentBranch = studentSession.branch || "";
-  const isEligible =
-    studentCGPA >= (job.cgpa || 0) &&
-    (!job.branches || job.branches.length === 0 || job.branches.includes(studentBranch));
+  const eligibility = checkEligibility(studentSession, job);
   const isApplied = appliedJobs.includes(job.id);
+
+  const requirementItems = [
+    {
+      label: eligibility.details.eligibleCGPA
+        ? "CGPA requirement met"
+        : `Minimum CGPA required: ${eligibility.details.minCGPA}`,
+      passed: eligibility.details.eligibleCGPA
+    },
+    {
+      label: eligibility.details.eligibleBranch
+        ? "Branch eligible"
+        : `Branch not eligible`,
+      passed: eligibility.details.eligibleBranch
+    }
+  ];
 
   detailPane.innerHTML = `
     <div class="animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <div class="flex justify-between items-start mb-8">
+      <div class="flex flex-col md:flex-row justify-between items-start gap-6 mb-8">
         <div>
           <h1 class="text-4xl font-black text-slate-900 mb-2">${job.title}</h1>
           <p class="text-xl text-indigo-600 font-semibold">${job.company}</p>
+          <p class="text-sm text-slate-500 mt-2">Branch: ${job.branches?.join(", ") || "Any"} • Min CGPA: ${job.cgpa}</p>
         </div>
-        <button
-          onclick="handleApply('${job.id}')"
-          ${isApplied || !isEligible ? "disabled" : ""}
-          class="px-10 py-4 rounded-xl font-bold text-white shadow-lg transition-all ${
-            isApplied
-              ? "bg-slate-300 cursor-not-allowed"
-              : !isEligible
-              ? "bg-red-400 cursor-not-allowed"
-              : "bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-1 active:scale-95"
+        <div class="flex flex-col gap-3 w-full md:w-auto">
+          <span class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ${
+            eligibility.eligible
+              ? "bg-emerald-100 text-emerald-700"
+              : "bg-rose-100 text-rose-700"
           }">
-          ${isApplied ? "Application Sent" : !isEligible ? "Criteria Not Met" : "Apply Now"}
-        </button>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-        <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-          <p class="text-xs font-bold text-slate-400 uppercase mb-2">Requirement Check</p>
-          <p class="text-xl font-bold ${isEligible ? "text-green-600" : "text-red-500"}">
-            Target: ${job.cgpa}+ (Yours: ${studentSession.cgpa})
+            ${eligibility.eligible ? "Eligible ✔" : "Not Eligible ❌"}
+          </span>
+          <button
+            onclick="handleApply('${job.id}')"
+            class="px-10 py-4 rounded-xl font-bold text-white shadow-lg transition-all ${
+              isApplied
+                ? "bg-slate-300 cursor-not-allowed"
+                : eligibility.eligible
+                ? "bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-1 active:scale-95"
+                : "bg-orange-500 hover:bg-orange-600"
+            }"
+            ${isApplied ? "disabled" : ""}>
+            ${isApplied ? "Application Sent" : "Apply Now"}
+          </button>
+          ${!eligibility.eligible && !isApplied ? `
+          <p class="text-sm text-rose-600 bg-rose-50 border border-rose-100 rounded-xl p-3 mt-2">
+            You may not meet all job requirements.
           </p>
+          ` : ""}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+        <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+          <p class="text-xs font-bold text-slate-400 uppercase mb-3">Eligibility Breakdown</p>
+          <ul class="space-y-3">
+            ${requirementItems.map(item => `
+              <li class="flex items-center gap-3 text-sm ${item.passed ? "text-emerald-700" : "text-rose-600"}">
+                <span class="w-6 h-6 flex items-center justify-center rounded-full bg-white border ${item.passed ? "border-emerald-200" : "border-rose-200"}">
+                  ${item.passed ? "✔" : "✖"}
+                </span>
+                <span>${item.label}</span>
+              </li>
+            `).join("")}
+          </ul>
         </div>
         <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-          <p class="text-xs font-bold text-slate-400 uppercase mb-2">Matching Skills</p>
+          <p class="text-xs font-bold text-slate-400 uppercase mb-3">Matching Skills</p>
+          <p class="text-sm text-slate-500 mb-3">${job.skills?.length ? `${eligibility.details.matchingSkills.length} of ${eligibility.details.totalSkills} required skills matched` : "No specific skills listed"}.</p>
           <div class="flex flex-wrap gap-2">
-            ${job.skills.map(skill => `<span class="px-2 py-1 text-xs rounded-lg border ${
-              skills.includes(skill)
-                ? "bg-green-50 border-green-200 text-green-700 font-bold"
-                : "bg-white border-slate-200 text-slate-400"
-            }">${skill}</span>`).join("")}
+            ${job.skills.map(skill => {
+              const matched = eligibility.details.matchingSkills.includes(normalizeText(skill));
+              return `<span class="px-2 py-1 text-xs rounded-lg border ${matched ? "bg-green-50 border-green-200 text-green-700 font-bold" : "bg-white border-slate-200 text-slate-400"}">${skill}</span>`;
+            }).join("")}
           </div>
         </div>
       </div>
+
       <div class="prose max-w-none">
         <h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-800">
           <i data-lucide="info" class="w-5 h-5 text-indigo-500"></i> Role Description
@@ -260,6 +294,16 @@ window.handleApply = async function (jobId) {
   if (!jobId) {
     alert("Invalid Job ID");
     return;
+  }
+
+  const job = allAvailableJobs.find((j) => j.id === jobId);
+  const eligibility = job ? checkEligibility(studentSession, job) : null;
+
+  if (job && !eligibility.eligible) {
+    const proceed = window.confirm(
+      "You may not meet all job requirements. Do you want to continue with this application?"
+    );
+    if (!proceed) return;
   }
 
   try {
