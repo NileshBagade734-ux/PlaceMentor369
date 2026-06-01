@@ -40,6 +40,72 @@ const defaultJobs = [
   }
 ];
 
+function debounce(func, delay) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), delay);
+  };
+}
+
+function getFilters() {
+  const searchInput = document.getElementById("search-input");
+  const filterBranch = document.getElementById("filter-branch");
+  const filterCgpa = document.getElementById("filter-cgpa");
+
+  const filters = {};
+  if (searchInput && searchInput.value.trim()) {
+    filters.search = searchInput.value.trim();
+  }
+  if (filterBranch && filterBranch.value) {
+    filters.branch = filterBranch.value;
+  }
+  if (filterCgpa && filterCgpa.value) {
+    filters.minCgpa = filterCgpa.value;
+  }
+  return filters;
+}
+
+async function fetchJobs(filters = {}) {
+  const token = getToken();
+  if (!token) return;
+
+  const params = new URLSearchParams(filters);
+
+  try {
+    const resJobs = await fetch(`${API}/jobs?${params.toString()}`, {
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+    const payload = await resJobs.json();
+
+    let jobsList = [];
+    if (resJobs.ok) {
+      if (payload && Array.isArray(payload.jobs)) {
+        jobsList = payload.jobs;
+      } else if (Array.isArray(payload)) {
+        jobsList = payload;
+      }
+
+      allAvailableJobs = jobsList.map(job => ({
+        id: job._id,
+        title: job.title,
+        company: job.company,
+        cgpa: job.cgpa || 0,
+        branches: job.branch || [],
+        deadline: job.deadline ? new Date(job.deadline).toLocaleDateString() : "Open",
+        skills: job.skillsRequired || [],
+        description: job.description
+      }));
+    } else {
+      console.warn("No jobs found. Using fallback.");
+      allAvailableJobs = defaultJobs;
+    }
+  } catch (err) {
+    console.error("Fetch jobs failed:", err);
+    allAvailableJobs = defaultJobs;
+  }
+}
+
 /* ==========================================================
    INIT FUNCTION
 ========================================================== */
@@ -76,29 +142,34 @@ async function init() {
   // -----------------------------
   // Fetch all approved jobs
   // -----------------------------
-  try {
-    const resJobs = await fetch("http://localhost:5000/api/student/jobs", {
-      headers: { "Authorization": `Bearer ${token}` }
+  await fetchJobs();
+
+  // -----------------------------
+  // Add search and filter event listeners
+  // -----------------------------
+  const searchInput = document.getElementById("search-input");
+  const filterBranch = document.getElementById("filter-branch");
+  const filterCgpa = document.getElementById("filter-cgpa");
+
+  if (searchInput) {
+    searchInput.addEventListener("input", debounce(async () => {
+      await fetchJobs(getFilters());
+      renderJobList();
+    }, 300));
+  }
+
+  if (filterBranch) {
+    filterBranch.addEventListener("change", async () => {
+      await fetchJobs(getFilters());
+      renderJobList();
     });
-    const jobsData = await resJobs.json();
-    if (resJobs.ok && jobsData.length > 0) {
-      allAvailableJobs = jobsData.map(job => ({
-        id: job._id,
-        title: job.title,
-        company: job.company,
-        cgpa: job.cgpa || 0,
-        branches: job.branch || [],
-        deadline: job.deadline ? new Date(job.deadline).toLocaleDateString() : "Open",
-        skills: job.skillsRequired || [],
-        description: job.description
-      }));
-    } else {
-      console.warn("No jobs found. Using fallback.");
-      allAvailableJobs = defaultJobs;
-    }
-  } catch (err) {
-    console.error("Fetch jobs failed:", err);
-    allAvailableJobs = defaultJobs;
+  }
+
+  if (filterCgpa) {
+    filterCgpa.addEventListener("input", async () => {
+      await fetchJobs(getFilters());
+      renderJobList();
+    });
   }
 
   // -----------------------------
