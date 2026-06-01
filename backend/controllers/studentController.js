@@ -47,8 +47,23 @@ export const saveProfile = async (req, res) => {
 ============================ */
 export const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ status: "approved" });
-    res.status(200).json(jobs);
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+    const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 10, 1), 50);
+    const skip = (page - 1) * limit;
+
+    const filter = { status: "approved" };
+    const totalJobs = await Job.countDocuments(filter);
+    const jobs = await Job.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json({
+      jobs,
+      totalJobs,
+      currentPage: page,
+      totalPages: Math.ceil(totalJobs / limit) || 1
+    });
   } catch (err) {
     console.error("GET JOBS ERROR:", err);
     res.status(500).json({ message: "Failed to fetch jobs" });

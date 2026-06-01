@@ -23,6 +23,108 @@ let studentSession = JSON.parse(localStorage.getItem(USER_KEY)) || {
 let skills = [...studentSession.skills];
 let appliedJobs = [];
 let allAvailableJobs = [];
+let currentPage = 1;
+let totalPages = 1;
+let totalJobs = 0;
+const JOBS_PER_PAGE = 10;
+
+function mapJobFromApi(job) {
+  return {
+    id: job._id,
+    title: job.title,
+    company: job.company,
+    cgpa: job.cgpa || 0,
+    branches: job.branch || [],
+    deadline: job.deadline ? new Date(job.deadline).toLocaleDateString() : "Open",
+    skills: job.skillsRequired || [],
+    description: job.description
+  };
+}
+
+async function fetchJobsPage(page = 1) {
+  const token = getToken();
+  if (!token) return;
+
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: String(JOBS_PER_PAGE)
+  });
+
+  try {
+    const resJobs = await fetch(`${API}/jobs?${params.toString()}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const payload = await resJobs.json();
+
+    if (resJobs.ok && payload && Array.isArray(payload.jobs)) {
+      currentPage = payload.currentPage || page;
+      totalPages = payload.totalPages || 1;
+      totalJobs = payload.totalJobs ?? payload.jobs.length;
+      allAvailableJobs = payload.jobs.map(mapJobFromApi);
+      return;
+    }
+
+    if (resJobs.ok && Array.isArray(payload) && payload.length > 0) {
+      allAvailableJobs = payload.map(mapJobFromApi);
+      currentPage = 1;
+      totalPages = 1;
+      totalJobs = payload.length;
+      return;
+    }
+
+    if (resJobs.ok && Array.isArray(payload.jobs) && payload.jobs.length === 0) {
+      allAvailableJobs = [];
+      currentPage = payload.currentPage || 1;
+      totalPages = payload.totalPages || 1;
+      totalJobs = payload.totalJobs ?? 0;
+      return;
+    }
+
+    console.warn("No jobs found. Using fallback.");
+    allAvailableJobs = defaultJobs;
+    currentPage = 1;
+    totalPages = 1;
+    totalJobs = allAvailableJobs.length;
+  } catch (err) {
+    console.error("Fetch jobs failed:", err);
+    allAvailableJobs = defaultJobs;
+    currentPage = 1;
+    totalPages = 1;
+    totalJobs = allAvailableJobs.length;
+  }
+}
+
+function renderPaginationControls() {
+  const prevBtn = document.getElementById("jobs-prev-page");
+  const nextBtn = document.getElementById("jobs-next-page");
+  const pageInfo = document.getElementById("jobs-page-info");
+
+  if (pageInfo) {
+    pageInfo.textContent = totalJobs
+      ? `Page ${currentPage} of ${totalPages} (${totalJobs} jobs)`
+      : "No jobs available";
+  }
+
+  if (prevBtn) {
+    prevBtn.disabled = currentPage <= 1;
+    prevBtn.onclick = async () => {
+      if (currentPage <= 1) return;
+      await fetchJobsPage(currentPage - 1);
+      renderJobList();
+      renderPaginationControls();
+    };
+  }
+
+  if (nextBtn) {
+    nextBtn.disabled = currentPage >= totalPages;
+    nextBtn.onclick = async () => {
+      if (currentPage >= totalPages) return;
+      await fetchJobsPage(currentPage + 1);
+      renderJobList();
+      renderPaginationControls();
+    };
+  }
+}
 
 /* ==========================================================
    DEFAULT JOBS (FALLBACK)
@@ -74,32 +176,9 @@ async function init() {
   }
 
   // -----------------------------
-  // Fetch all approved jobs
+  // Fetch paginated approved jobs
   // -----------------------------
-  try {
-    const resJobs = await fetch("http://localhost:5000/api/student/jobs", {
-      headers: { "Authorization": `Bearer ${token}` }
-    });
-    const jobsData = await resJobs.json();
-    if (resJobs.ok && jobsData.length > 0) {
-      allAvailableJobs = jobsData.map(job => ({
-        id: job._id,
-        title: job.title,
-        company: job.company,
-        cgpa: job.cgpa || 0,
-        branches: job.branch || [],
-        deadline: job.deadline ? new Date(job.deadline).toLocaleDateString() : "Open",
-        skills: job.skillsRequired || [],
-        description: job.description
-      }));
-    } else {
-      console.warn("No jobs found. Using fallback.");
-      allAvailableJobs = defaultJobs;
-    }
-  } catch (err) {
-    console.error("Fetch jobs failed:", err);
-    allAvailableJobs = defaultJobs;
-  }
+  await fetchJobsPage(1);
 
   // -----------------------------
   // Fetch applied jobs
@@ -122,6 +201,7 @@ async function init() {
   }
 
   renderJobList();
+  renderPaginationControls();
   if (window.lucide) lucide.createIcons();
 }
 
@@ -134,6 +214,13 @@ function renderJobList() {
 
   const studentCGPA = studentSession.cgpa || 0;
   const studentBranch = studentSession.branch || "";
+
+  if (allAvailableJobs.length === 0) {
+    list.innerHTML = `
+      <p class="text-sm text-slate-500 text-center py-8">No jobs on this page.</p>
+    `;
+    return;
+  }
 
   list.innerHTML = allAvailableJobs
     .map(job => {
