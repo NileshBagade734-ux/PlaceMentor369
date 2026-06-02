@@ -10,7 +10,13 @@ import authRoutes from "./routes/authRoutes.js";
 import recruiterRoutes from "./routes/recruiterRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 
+import { validateEnv } from "./config/env.js";
+
 dotenv.config();
+
+// Validate Environment Variables
+validateEnv();
+
 const app = express();
 
 /* ============================
