@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import mongoSanitize from "express-mongo-sanitize";
 
 // Routes
 import studentRoutes from "./routes/studentRoutes.js";
@@ -28,6 +29,9 @@ app.use(
 // ✅ Body parsers
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true, limit: "20mb" }));
+
+// ✅ Data Sanitization against NoSQL Injection
+app.use(mongoSanitize());
 
 /* ============================
    ROUTES
