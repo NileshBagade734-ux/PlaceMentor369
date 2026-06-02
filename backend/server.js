@@ -49,11 +49,10 @@ app.use((req, res) => {
   res.status(404).json({ message: "❌ Route not found" });
 });
 
+import { errorHandler } from "./utils/errorHandler.js";
+
 // Global Error Handler
-app.use((err, req, res, next) => {
-  console.error("🔥 Server Error:", err.stack);
-  res.status(500).json({ message: "Internal Server Error" });
-});
+app.use(errorHandler);
 
 /* ============================
    MONGODB + SERVER START
