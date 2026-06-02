@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import helmet from "helmet";
 
 // Routes
 import studentRoutes from "./routes/studentRoutes.js";
@@ -24,6 +25,9 @@ app.use(
     credentials: true
   })
 );
+
+// ✅ Secure HTTP Headers
+app.use(helmet());
 
 // ✅ Body parsers
 app.use(express.json({ limit: "20mb" }));
