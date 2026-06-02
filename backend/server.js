@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import morgan from "morgan";
 
 // Routes
 import studentRoutes from "./routes/studentRoutes.js";
@@ -24,6 +25,9 @@ app.use(
     credentials: true
   })
 );
+
+// ✅ HTTP Request Logging
+app.use(morgan("dev"));
 
 // ✅ Body parsers
 app.use(express.json({ limit: "20mb" }));
