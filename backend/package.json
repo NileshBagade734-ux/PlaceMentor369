@@ -14,7 +14,8 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.5.2",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.1.5"
+    "mongoose": "^9.1.5",
+    "morgan": "^1.10.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
