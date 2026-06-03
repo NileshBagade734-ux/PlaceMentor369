@@ -27,6 +27,19 @@ function showWelcome() {
 }
 
 async function loadApplications() {
+  const list = document.getElementById("applications-list");
+  if (list) {
+    list.innerHTML = `
+      <div class="p-4 border-b border-slate-100 space-y-2">
+        <div class="skeleton w-1/3 h-5"></div>
+        <div class="skeleton w-1/4 h-4"></div>
+      </div>
+      <div class="p-4 border-b border-slate-100 space-y-2">
+        <div class="skeleton w-1/2 h-5"></div>
+        <div class="skeleton w-1/3 h-4"></div>
+      </div>
+    `;
+  }
   try {
     const res = await fetch(`${API_BASE}/student/applications`, {
       headers: {
@@ -71,7 +84,19 @@ function renderDashboardTable(apps) {
   if (!list) return;
 
   if (apps.length === 0) {
-    list.innerHTML = `<div class="p-6 text-center text-slate-400">No applications yet 🚀</div>`;
+    list.innerHTML = `
+      <div class="p-8 text-center flex flex-col items-center justify-center">
+        <div class="w-12 h-12 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-600 mb-3">
+          <i data-lucide="inbox" class="w-6 h-6"></i>
+        </div>
+        <h4 class="font-semibold text-slate-800 mb-1">No Applications Yet</h4>
+        <p class="text-sm text-slate-500 max-w-xs mb-4">You haven't applied to any jobs yet. Start exploring active job postings.</p>
+        <a href="../student/student-joblist.html" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg text-sm transition">
+          Browse Jobs
+        </a>
+      </div>
+    `;
+    lucide.createIcons();
     return;
   }
 
