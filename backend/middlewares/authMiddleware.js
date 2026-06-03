@@ -5,17 +5,27 @@ export const protect = async (req, res, next) => {
   let token;
 
   if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
-    token = req.headers.authorization.split(" ")[1];
+    try {
+      token = req.headers.authorization.split(" ")[1];
+    } catch (e) {
+      return res.status(401).json({ message: "Not authorized, token parsing failed" });
+    }
   }
 
-  if (!token) return res.status(401).json({ message: "Not authorized" });
+  if (!token) return res.status(401).json({ message: "Not authorized, token missing" });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id).select("-password");
+    const currentUser = await User.findById(decoded.id).select("-password");
+
+    if (!currentUser) {
+      return res.status(401).json({ message: "The user belonging to this token no longer exists" });
+    }
+
+    req.user = currentUser;
     next();
   } catch (err) {
-    console.error(err);
-    res.status(401).json({ message: "Invalid token" });
+    console.error("JWT Verification Error:", err.message);
+    res.status(401).json({ message: "Invalid or expired token" });
   }
 };
