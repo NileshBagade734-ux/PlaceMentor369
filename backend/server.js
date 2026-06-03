@@ -9,8 +9,12 @@ import studentRoutes from "./routes/studentRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import recruiterRoutes from "./routes/recruiterRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import { globalErrorHandler } from "./middlewares/errorMiddleware.js";
+import { validateEnv } from "./config/validateEnv.js";
 
 dotenv.config();
+validateEnv();
+
 const app = express();
 
 /* ============================
@@ -58,17 +62,34 @@ app.use((err, req, res, next) => {
 /* ============================
    MONGODB + SERVER START
 ============================ */
-/* ============================
-   MONGODB + SERVER START
-============================ */
 const PORT = process.env.PORT || 5000;
+let server;
 
 mongoose
-  .connect(process.env.MONGO_URI) // no options needed in Mongoose v7+
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("✅ MongoDB Connected successfully");
-    app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+    server = app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
   })
   .catch((err) => {
     console.error("❌ MongoDB connection failed:", err.message);
   });
+
+// Graceful Shutdown
+const gracefulShutdown = () => {
+  console.log("⚠️ SIGINT/SIGTERM signal received. Shutting down gracefully...");
+  if (server) {
+    server.close(() => {
+      console.log("🛑 Express server closed.");
+      mongoose.connection.close(false).then(() => {
+        console.log("🔌 MongoDB connection closed.");
+        process.exit(0);
+      });
+    });
+  } else {
+    process.exit(0);
+  }
+};
+
+process.on("SIGINT", gracefulShutdown);
+process.on("SIGTERM", gracefulShutdown);
