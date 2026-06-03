@@ -9,6 +9,7 @@ import studentRoutes from "./routes/studentRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import recruiterRoutes from "./routes/recruiterRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import { globalErrorHandler } from "./middlewares/errorMiddleware.js";
 
 dotenv.config();
 const app = express();
@@ -50,10 +51,7 @@ app.use((req, res) => {
 });
 
 // Global Error Handler
-app.use((err, req, res, next) => {
-  console.error("🔥 Server Error:", err.stack);
-  res.status(500).json({ message: "Internal Server Error" });
-});
+app.use(globalErrorHandler);
 
 /* ============================
    MONGODB + SERVER START
