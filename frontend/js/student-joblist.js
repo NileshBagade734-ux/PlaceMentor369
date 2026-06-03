@@ -121,6 +121,16 @@ async function init() {
     appliedJobs = JSON.parse(localStorage.getItem(APPLICATION_KEY)) || [];
   }
 
+  const searchInput = document.getElementById("search-jobs");
+  const filterSelect = document.getElementById("filter-eligibility");
+
+  if (searchInput) {
+    searchInput.addEventListener("input", renderJobList);
+  }
+  if (filterSelect) {
+    filterSelect.addEventListener("change", renderJobList);
+  }
+
   renderJobList();
   if (window.lucide) lucide.createIcons();
 }
@@ -132,10 +142,29 @@ function renderJobList() {
   const list = document.getElementById("jobs-list");
   if (!list) return;
 
-  const studentCGPA = studentSession.cgpa || 0;
-  const studentBranch = studentSession.branch || "";
+  const searchQuery = document.getElementById("search-jobs")?.value.toLowerCase() || "";
+  const eligibilityFilter = document.getElementById("filter-eligibility")?.value || "all";
 
-  list.innerHTML = allAvailableJobs
+  const filteredJobs = allAvailableJobs.filter(job => {
+    const matchesSearch = job.title.toLowerCase().includes(searchQuery) || 
+                          job.company.toLowerCase().includes(searchQuery);
+    
+    if (!matchesSearch) return false;
+
+    if (eligibilityFilter === "eligible") {
+      const eligibility = checkEligibility(studentSession, job);
+      return eligibility.eligible;
+    }
+
+    return true;
+  });
+
+  if (filteredJobs.length === 0) {
+    list.innerHTML = `<div class="p-6 text-center text-slate-400">No matching jobs found</div>`;
+    return;
+  }
+
+  list.innerHTML = filteredJobs
     .map(job => {
       const eligibility = checkEligibility(studentSession, job);
       const isApplied = appliedJobs.includes(job.id);
