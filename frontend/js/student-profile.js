@@ -2,7 +2,6 @@
 // CONSTANTS & SESSION
 // ============================
 const API_BASE = "http://localhost:5000/api/student";
-;
 const SESSION_KEY = "placementor_session";
 
 function getSession() {
