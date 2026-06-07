@@ -413,33 +413,43 @@
 
 
 <script>
-  // Mobile Hamburger Toggle Logic
+  // Mobile Hamburger Toggle Logic (improved accessibility + UX)
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
   const navLinksTarget = document.getElementById('nav-links-target');
   const menuIcon = document.getElementById('menu-icon');
   const navOverlay = document.getElementById('nav-overlay');
 
-  function toggleMenu() {
-    if (navLinksTarget && navOverlay && menuIcon) {
-      navLinksTarget.classList.toggle('active');
-      navOverlay.classList.toggle('active');
-      
-      if(navLinksTarget.classList.contains('active')) {
-        menuIcon.classList.remove('fa-bars');
-        menuIcon.classList.add('fa-xmark');
-      } else {
-        menuIcon.classList.remove('fa-xmark');
-        menuIcon.classList.add('fa-bars');
-      }
-    }
+  if (mobileMenuBtn) mobileMenuBtn.setAttribute('aria-expanded', 'false');
+
+  function openMenu() {
+    if (!navLinksTarget || !navOverlay || !menuIcon) return;
+    navLinksTarget.classList.add('active');
+    navOverlay.classList.add('active');
+    mobileMenuBtn.setAttribute('aria-expanded', 'true');
+    menuIcon.classList.remove('fa-bars');
+    menuIcon.classList.add('fa-xmark');
+    document.body.style.overflow = 'hidden';
+    const first = navLinksTarget.querySelector('a, button, [tabindex]');
+    if (first) first.focus();
   }
 
-  if (mobileMenuBtn) {
-    mobileMenuBtn.addEventListener('click', toggleMenu);
+  function closeMenu() {
+    if (!navLinksTarget || !navOverlay || !menuIcon) return;
+    navLinksTarget.classList.remove('active');
+    navOverlay.classList.remove('active');
+    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+    menuIcon.classList.remove('fa-xmark');
+    menuIcon.classList.add('fa-bars');
+    document.body.style.overflow = '';
+    mobileMenuBtn.focus();
   }
-  if (navOverlay) {
-    navOverlay.addEventListener('click', toggleMenu);
-  }
+
+  function toggleMenu() { if (navLinksTarget && navLinksTarget.classList.contains('active')) closeMenu(); else openMenu(); }
+
+  if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleMenu);
+  if (navOverlay) navOverlay.addEventListener('click', closeMenu);
+  if (navLinksTarget) navLinksTarget.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeMenu));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
 
   lucide.createIcons();
 

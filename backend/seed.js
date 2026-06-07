@@ -8,7 +8,9 @@ import User from "./models/user.js";
 
 dotenv.config();
 
-await mongoose.connect(process.env.MONGO_URI);
+import connectDB from "./config/db.js";
+
+await connectDB();
 
 async function seed() {
   try {

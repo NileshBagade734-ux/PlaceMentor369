@@ -1,6 +1,7 @@
 // backend/server.js
 import express from "express";
 import mongoose from "mongoose";
+import connectDB from "./config/db.js";
 import dotenv from "dotenv";
 import cors from "cors";
 
@@ -63,8 +64,7 @@ app.use((err, req, res, next) => {
 ============================ */
 const PORT = process.env.PORT || 5000;
 
-mongoose
-  .connect(process.env.MONGO_URI) // no options needed in Mongoose v7+
+connectDB()
   .then(() => {
     console.log("✅ MongoDB Connected successfully");
     app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
