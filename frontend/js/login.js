@@ -12,6 +12,30 @@ const loginForm = document.getElementById("loginForm");
 const loginBtn = document.getElementById("loginBtn");
 const btnText = document.getElementById("btnText");
 const passwordField = document.getElementById("password");
+const emailField = document.getElementById("email");
+const roleField = document.getElementById("role");
+const errorDisplay = document.getElementById("errorMessage");
+
+// -------------------------
+// Helper: Show Error
+// -------------------------
+const showError = (message) => {
+  errorDisplay.innerText = message;
+  errorDisplay.classList.remove("hidden");
+};
+
+// -------------------------
+// Helper: Clear Error
+// -------------------------
+const clearError = () => {
+  errorDisplay.innerText = "";
+  errorDisplay.classList.add("hidden");
+};
+
+// Clear error on input
+[emailField, passwordField, roleField].forEach(field => {
+  field?.addEventListener("input", clearError);
+});
 const passwordToggleBtn = document.getElementById("togglePassword");
 const eyeIcon = document.getElementById("eyeIcon");
 
@@ -35,12 +59,12 @@ loginForm.addEventListener("submit", async (e) => {
     return; // validation.js will handle UI
   }
 
-  const email = document.getElementById("email")?.value;
+  const email = emailField?.value;
   const password = passwordField?.value;
-  const role = document.getElementById("role")?.value;
+  const role = roleField?.value;
 
   if (!email || !password || !role) {
-    return alert("Please fill all fields!");
+    return showError("Please fill all fields!");
   }
 
   loginBtn.disabled = true;
@@ -56,7 +80,7 @@ loginForm.addEventListener("submit", async (e) => {
     const data = await res.json();
 
     if (!res.ok) {
-      alert(data.message || "Login failed");
+      showError(data.message || "Login failed");
       return;
     }
 
@@ -75,7 +99,22 @@ loginForm.addEventListener("submit", async (e) => {
 
   } catch (err) {
     console.error("Login Error:", err);
-    alert("Server error. Try again later.");
+    
+    // Firebase Error Code Map
+    const errorMessages = {
+      "auth/user-not-found": "No account found with this email.",
+      "auth/wrong-password": "Incorrect password. Please try again.",
+      "auth/invalid-email": "The email address is badly formatted.",
+      "auth/too-many-requests": "Too many failed attempts. Please try again later.",
+      "auth/network-request-failed": "Network error. Please check your connection.",
+      "auth/invalid-credential": "Invalid email or password.",
+      "auth/configuration-not-found": "Server configuration error. Contact support.",
+    };
+
+    const code = err.code || (err.message && err.message.includes("auth/") ? err.message : null);
+    const message = errorMessages[code] || "Server error. Try again later.";
+    
+    showError(message);
   } finally {
     loginBtn.disabled = false;
     btnText.innerText = "Sign In";
