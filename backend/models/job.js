@@ -43,6 +43,27 @@ const jobSchema = new mongoose.Schema(
       }
     ],
 
+    // Location
+    location: {
+      type: String,
+      default: "Remote",
+      trim: true
+    },
+
+    // Salary / Stipend
+    salary: {
+      type: String,
+      default: "Not Specified",
+      trim: true
+    },
+
+    // Employment Type (Internship / Full-Time)
+    employmentType: {
+      type: String,
+      enum: ["Internship", "Full-Time"],
+      default: "Full-Time"
+    },
+
     // Application deadline
     deadline: {
       type: Date,

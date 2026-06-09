@@ -42,12 +42,97 @@
 
 
   <main class="flex-1 flex overflow-hidden">
-    <section class="w-full md:w-2/5 border-r border-slate-200 overflow-y-auto p-6">
-      <div class="mb-6">
-        <h2 class="text-2xl font-bold text-slate-800">Job Board</h2>
+    <section class="w-full md:w-[45%] lg:w-[40%] xl:w-2/5 border-r border-slate-200 overflow-y-auto p-6 flex flex-col bg-slate-50">
+      <div class="mb-6 flex-shrink-0">
+        <div class="flex justify-between items-center mb-1">
+          <h2 class="text-2xl font-bold text-slate-800">Job Board</h2>
+          <span class="text-xs text-indigo-600 font-semibold bg-indigo-50 px-2 py-1 rounded" id="jobs-count">0 items</span>
+        </div>
         <p class="text-sm text-slate-500" id="student-info">Loading profile...</p>
       </div>
-      <div id="jobs-list" class="space-y-4"></div>
+
+      <!-- Search & Filters Container -->
+      <div class="mb-6 space-y-3 flex-shrink-0">
+        <!-- Search bar -->
+        <div class="flex gap-2">
+          <div class="relative flex-1">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3.5"></i>
+            <input type="text" id="search-input" placeholder="Search role, company, skills..." 
+                   class="w-full pl-9 pr-4 py-2.5 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all shadow-sm">
+          </div>
+          <button id="toggle-filters-btn" onclick="toggleFiltersPanel()" 
+                  class="p-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-600 hover:text-indigo-600 transition-all flex items-center justify-center shadow-sm relative">
+            <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+            <span id="active-filters-dot" class="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-600 rounded-full hidden"></span>
+          </button>
+        </div>
+
+        <!-- Collapsible Filters Panel -->
+        <div id="filters-panel" class="hidden bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 transition-all duration-300">
+          <div class="flex justify-between items-center border-b border-slate-100 pb-2 mb-2">
+            <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider">Filter Results</h3>
+            <button onclick="clearAllFilters()" class="text-xs text-indigo-600 hover:underline">Clear All</button>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Role</label>
+              <select id="filter-role" onchange="applyFilters()" class="w-full p-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                <option value="">All Roles</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Company</label>
+              <select id="filter-company" onchange="applyFilters()" class="w-full p-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                <option value="">All Companies</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Location</label>
+              <select id="filter-location" onchange="applyFilters()" class="w-full p-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                <option value="">All Locations</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Required Skill</label>
+              <select id="filter-skill" onchange="applyFilters()" class="w-full p-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                <option value="">All Skills</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Employment Type</label>
+            <div class="flex gap-4 mt-1">
+              <label class="inline-flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
+                <input type="radio" name="filter-type" value="" checked onchange="applyFilters()" class="text-indigo-600 focus:ring-indigo-500">
+                <span>All</span>
+              </label>
+              <label class="inline-flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
+                <input type="radio" name="filter-type" value="Full-Time" onchange="applyFilters()" class="text-indigo-600 focus:ring-indigo-500">
+                <span>Full-Time</span>
+              </label>
+              <label class="inline-flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
+                <input type="radio" name="filter-type" value="Internship" onchange="applyFilters()" class="text-indigo-600 focus:ring-indigo-500">
+                <span>Internship</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs for All vs Saved -->
+        <div class="flex gap-2">
+          <button id="tab-all" onclick="setTab('all')" 
+                  class="flex-1 py-2 text-xs font-semibold rounded-xl bg-indigo-600 text-white shadow-sm transition-all border border-transparent">
+            All Opportunities
+          </button>
+          <button id="tab-saved" onclick="setTab('saved')" 
+                  class="flex-1 py-2 text-xs font-semibold rounded-xl bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-indigo-600 transition-all flex items-center justify-center gap-1.5 shadow-sm">
+            <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 stroke-amber-400"></i>
+            <span>Bookmarked</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="jobs-list" class="space-y-4 overflow-y-auto flex-1 pr-1"></div>
     </section>
 
     <section class="flex-1 bg-white overflow-y-auto p-10 relative">

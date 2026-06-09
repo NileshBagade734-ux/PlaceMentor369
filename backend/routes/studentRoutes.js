@@ -5,7 +5,9 @@ import {
   saveProfile,
   getJobs,
   applyJob,
-  getApplications
+  getApplications,
+  toggleBookmarkJob,
+  getBookmarkedJobs
 } from "../controllers/studentController.js";
 
 const router = express.Router();
@@ -18,6 +20,12 @@ router.patch("/profile", verifyToken, saveProfile);
 
 // Get all approved jobs
 router.get("/jobs", verifyToken, getJobs);
+
+// Bookmark a job
+router.post("/jobs/:jobId/bookmark", verifyToken, toggleBookmarkJob);
+
+// Get all bookmarked jobs
+router.get("/bookmarks", verifyToken, getBookmarkedJobs);
 
 // Apply for a job
 // backend/routes/studentRoutes.js
