@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Student from "../models/student.js";
 import Job from "../models/job.js";
-import Application from "../models/application.js"; // make sure file name matches exactly
+import Application from "../models/application.js";
 
 /* ============================
    GET STUDENT PROFILE
@@ -70,42 +70,88 @@ export const applyJob = async (req, res) => {
     }
 
     const job = await Job.findById(jobId);
-    console.log("🧰 job found:", job);
     if (!job) return res.status(404).json({ message: "Job not found" });
 
     const studentProfile = await Student.findOne({ user: req.user.id });
-    console.log("🧰 studentProfile found:", studentProfile);
     if (!studentProfile) {
       return res.status(400).json({ message: "Complete your profile first" });
     }
 
-    // ✅ Check if already applied
+    // Check if already applied
     const exists = await Application.findOne({
       student: studentProfile._id,
-      job: jobId
+      job: jobId,
     });
-    console.log("🧰 existing application:", exists);
-    if (exists) return res.status(400).json({ message: "Already applied" });
 
-    // ✅ Create new application
+    if (exists) {
+      return res.status(400).json({ message: "Already applied" });
+    }
+
+    // Create application
     const application = await Application.create({
       student: studentProfile._id,
-      job: jobId
+      job: jobId,
     });
-    console.log("🧰 application created:", application);
-
-    // ⚡ UPDATE JOB DOCUMENT: push application ID
-   
 
     res.status(201).json({
       success: true,
       message: "Application sent successfully",
-      application
+      application,
     });
-
   } catch (err) {
     console.error("🔥 APPLY JOB ERROR:", err);
     res.status(500).json({ message: "Failed to apply" });
+  }
+};
+
+/* ============================
+   WITHDRAW APPLICATION (NEW FEATURE)
+============================ */
+export const withdrawApplication = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const studentProfile = await Student.findOne({ user: req.user.id });
+    if (!studentProfile) {
+      return res.status(400).json({ message: "Profile not found" });
+    }
+
+    const application = await Application.findById(id);
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    // ownership check
+    if (application.student.toString() !== studentProfile._id.toString()) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    // already withdrawn
+    if (application.isWithdrawn) {
+      return res.status(400).json({ message: "Already withdrawn" });
+    }
+
+    // block after recruiter review
+    if (["shortlisted", "rejected"].includes(application.status)) {
+      return res.status(400).json({
+        message: "Cannot withdraw after recruiter review",
+      });
+    }
+
+    application.isWithdrawn = true;
+    application.withdrawnAt = new Date();
+
+    await application.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Application withdrawn successfully",
+      application,
+    });
+  } catch (err) {
+    console.error("WITHDRAW ERROR:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -115,11 +161,14 @@ export const applyJob = async (req, res) => {
 export const getApplications = async (req, res) => {
   try {
     const studentProfile = await Student.findOne({ user: req.user.id });
-    if (!studentProfile) return res.status(400).json({ message: "Profile not found" });
+    if (!studentProfile)
+      return res.status(400).json({ message: "Profile not found" });
 
-    const apps = await Application.find({ student: studentProfile._id }).populate({
+    const apps = await Application.find({
+      student: studentProfile._id,
+    }).populate({
       path: "job",
-      select: "title company"
+      select: "title company",
     });
 
     res.status(200).json(apps);
@@ -138,7 +187,7 @@ export const getJobApplications = async (req, res) => {
 
     const applications = await Application.find({ job: jobId }).populate({
       path: "student",
-      select: "name email branch cgpa resume"
+      select: "name email branch cgpa resume",
     });
 
     res.status(200).json(applications);
