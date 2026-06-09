@@ -13,14 +13,27 @@ const applicationSchema = new mongoose.Schema(
       ref: "Job",
       required: true,
     },
+
     status: {
       type: String,
       enum: ["applied", "shortlisted", "rejected", "verified"],
       default: "applied",
     },
+
     appliedAt: {
       type: Date,
       default: Date.now,
+    },
+
+    // ✅ NEW: Withdrawal support
+    isWithdrawn: {
+      type: Boolean,
+      default: false,
+    },
+
+    withdrawnAt: {
+      type: Date,
+      default: null,
     },
   },
   { timestamps: true }
@@ -36,6 +49,5 @@ applicationSchema.pre("save", function () {
 // 🔹 Prevent duplicate application per student-job pair
 applicationSchema.index({ student: 1, job: 1 }, { unique: true });
 
-// 🔹 Export the model
 const Application = mongoose.model("Application", applicationSchema);
 export default Application;
