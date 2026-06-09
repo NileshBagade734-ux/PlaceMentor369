@@ -25,6 +25,9 @@ export const createJob = async (req, res) => {
       branches,
       skillsRequired,
       deadline,
+      location,
+      salary,
+      employmentType,
     } = req.body;
 
     if (!title || !company || !description || !deadline) {
@@ -39,6 +42,9 @@ export const createJob = async (req, res) => {
       branch: branch || branches || [],
       skillsRequired,
       deadline: new Date(deadline),
+      location: location || "Remote",
+      salary: salary || "Not Specified",
+      employmentType: employmentType || "Full-Time",
       recruiter: recruiterId,
       status: "approved",
     });

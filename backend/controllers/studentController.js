@@ -147,3 +147,57 @@ export const getJobApplications = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch applications" });
   }
 };
+
+/* ============================
+   TOGGLE BOOKMARK JOB
+============================ */
+export const toggleBookmarkJob = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(jobId)) {
+      return res.status(400).json({ message: "Invalid Job ID" });
+    }
+
+    const studentProfile = await Student.findOne({ user: req.user.id });
+    if (!studentProfile) {
+      return res.status(400).json({ message: "Student profile not found" });
+    }
+
+    const index = studentProfile.savedJobs.indexOf(jobId);
+    let bookmarked = false;
+    if (index === -1) {
+      studentProfile.savedJobs.push(jobId);
+      bookmarked = true;
+    } else {
+      studentProfile.savedJobs.splice(index, 1);
+    }
+
+    await studentProfile.save();
+
+    res.status(200).json({
+      success: true,
+      message: bookmarked ? "Job bookmarked" : "Bookmark removed",
+      bookmarked,
+      savedJobs: studentProfile.savedJobs
+    });
+  } catch (err) {
+    console.error("TOGGLE BOOKMARK ERROR:", err);
+    res.status(500).json({ message: "Failed to toggle bookmark" });
+  }
+};
+
+/* ============================
+   GET BOOKMARKED JOBS
+============================ */
+export const getBookmarkedJobs = async (req, res) => {
+  try {
+    const studentProfile = await Student.findOne({ user: req.user.id }).populate("savedJobs");
+    if (!studentProfile) {
+      return res.status(400).json({ message: "Student profile not found" });
+    }
+    res.status(200).json(studentProfile.savedJobs || []);
+  } catch (err) {
+    console.error("GET BOOKMARKS ERROR:", err);
+    res.status(500).json({ message: "Failed to fetch bookmarked jobs" });
+  }
+};

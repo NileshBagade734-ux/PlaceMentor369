@@ -9,6 +9,14 @@ const studentSchema = new mongoose.Schema({
   skills: [{ type: String }],
   resume: { type: String },
 
+  // Bookmarked / Saved Jobs
+  savedJobs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Job"
+    }
+  ],
+
   // 🔥 ADD THIS
   status: {
     type: String,
