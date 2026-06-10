@@ -106,7 +106,7 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
         <form id="registerForm" class="space-y-4 needs-validation" novalidate>
           <!-- Full Name -->
           <div>
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Full Name</label>
+            <label for="name" class="text-sm font-medium text-gray-700 dark:text-gray-200">Full Name</label>
             <input id="name" type="text" required placeholder="Nilesh Bagade"
               class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
             <div class="invalid-feedback">
@@ -119,7 +119,7 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
 
           <!-- Email -->
           <div>
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
+            <label for="email" class="text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
             <input id="email" type="email" required placeholder="nilesh345@gmail.com"
               class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
             <div class="invalid-feedback">
@@ -133,7 +133,7 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
 
           <!-- Password -->
           <div class="relative">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
+            <label for="password" class="text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
             <input id="password" type="password" required placeholder="••••••••"
               class="mt-1 w-full px-4 py-3 pr-12 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
             <div class="invalid-feedback">
@@ -143,7 +143,8 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
               Strong password.
             </div>
             <button type="button" id="togglePassword"
-              class="absolute right-4 top-[38px] text-gray-400 hover:text-indigo-600">
+              class="absolute right-4 top-[38px] text-gray-400 hover:text-indigo-600"
+              aria-label="Toggle password visibility">
               <i data-lucide="eye" id="eyeIcon"></i>
             </button>
             <p id="passwordError" class="text-red-500 text-sm hidden mt-1">Password must be at least 8 characters.</p>
@@ -151,7 +152,7 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
 
           <!-- Role -->
           <div>
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Role</label>
+            <label for="role" class="text-sm font-medium text-gray-700 dark:text-gray-200">Role</label>
             <select id="role" required
               class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer form-select">
               <option value="" disabled selected>Choose your role</option>

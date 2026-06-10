@@ -86,7 +86,7 @@
 
           <!-- Role -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+            <label for="role" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
               I am a...
             </label>
 
@@ -103,7 +103,7 @@
 
           <!-- Email -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
               Email Address
             </label>
 
@@ -117,7 +117,7 @@
 
           <!-- Password -->
           <div class="relative">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
               Password
             </label>
 
@@ -132,6 +132,7 @@
               type="button"
               id="togglePassword"
               class="absolute right-4 top-[44px] text-gray-400 hover:text-indigo-600"
+              aria-label="Toggle password visibility"
             >
               <i id="eyeIcon" data-lucide="eye"></i>
             </button>
