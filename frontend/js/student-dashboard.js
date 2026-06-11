@@ -94,3 +94,52 @@ function attachLogout() {
     window.location.href = "../login.html";
   });
 }
+// ==============================
+// INTERVIEW COUNTDOWN WIDGET
+// ==============================
+
+const interviewDate = new Date("2026-06-15T10:00:00");
+
+function updateInterviewCountdown() {
+
+  const now = new Date();
+
+  const difference = interviewDate - now;
+
+  if (difference <= 0) {
+
+    document.getElementById("days").innerText = "0";
+
+    document.getElementById("hours").innerText = "0";
+
+    document.getElementById("minutes").innerText = "0";
+
+    return;
+  }
+
+  const days = Math.floor(
+    difference / (1000 * 60 * 60 * 24)
+  );
+
+  const hours = Math.floor(
+    (difference % (1000 * 60 * 60 * 24))
+    / (1000 * 60 * 60)
+  );
+
+  const minutes = Math.floor(
+    (difference % (1000 * 60 * 60))
+    / (1000 * 60)
+  );
+
+  document.getElementById("days").innerText = days;
+
+  document.getElementById("hours").innerText = hours;
+
+  document.getElementById("minutes").innerText = minutes;
+}
+
+// Initial load
+updateInterviewCountdown();
+
+// Auto update every minute
+setInterval(updateInterviewCountdown, 60000);
