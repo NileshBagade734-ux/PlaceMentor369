@@ -61,7 +61,7 @@ function updateCompletion() {
         resumeBase64
     ].filter(Boolean).length;
 
-    const percent = Math.floor((filled / 6) * 100);
+    const percent = Math.round((filled / 6) * 100);
     completionBar.style.width = percent + "%";
     completionText.textContent = percent + "%";
     completionMessage.innerHTML = percent === 100
@@ -215,4 +215,9 @@ saveBtn?.addEventListener("click", async () => {
 // ============================
 document.addEventListener("DOMContentLoaded", () => {
     loadProfile();
+
+    [fullNameInput, rollInput, branchSelect, cgpaInput].forEach((field) => {
+        field?.addEventListener("input", updateCompletion);
+        field?.addEventListener("change", updateCompletion);
+    });
 });
