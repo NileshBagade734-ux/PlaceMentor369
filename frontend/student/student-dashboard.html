@@ -94,17 +94,27 @@
             </div>
         </div>
 
-        <section class="bg-white border border-slate-200 rounded-xl shadow-sm mb-8 overflow-hidden">
-            <div class="p-6 flex justify-between items-center border-b border-slate-100">
-                <h3 class="font-semibold text-slate-900">Recent Applications</h3>
-                <a href="../student/student-application.html" class="text-xs font-semibold text-indigo-600 hover:underline">View All</a>
-            </div>
-            <div class="divide-y divide-slate-100" id="applications-list">
-                </div>
         </section>
 
-        <section>
-            <h3 class="font-semibold text-slate-900 mb-4">Quick Actions</h3>
+<!-- Recently Applied Companies -->
+<section class="bg-white border border-slate-200 rounded-xl shadow-sm mb-8 overflow-hidden">
+    <div class="p-6 border-b border-slate-100">
+        <h3 class="font-semibold text-slate-900">
+            Recently Applied Companies
+        </h3>
+
+        <p class="text-sm text-slate-500 mt-1">
+            Track your latest company applications
+        </p>
+    </div>
+
+    <div id="recent-companies-list" class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Dynamic cards will come here -->
+    </div>
+</section>
+
+<section>
+    <h3 class="font-semibold text-slate-900 mb-4">Quick Actions</h3>
             <div class="flex flex-wrap gap-4">
                 <a href="../student/student-joblist.html" class="btn-primary"><i data-lucide="search" class="w-4 h-4"></i> Browse Jobs</a>
                 <a href="../student/student-profile.html" class="btn-secondary"><i data-lucide="user-cog" class="w-4 h-4"></i> Update Profile</a>

@@ -51,8 +51,12 @@ async function loadApplications() {
     }
 
     localStorage.setItem(APPLICATION_KEY, JSON.stringify(data));
-    updateStats(data);
-    renderDashboardTable(data);
+
+updateStats(data);
+
+renderDashboardTable(data);
+
+renderRecentlyAppliedCompanies(data);
 
   } catch (err) {
     console.error("Dashboard error:", err);
@@ -87,7 +91,60 @@ function renderDashboardTable(apps) {
 
   lucide.createIcons();
 }
+function renderRecentlyAppliedCompanies(apps) {
 
+  const container = document.getElementById("recent-companies-list");
+
+  if (!container) return;
+
+  if (apps.length === 0) {
+
+    container.innerHTML = `
+      <div class="text-slate-400 text-center col-span-full">
+        No recently applied companies 🚀
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML = apps.slice(0, 4).map(app => {
+
+    const company = app.job?.company || "Unknown Company";
+
+    const status = app.status || "Pending";
+
+    const appliedDate = app.createdAt
+      ? new Date(app.createdAt).toLocaleDateString()
+      : "N/A";
+
+    return `
+      <div class="company-card">
+
+        <div class="company-header">
+
+          <div class="company-logo">
+            ${company.charAt(0)}
+          </div>
+
+          <div>
+            <h4 class="company-name">${company}</h4>
+
+            <p class="company-date">
+              Applied: ${appliedDate}
+            </p>
+          </div>
+
+        </div>
+
+        <span class="company-status status-${status.toLowerCase()}">
+          ${status}
+        </span>
+
+      </div>
+    `;
+  }).join("");
+}
 function attachLogout() {
   document.getElementById("logoutBtn")?.addEventListener("click", () => {
     localStorage.clear();
