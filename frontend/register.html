@@ -120,7 +120,7 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
           <!-- Email -->
           <div>
             <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
-            <input id="email" type="email" required placeholder="nilesh345@gmail.com"
+            <input id="email" aria-label="Email Address" aria-required="true" type="email" required placeholder="nilesh345@gmail.com"
               class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
             <div class="invalid-feedback">
               Please enter a valid email address.
@@ -134,7 +134,7 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
           <!-- Password -->
           <div class="relative">
             <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
-            <input id="password" type="password" required placeholder="••••••••"
+            <input id="password" aria-label="Password" aria-required="true" type="password" required placeholder="••••••••"
               class="mt-1 w-full px-4 py-3 pr-12 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
             <div class="invalid-feedback">
               Password must be at least 8 characters.
