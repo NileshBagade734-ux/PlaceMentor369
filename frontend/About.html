@@ -481,6 +481,37 @@
       .faq-question i {
         transition: transform 0.3s ease;
       }
+      .offer-card {
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease,
+          border-color 0.3s ease;
+        cursor: pointer;
+        border: 1px solid transparent;
+      }
+
+      .offer-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        border-color: #6366f1;
+      }
+
+      .offer-card i {
+        transition: transform 0.3s ease;
+      }
+
+      .offer-card:hover i {
+        transform: scale(1.15);
+      }
+
+      /* Dark mode support */
+      body.dark-mode .offer-card {
+        background: #1e293b;
+      }
+
+      body.dark-mode .offer-card:hover {
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
+      }
     </style>
   </head>
 
@@ -551,7 +582,7 @@
         </h2>
 
         <div class="grid md:grid-cols-3 gap-8 text-center">
-          <div class="bg-white p-6 rounded-xl shadow-lg">
+          <div class="bg-white p-6 rounded-xl shadow-lg offer-card">
             <i
               data-lucide="trending-up"
               class="w-8 h-8 mx-auto text-indigo-600 mb-4"
@@ -562,7 +593,7 @@
             </p>
           </div>
 
-          <div class="bg-white p-6 rounded-xl shadow-lg">
+          <div class="bg-white p-6 rounded-xl shadow-lg offer-card">
             <i
               data-lucide="file-text"
               class="w-8 h-8 mx-auto text-indigo-600 mb-4"
@@ -571,7 +602,7 @@
             <p class="text-slate-600">Track every application in one place.</p>
           </div>
 
-          <div class="bg-white p-6 rounded-xl shadow-lg">
+          <div class="bg-white p-6 rounded-xl shadow-lg offer-card">
             <i
               data-lucide="user-check"
               class="w-8 h-8 mx-auto text-indigo-600 mb-4"
