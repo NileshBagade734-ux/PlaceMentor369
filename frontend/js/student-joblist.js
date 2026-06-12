@@ -13,11 +13,17 @@ function getToken() {
 /* ==========================================================
    SESSION & DATA
 ========================================================== */
+
+// ✅ FIXED: Replace hardcoded fallback with session data
+const placementorSession = JSON.parse(
+  localStorage.getItem("placementor_session")
+);
+
 let studentSession = JSON.parse(localStorage.getItem(USER_KEY)) || {
-  name: "Guest Student",
-  cgpa: 9.0,
-  branch: "Computer Science",
-  skills: ["React", "Node.js", "JavaScript"]
+  name: placementorSession?.user?.name || "Student",
+  cgpa: 0,
+  branch: "",
+  skills: []
 };
 
 let skills = [...studentSession.skills];
@@ -284,7 +290,7 @@ window.selectJob = function(id) {
 window.handleApply = async function (jobId) {
   console.log("🆔 jobId received:", jobId);
 
-  const token = getToken(); // ✅ FIX
+  const token = getToken();
 
   if (!token) {
     alert("Login required");
@@ -323,7 +329,6 @@ window.handleApply = async function (jobId) {
 
     alert("✅ Applied successfully");
 
-    // Optional: prevent re-apply instantly
     appliedJobs.push(jobId);
     localStorage.setItem(APPLICATION_KEY, JSON.stringify(appliedJobs));
 
@@ -332,7 +337,6 @@ window.handleApply = async function (jobId) {
     alert(err.message);
   }
 };
-
 
 /* ==========================================================
    DOM READY INIT

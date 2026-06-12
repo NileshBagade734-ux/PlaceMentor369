@@ -11,8 +11,15 @@ const token = session.token;
 const user = session.user;
 
 document.addEventListener("DOMContentLoaded", () => {
+
   lucide.createIcons();
+
+  loadTheme();
+
   initDashboard();
+
+  setupThemeToggle();
+
 });
 
 async function initDashboard() {
@@ -93,4 +100,77 @@ function attachLogout() {
     localStorage.clear();
     window.location.href = "../login.html";
   });
+}
+// =====================================
+// DARK MODE SYSTEM
+// =====================================
+
+const THEME_KEY = "placementor_theme";
+
+function setupThemeToggle() {
+
+  const themeBtn = document.getElementById("themeToggle");
+
+  themeBtn?.addEventListener("click", () => {
+
+    const isDark =
+      document.body.classList.contains("dark-mode");
+
+    if (isDark) {
+
+      disableDarkMode();
+
+    } else {
+
+      enableDarkMode();
+
+    }
+
+  });
+
+}
+
+function enableDarkMode() {
+
+  document.body.classList.add("dark-mode");
+
+  localStorage.setItem(THEME_KEY, "dark");
+
+  updateThemeButton(true);
+
+}
+
+function disableDarkMode() {
+
+  document.body.classList.remove("dark-mode");
+
+  localStorage.setItem(THEME_KEY, "light");
+
+  updateThemeButton(false);
+
+}
+
+function loadTheme() {
+
+  const savedTheme =
+    localStorage.getItem(THEME_KEY);
+
+  if (savedTheme === "dark") {
+
+    enableDarkMode();
+
+  }
+
+}
+
+function updateThemeButton(isDark) {
+
+  const btn =
+    document.getElementById("themeToggle");
+
+  if (!btn) return;
+
+  btn.innerText =
+    isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+
 }

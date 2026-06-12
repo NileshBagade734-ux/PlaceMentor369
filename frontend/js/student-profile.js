@@ -36,6 +36,7 @@ const resumeActions = document.getElementById("resumeActions");
 const resumeFileName = document.getElementById("resumeFileName");
 const viewPdfBtn = document.getElementById("viewPdfBtn");
 const removeResumeBtn = document.getElementById("removeResumeBtn");
+const resumeError = document.getElementById("resumeError");
 
 const saveBtn = document.getElementById("saveBtn");
 const completionBar = document.getElementById("completionBar");
@@ -100,21 +101,48 @@ window.removeSkill = function (i) {
     skills.splice(i, 1);
     renderSkills();
 }
+function showResumeError(message) {
+    resumeError.textContent = message;
+    resumeError.classList.remove("hidden");
+}
+
+function clearResumeError() {
+    resumeError.textContent = "";
+    resumeError.classList.add("hidden");
+}
 
 // ============================
 // RESUME LOGIC
 // ============================
 resumeInput?.addEventListener("change", (e) => {
+    clearResumeError();
+
     const file = e.target.files[0];
-    if (!file || file.type !== "application/pdf") return alert("Only PDFs allowed!");
-    if (file.size > 2 * 1024 * 1024) return alert("Max 2MB");
+
+    if (!file) return;
+
+    if (file.type !== "application/pdf") {
+        showResumeError("Only PDF resumes are allowed.");
+        resumeInput.value = "";
+        return;
+    }
+
+    const MAX_SIZE = 2 * 1024 * 1024;
+
+    if (file.size > MAX_SIZE) {
+        showResumeError("Resume size must be under 2MB.");
+        resumeInput.value = "";
+        return;
+    }
 
     const reader = new FileReader();
+
     reader.onload = () => {
         resumeBase64 = reader.result;
         showResumeUI(file.name);
         updateCompletion();
     };
+
     reader.readAsDataURL(file);
 });
 
@@ -134,6 +162,7 @@ removeResumeBtn?.addEventListener("click", () => {
     resumeBase64 = null;
     resumeInput.value = "";
     resumeActions.classList.add("hidden");
+    clearResumeError();
     updateCompletion();
 });
 
