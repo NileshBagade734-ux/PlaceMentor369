@@ -38,7 +38,7 @@ async function loadDashboard() {
 
   } catch (err) {
     console.error("Dashboard load failed:", err);
-    alert("Admin access denied or server error");
+    showToast("Admin access denied or server error");
     window.location.href = "../login.html";
   }
 }
@@ -126,7 +126,7 @@ async function verifyStudent(id) {
     await loadDashboard(); // refresh all stats
   } catch (err) {
     console.error(err);
-    alert("Failed to verify student: " + err.message);
+    showToast("Failed to verify student: " + err.message);
   }
 }
 
@@ -148,7 +148,7 @@ async function approveJob(id) {
     await loadDashboard(); // refresh all stats
   } catch (err) {
     console.error(err);
-    alert("Failed to approve job: " + err.message);
+    showToast("Failed to approve job: " + err.message);
   }
 }
 

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>About – PlacementorAI</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+<link rel="stylesheet" href="../css/toast.css">
   <script src="https://cdn.tailwindcss.com"></script>
 
   <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
@@ -667,7 +667,7 @@ body.dark-mode .faq-answer p{
 
   document.getElementById("supportForm").addEventListener("submit", e => {
     e.preventDefault();
-    alert("✅ Support ticket submitted successfully!");
+    showToast("✅ Support ticket submitted successfully!");
     e.target.reset();
   });
 
@@ -742,7 +742,7 @@ body.dark-mode .faq-answer p{
 </script>
 <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
-
+<script src="../js/toast.js"></script>
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
 (function(){
