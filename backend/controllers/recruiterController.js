@@ -171,7 +171,7 @@ export const exportJobApplicantsToCSV = async (req, res) => {
           .json({ message: "Job not found or unauthorized" });
 
       applications = await Application.find({ job: jobId })
-        .populate("student", "name email branch cgpa skills resume")
+        .populate({ path: "student", select: "name branch cgpa skills resume", populate: { path: "user", select: "email" } })
         .populate("job", "title");
 
       filename = `applicants-${jobId}.csv`;
@@ -180,7 +180,7 @@ export const exportJobApplicantsToCSV = async (req, res) => {
       const jobIds = jobs.map((j) => j._id);
 
       applications = await Application.find({ job: { $in: jobIds } })
-        .populate("student", "name email branch cgpa skills resume")
+        .populate({ path: "student", select: "name branch cgpa skills resume", populate: { path: "user", select: "email" } })
         .populate("job", "title");
     }
 
@@ -204,7 +204,7 @@ export const exportJobApplicantsToCSV = async (req, res) => {
       return [
         `"${job.title || "N/A"}"`,
         `"${student.name || "N/A"}"`,
-        `"${student.email || "N/A"}"`,
+        `"${(student.student && student.student.user && student.student.user.email) || (student.user && student.user.email) || "N/A"}"`,
         `"${student.branch || "N/A"}"`,
         student.cgpa || "N/A",
         `"${skills}"`,
