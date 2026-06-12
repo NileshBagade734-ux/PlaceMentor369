@@ -40,6 +40,9 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password, role } = req.body;
+    if (typeof email !== "string" || typeof password !== "string" || typeof role !== "string") {
+      return res.status(400).json({ message: "Invalid input types." });
+    }
 
     const user = await User.findOne({ email, role });
     if (!user) {
