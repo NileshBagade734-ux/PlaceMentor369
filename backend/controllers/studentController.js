@@ -47,7 +47,10 @@ export const saveProfile = async (req, res) => {
 ============================ */
 export const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ status: "approved" });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const jobs = await Job.find({ status: "approved" }).skip(skip).limit(limit);
     res.status(200).json(jobs);
   } catch (err) {
     console.error("GET JOBS ERROR:", err);
