@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered assistance</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Theme Toggle Button */
+
+.theme-toggle{
+    width:42px;
+    height:42px;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    background:#f3f4f6;
+    font-size:18px;
+    transition:.3s;
+}
+
+.theme-toggle:hover{
+    transform:rotate(15deg);
+}
+/* Dark Mode */
+
+body.dark-mode{
+    background:#0f172a;
+    color:#f8fafc;
+}
+
+body.dark-mode .resume-form,
+body.dark-mode .resume-preview{
+    background:#1e293b;
+    color:#f8fafc;
+}
+
+body.dark-mode .resume-form input,
+body.dark-mode .resume-form textarea{
+    background:#334155;
+    border:1px solid #475569;
+    color:white;
+}
+
+body.dark-mode .resume-form input::placeholder,
+body.dark-mode .resume-form textarea::placeholder{
+    color:#cbd5e1;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3{
+    color:white;
+}
+
+body.dark-mode hr{
+    border-color:#475569;
+}
+.ai-hero{
+    padding:100px 20px;
+    text-align:center;
+    background:linear-gradient(
+        135deg,
+        #4f46e5,
+        #7c3aed
+    );
+    color:white;
+}
+
+.ai-hero h1{
+    font-size:60px;
+    margin:20px 0;
+}
+
+.ai-tag{
+    background:rgba(255,255,255,.15);
+    padding:10px 20px;
+    border-radius:999px;
+}
+
+.start-btn{
+    display:inline-block;
+    margin-top:25px;
+    padding:14px 28px;
+    background:white;
+    color:#4f46e5;
+    text-decoration:none;
+    border-radius:12px;
+    font-weight:600;
+}
+
+.tools-section{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+    padding:80px 40px;
+}
+
+.tool-card{
+    background:white;
+    border-radius:20px;
+    padding:30px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.tool-card:hover{
+    transform:translateY(-10px);
+}
+
+.tool-card i{
+    font-size:40px;
+    color:#7c3aed;
+    margin-bottom:15px;
+}
+
+.score-card{
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+
+    max-width: 800px;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+.readiness-section,
+.recommendation-section{
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.readiness-section h2,
+.recommendation-section h2{
+    margin-bottom: 30px;
+    font-size: 2rem;
+}
+
+.score-card,
+.recommendation-card{
+    max-width: 800px;
+    margin: 0 auto;
+}
+.recommendation-card ul{
+    list-style-position: inside;
+    padding: 0;
+    margin-top: 15px;
+}
+
+.recommendation-card li{
+    margin: 10px 0;
+}
+.readiness-section h2,
+.recommendation-section h2{
+    text-align: center;
+}
+.theme-toggle{
+    width:45px;
+    height:45px;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    background:#f3f4f6;
+    color:#374151;
+    font-size:18px;
+    transition:all .3s ease;
+}
+
+.theme-toggle:hover{
+    transform:rotate(15deg);
+    background:#e5e7eb;
+}
+body.dark-mode{
+    background:#0f172a;
+    color:#f8fafc;
+}
+
+body.dark-mode .tool-card,
+body.dark-mode .score-card,
+body.dark-mode .recommendation-card,
+body.dark-mode .question-card{
+    background:#1e293b;
+    color:#f8fafc;
+}
+
+body.dark-mode .tool-card p,
+body.dark-mode .score-details p,
+body.dark-mode .recommendation-card li{
+    color:#cbd5e1;
+}
+
+body.dark-mode .tools-section h2,
+body.dark-mode .readiness-section h2,
+body.dark-mode .recommendation-section h2,
+body.dark-mode .interview-preview h2{
+    color:white;
+}
+
+body.dark-mode .theme-toggle{
+    background:#334155;
+    color:white;
+}
+    </style>
+    </head>
+<body>
+    <header class="header">
+  <div class="container nav" style="position: relative;">
+    <div class="logo">
+      <i class="fa-solid fa-arrow-up-right-dots"></i> 
+      <span>PlacementorAI</span>
+    </div>
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
+  <i class="fa-solid fa-moon"></i>
+</button>
+    <button class="menu-toggle" id="mobile-menu-btn" aria-label="Toggle Navigation Menu">
+      <i class="fa-solid fa-bars" id="menu-icon"></i>
+    </button>
+
+    <nav class="nav-menu" id="nav-links-target">
+      <a href="index.html">Home</a>
+      <a href="contact.html">Contact</a>
+      <a href="register.html">Sign Up</a>
+      <a href="login.html" class="login">Login</a>
+      <a href="register.html" class="btn primary" style="color: #ffffff !important;">
+        Get Started
+        <i class="fa-solid fa-arrow-up-right-from-square" style="color: #ffffff !important;"></i>
+      </a>    
+    </nav>
+  </div>
+</header>
+    
+<section class="ai-hero">
+    <div class="container">
+
+        <span class="ai-tag">
+            <i class="fa-solid fa-robot"></i>
+            AI Powered Career Guidance
+        </span>
+
+        <h1>Your Personal Placement Mentor</h1>
+
+        <p>
+            Get interview preparation, skill gap analysis,
+            personalized learning paths, job recommendations,
+            resume reviews and placement readiness insights.
+        </p>
+
+        <a href="#tools" class="start-btn">
+            Start Exploring
+        </a>
+
+    </div>
+</section>
+<section id="tools" class="tools-section">
+
+    <div class="tool-card">
+        <i class="fa-solid fa-file-lines"></i>
+        <h3>Resume Analyzer</h3>
+        <p>Check resume quality and identify improvements.</p>
+    </div>
+
+    <div class="tool-card">
+        <i class="fa-solid fa-chart-line"></i>
+        <h3>Skill Gap Analysis</h3>
+        <p>Compare your skills against industry requirements.</p>
+    </div>
+
+    <div class="tool-card">
+        <i class="fa-solid fa-user-tie"></i>
+        <h3>Interview Preparation</h3>
+        <p>Practice technical and HR interview questions.</p>
+    </div>
+
+    <div class="tool-card">
+        <i class="fa-solid fa-briefcase"></i>
+        <h3>Job Matching</h3>
+        <p>Discover jobs aligned with your profile.</p>
+    </div>
+
+    <div class="tool-card">
+        <i class="fa-solid fa-book-open"></i>
+        <h3>Learning Roadmap</h3>
+        <p>Receive personalized learning recommendations.</p>
+    </div>
+
+    <div class="tool-card">
+        <i class="fa-solid fa-bullseye"></i>
+        <h3>Placement Readiness</h3>
+        <p>Track your placement preparation score.</p>
+    </div>
+
+</section>
+
+<section class="readiness-section">
+
+    <h2>Placement Readiness Score</h2>
+
+    <div class="score-card">
+        <div class="score-circle">
+            82%
+        </div>
+
+        <div class="score-details">
+            <p>Resume Quality: 90%</p>
+            <p>Technical Skills: 78%</p>
+            <p>Projects: 85%</p>
+            <p>Interview Readiness: 75%</p>
+        </div>
+    </div>
+
+</section>
+
+<section class="recommendation-section">
+
+    <h2>AI Recommendations</h2>
+
+    <div class="recommendation-card">
+        <h3>Frontend Developer Path</h3>
+
+        <ul>
+            <li>Learn React Hooks</li>
+            <li>Build 2 Portfolio Projects</li>
+            <li>Practice JavaScript DSA</li>
+            <li>Learn REST APIs</li>
+        </ul>
+    </div>
+
+</section>
+
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h3>PlacementorAI</h3>
+        <p>Your intelligent companion for career growth and recruitment management. Streamlining the path from campus to corporate.</p>
+        
+          <div class="footer-social">
+  <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
+    <i class="fa-brands fa-linkedin"></i>
+  </a>
+
+  <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+    <i class="fa-brands fa-github"></i>
+  </a>
+
+  <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+    <i class="fa-brands fa-x-twitter"></i>
+  </a>
+</div>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <a href="index.html">Home</a>
+        <a href="About.html">About Us</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="javascript:void(0)" onclick="openPortal('faq')">FAQ</a>
+        <a href="javascript:void(0)" onclick="openPortal('privacy')">Privacy Policy</a>
+        <a href="javascript:void(0)" onclick="openPortal('terms')">Terms of Service</a>
+      </div>
+      <div>
+        <h4>Account</h4>
+        <a href="login.html">Login</a>
+        <a href="register.html">Sign Up</a>
+        <a href="register.html">Recruiter Portal</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="copyright">&copy; 2026 PlacementorAI. All rights reserved.</p>
+      <div style="display: flex; gap: 20px;">
+        <a href="javascript:void(0)" onclick="openPortal('privacy')">Privacy</a>
+        <a href="javascript:void(0)" onclick="openPortal('terms')">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+const themeToggle = document.getElementById("theme-toggle");
+const themeIcon = themeToggle.querySelector("i");
+
+/* Load saved theme */
+if(localStorage.getItem("theme") === "dark"){
+    document.body.classList.add("dark-mode");
+    themeIcon.classList.replace("fa-moon", "fa-sun");
+}
+
+themeToggle.addEventListener("click", () => {
+
+    document.body.classList.toggle("dark-mode");
+
+    if(document.body.classList.contains("dark-mode")){
+        localStorage.setItem("theme", "dark");
+        themeIcon.classList.replace("fa-moon", "fa-sun");
+    }else{
+        localStorage.setItem("theme", "light");
+        themeIcon.classList.replace("fa-sun", "fa-moon");
+    }
+
+});
+</script>
+</body>
+</html>

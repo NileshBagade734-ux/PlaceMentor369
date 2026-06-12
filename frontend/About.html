@@ -1,389 +1,880 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PlacementorAI - About Us</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About – PlacementorAI</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
 
-  <style>
-    /* BASE */
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Inter, sans-serif; }
-    body { background: linear-gradient(to bottom right, #eef2ff, #ffffff, #eff6ff); color: #1f2937; }
-    .container { max-width: 1200px; margin: auto; padding: 0 20px; }
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    /* HEADER & RESPONSIVE NAVBAR */
-    .header { background: #fff; padding: 16px 0; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 1000; }
-    .nav { display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    
-    /* Navigation Menu Links Wrapper */
-    .nav-menu { display: flex; align-items: center; }
-    .nav-menu a { margin: 0 12px; text-decoration: none; color: #374151; font-weight: 500; transition: color 0.2s; }
-    .nav-menu a:hover { color: #4f46e5; }
-    .login { color: #4f46e5; }
-    
-    .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; text-decoration: none; }
-    .primary { background: #161533; color: #fff !important; }
-    .primary:hover { background: #23214d; color: #fff !important; }
-    .secondary { background: #e5e7eb; color: #374151; }
+    <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
 
-    /* Mobile Hamburger Menu Toggle Button Button */
-    .menu-toggle { display: none; background: none; border: none; font-size: 24px; color: #374151; cursor: pointer; }
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-    /* HERO */
-    .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; padding: 80px 0; align-items: center; }
-    .badge { display: inline-block; background: #e0e7ff; color: #4338ca; padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; font-weight: 500; }
-    .hero h1 { font-size: 42px; line-height: 1.2; margin-bottom: 20px; font-weight: 700; }
-    .hero p { font-size: 18px; color: #6b7280; line-height: 1.5; }
-
-    .features { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; margin: 30px 0; }
-    .feature {
-      display: flex;
-      gap: 12px;
-      background: #fff;
-      padding: 14px;
-      border-radius: 12px;
-      align-items: center;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .feature:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    }    
-    .feature h4 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
-    .feature p { font-size: 14px; color: #6b7280; }
-
-    .cta { display: flex; gap: 14px; margin-top: 20px; }
-    .cta button { flex: 1; text-align: center; }
-
-    /* HERO IMAGE */
-    .hero-right { position: relative; top: -8px; }
-    .hero-right img {
-      width: 100%;
-      height: auto;
-      max-height: 420px;
-      object-fit: cover;
-      display: block;
-      border-radius: 20px;
-    }
-
-    .hero-img-wrapper { position: relative; border-radius: 20px; overflow: hidden; }
-    .hero-img-wrapper::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to bottom right,
-        rgba(79,70,229,0.08),
-        rgba(255,255,255,0.02)
-      );
-    }
-
-    .stats-card { position: absolute; bottom: -32px; left: -32px; background: #ffffff; padding: 16px 20px; border-radius: 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 12px 24px rgba(0,0,0,0.12); z-index: 10; }
-    .stats-card strong { font-size: 24px; font-weight: 700; color: #111827; }
-    .stats-card span { display: block; font-size: 14px; color: #6b7280; }
-    .stats-card div { text-align: center; }
-
-    /* FOOTER */
-    footer { background: #0f172a; color: #f8fafc; padding: 80px 0 40px; }
-    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 60px; }
-    footer h3 { font-size: 24px; margin-bottom: 20px; color: #fff; }
-    footer h4 { font-size: 18px; margin-bottom: 20px; color: #fff; }
-    footer p { color: #94a3b8; line-height: 1.6; }
-    footer a { color: #94a3b8; text-decoration: none; margin-bottom: 12px; display: block; transition: color 0.2s; }
-    footer a:hover { color: #4f46e5; }
-    .footer-social { display: flex; gap: 15px; margin-top: 20px; }
-    .footer-social a { font-size: 20px; color: #94a3b8; }
-    .footer-social a:hover { color: #fff; }
-    .footer-bottom { border-top: 1px solid #1e293b; padding-top: 40px; display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 14px; }
-    .copyright { margin-top: 0; }
-
-    /* DOCUMENTATION PORTAL */
-    .portal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
-    .portal-content { background: rgba(255, 255, 255, 0.98); width: 100%; max-width: 800px; max-height: 90vh; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.3); animation: slideUp 0.4s ease-out; }
-    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .portal-header { padding: 24px 32px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-    .portal-nav { display: flex; gap: 12px; padding: 12px 32px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-    .portal-nav-btn { background: none; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 500; color: #64748b; transition: all 0.2s; }
-    .portal-nav-btn.active { background: #4f46e5; color: #fff; }
-    .portal-body { padding: 32px; overflow-y: auto; color: #334155; line-height: 1.7; }
-    .portal-body h2 { margin-bottom: 16px; color: #0f172a; font-size: 24px; }
-    .portal-body section { margin-bottom: 32px; }
-    .portal-body section h3 { font-size: 18px; margin-bottom: 12px; color: #1e293b; }
-    .close-portal { cursor: pointer; font-size: 24px; color: #64748b; transition: color 0.2s; }
-    .close-portal:hover { color: #ef4444; }
-
-    /* MODAL */
-    .modal { position: fixed; inset: 0; display: none; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
-    .modal-box { background: #fff; padding: 30px; border-radius: 16px; width: 360px; }
-    .modal-box input { width: 100%; padding: 10px; margin: 10px 0; }
-    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-
-    .btn i { margin-left: 6px; font-size: 14px; }
-    footer h3, footer h4 { color: #ffffff; }
-
-    .feature-wide {
-      grid-column: span 2;
-      background: #ffffff;
-      padding: 18px 22px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .feature-wide:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.08); }
-    .feature-wide:hover .fa-arrow-right { transform: translateX(4px); transition: transform 0.2s ease; }
-    
-    @media (min-width: 1025px) {
-      .feature-wide--big { width: calc(100% + 0px); margin-left: 0px; }
-    }
-
-    .feature-wide h4 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
-    .feature-wide p { font-size: 14px; color: #6b7280; }
-    .ai-icon { color: #4c45ce; background: #eef2ff; padding: 8px; border-radius: 8px; font-size: 16px; }
-
-    /* ABOUT CONTENT TYPOGRAPHY FIXES */
-    #about h1 { font-size: 36px; font-weight: 700; margin-bottom: 16px; color: #111827; }
-    #about h2 { font-size: 24px; font-weight: 600; margin-bottom: 12px; color: #1f2937; }
-    #about p { font-size: 16px; line-height: 1.6; color: #4b5563; margin-bottom: 16px; }
-    #about ul li { font-size: 16px; color: #4b5563; margin-bottom: 8px; list-style-position: inside; }
-
-    /* RESPONSIVE BREAKPOINTS WITH MOBILE DROPDOWN NAVIGATION FIX */
-    @media (max-width: 768px) {
-      .menu-toggle { display: block; }
-      
-      .nav-menu {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: #ffffff;
-        padding: 20px;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-        border-top: 1px solid #f3f4f6;
-        gap: 16px;
-        text-align: center;
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Inter, sans-serif;
       }
-      
-      .nav-menu.active { display: flex; }
-      .nav-menu a { margin: 8px 0; width: 100%; font-size: 16px; }
-      .nav-menu .btn { width: 100%; justify-content: center; }
 
-      .hero { grid-template-columns: 1fr; gap: 30px; text-align: center; }
-      .hero-left { order: 2; }
-      .hero-right { order: 1; }
-      .features { grid-template-columns: 1fr; }
-      .feature-wide { grid-column: span 1; }
-      .cta { flex-direction: column; }
-      .stats-card { left: 50%; transform: translateX(-50%); bottom: -24px; }
+      body {
+        background: linear-gradient(to bottom right, #eef2ff, #ffffff, #eff6ff);
+        color: #1f2937;
+        overflow-x: hidden;
+      }
 
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-      .footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
-      
-      #about h1 { font-size: 28px; }
-      #about h2 { font-size: 20px; }
-    }
+      /* Navbar styling with responsive structure updates */
+      .header {
+        background: #fff;
+        padding: 16px 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-bottom: 1px solid #e5e7eb;
+      }
 
-    @media (max-width: 480px) {
-      .footer-grid { grid-template-columns: 1fr; }
-    }
-  </style>
-</head>
-<body>
+      .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: auto;
+        padding: 0 20px;
+      }
 
-<header class="header">
-  <div class="container nav" style="position: relative;">
-    <div class="logo">
-      <i class="fa-solid fa-arrow-up-right-dots"></i> 
-      <span>PlacementorAI</span>
+      .nav-menu {
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-menu a {
+        margin: 0 12px;
+        text-decoration: none;
+        color: #374151;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+
+      .nav-menu a:hover {
+        color: #4f46e5;
+      }
+
+      .nav-menu a.login {
+        color: #4f46e5;
+        font-weight: 600;
+      }
+
+      .btn {
+        padding: 10px 18px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+      }
+
+      .btn.primary {
+        background: #4f46e5;
+        color: #fff;
+      }
+
+      .btn.primary:hover {
+        background: #4338ca;
+      }
+
+      /* Mobile Hamburger Menu Toggle Button */
+      .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #374151;
+        cursor: pointer;
+      }
+
+      section {
+        padding: 60px 0;
+      }
+
+      .fade-in {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      .team-member img {
+        border-radius: 9999px;
+        transition: transform 0.4s;
+      }
+
+      .team-member img:hover {
+        transform: scale(1.1);
+      }
+
+      /* FOOTER */
+      footer {
+        background: #0f172a;
+        color: #f8fafc;
+        padding: 80px 0 40px;
+      }
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 60px;
+      }
+      footer h3 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #fff;
+      }
+      footer h4 {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: #fff;
+      }
+      footer p {
+        color: #94a3b8;
+        line-height: 1.6;
+      }
+      footer a {
+        color: #94a3b8;
+        text-decoration: none;
+        margin-bottom: 12px;
+        display: block;
+        transition: color 0.2s;
+      }
+      footer a:hover {
+        color: #4f46e5;
+      }
+      .footer-social {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .footer-social a {
+        font-size: 20px;
+        color: #94a3b8;
+      }
+      .footer-social a:hover {
+        color: #fff;
+      }
+      .footer-bottom {
+        border-top: 1px solid #1e293b;
+        padding-top: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #64748b;
+        font-size: 14px;
+      }
+      .copyright {
+        margin-top: 0;
+      }
+
+      /* DOCUMENTATION PORTAL */
+      .portal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(8px);
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .portal-content {
+        background: rgba(255, 255, 255, 0.98);
+        width: 100%;
+        max-width: 800px;
+        max-height: 90vh;
+        border-radius: 24px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        animation: slideUp 0.4s ease-out;
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(30px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .portal-header {
+        padding: 24px 32px;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .portal-nav {
+        display: flex;
+        gap: 12px;
+        padding: 12px 32px;
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      .portal-nav-btn {
+        background: none;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        color: #64748b;
+        transition: all 0.2s;
+      }
+      .portal-nav-btn.active {
+        background: #4f46e5;
+        color: #fff;
+      }
+      .portal-body {
+        padding: 32px;
+        overflow-y: auto;
+        color: #334155;
+        line-height: 1.7;
+      }
+      .portal-body h2 {
+        margin-bottom: 16px;
+        color: #0f172a;
+        font-size: 24px;
+      }
+      .portal-body section {
+        margin-bottom: 32px;
+      }
+      .portal-body section h3 {
+        font-size: 18px;
+        margin-bottom: 12px;
+        color: #1e293b;
+      }
+      .close-portal {
+        cursor: pointer;
+        font-size: 24px;
+        color: #64748b;
+        transition: color 0.2s;
+      }
+      .close-portal:hover {
+        color: #ef4444;
+      }
+
+      /* RESPONSIVE BREAKPOINTS WITH NAV MOBILE DRAWER UI */
+      @media (max-width: 768px) {
+        .menu-toggle {
+          display: block;
+        }
+
+        .nav-menu {
+          display: none;
+          flex-direction: column;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          background: #ffffff;
+          padding: 20px;
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+          border-top: 1px solid #f3f4f6;
+          gap: 16px;
+          text-align: center;
+        }
+
+        .nav-menu.active {
+          display: flex;
+        }
+
+        .nav-menu a {
+          margin: 8px 0;
+          width: 100%;
+          font-size: 16px;
+        }
+
+        .nav-menu .btn {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .footer-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .footer-bottom {
+          flex-direction: column;
+          gap: 20px;
+          text-align: center;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      /* Theme Toggle Button */
+      .theme-toggle {
+        background: #f3f4f6;
+        border: none;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+        color: #374151;
+        transition: all 0.3s ease;
+        margin-right: 12px;
+      }
+
+      .theme-toggle:hover {
+        transform: rotate(15deg);
+        background: #e5e7eb;
+      }
+      /* DARK MODE */
+
+      body.dark-mode {
+        background: #0f172a;
+        color: #f8fafc;
+      }
+
+      /* Header */
+      body.dark-mode .header {
+        background: #1e293b;
+        border-bottom: 1px solid #334155;
+      }
+
+      body.dark-mode .nav-menu a,
+      body.dark-mode .logo,
+      body.dark-mode .menu-toggle {
+        color: #f8fafc;
+      }
+
+      /* Hero Features */
+      body.dark-mode .feature,
+      body.dark-mode .stats-card {
+        background: #1e293b;
+        color: #f8fafc;
+      }
+
+      body.dark-mode .feature p,
+      body.dark-mode .hero p {
+        color: #cbd5e1;
+      }
+
+      /* Buttons */
+      body.dark-mode .secondary {
+        background: #334155;
+        color: #fff;
+      }
+
+      /* Documentation Portal */
+      body.dark-mode .portal-content {
+        background: #1e293b;
+      }
+
+      body.dark-mode .portal-body,
+      body.dark-mode .portal-header h2,
+      body.dark-mode .portal-body h2,
+      body.dark-mode .portal-body h3 {
+        color: #f8fafc;
+      }
+
+      body.dark-mode .portal-nav {
+        background: #0f172a;
+      }
+
+      body.dark-mode .portal-nav-btn {
+        color: #cbd5e1;
+      }
+
+      /* Mobile Menu */
+      body.dark-mode .nav-menu {
+        background: #1e293b;
+      }
+
+      /* Footer */
+      body.dark-mode footer {
+        background: #020617;
+      }
+      body.dark-mode .faq-item {
+        background: #1e293b;
+      }
+
+      body.dark-mode .faq-question {
+        color: #f8fafc;
+      }
+
+      body.dark-mode .faq-answer p {
+        color: #cbd5e1;
+      }
+      /* FAQ Section */
+      .faq-section {
+        padding: 60px 0;
+      }
+
+      .faq-title {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #4f46e5;
+        margin-bottom: 40px;
+      }
+
+      .faq-container {
+        max-width: 850px;
+        margin: auto;
+      }
+
+      .faq-item {
+        background: #ffffff;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      .faq-question {
+        width: 100%;
+        border: none;
+        background: transparent;
+        padding: 20px;
+        text-align: left;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+      }
+
+      .faq-answer p {
+        padding: 0 20px 20px;
+        color: #6b7280;
+        line-height: 1.6;
+      }
+
+      .faq-item.active .faq-answer {
+        max-height: 200px;
+      }
+
+      .faq-item.active .faq-question i {
+        transform: rotate(180deg);
+      }
+
+      .faq-question i {
+        transition: transform 0.3s ease;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="header">
+      <div class="nav" style="position: relative">
+        <div class="text-xl font-bold">
+          <i class="fa-solid fa-arrow-up-right-dots"></i> PlacementorAI
+        </div>
+        <button
+          id="theme-toggle"
+          class="theme-toggle"
+          aria-label="Toggle Theme"
+        >
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <button
+          class="menu-toggle"
+          id="mobile-menu-btn"
+          aria-label="Toggle Navigation Menu"
+        >
+          <i class="fa-solid fa-bars" id="menu-icon"></i>
+        </button>
+
+        <nav class="nav-menu" id="nav-links-target">
+          <a href="index.html">Home</a>
+          <a href="About.html">About Us</a>
+          <a href="contact.html">Contact</a>
+          <a href="register.html">Sign Up</a>
+          <a href="login.html" class="login">Login</a>
+          <a href="register.html" class="btn primary">Get Started</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-6 py-12">
+      <section class="text-center fade-in">
+        <h1 class="text-4xl font-bold text-indigo-600 mb-4">
+          About PlacementorAI
+        </h1>
+        <p class="text-slate-600 max-w-2xl mx-auto">
+          Helping students find their dream jobs and track applications
+          efficiently using a smart, simple placement ecosystem.
+        </p>
+      </section>
+
+      <section class="grid md:grid-cols-2 gap-10 fade-in">
+        <div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg">
+          <h2 class="text-2xl font-semibold mb-3">Our Mission</h2>
+          <p>
+            To simplify placements and connect students with opportunities that
+            match their skills and ambitions.
+          </p>
+        </div>
+
+        <div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg">
+          <h2 class="text-2xl font-semibold mb-3">Our Vision</h2>
+          <p>
+            A future where every student finds the right career path with
+            confidence and clarity.
+          </p>
+        </div>
+      </section>
+
+      <section class="fade-in">
+        <h2 class="text-3xl font-bold text-center mb-10 text-indigo-600">
+          What We Offer
+        </h2>
+
+        <div class="grid md:grid-cols-3 gap-8 text-center">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <i
+              data-lucide="trending-up"
+              class="w-8 h-8 mx-auto text-indigo-600 mb-4"
+            ></i>
+            <h3 class="font-semibold mb-2">Smart Job Matching</h3>
+            <p class="text-slate-600">
+              Jobs matched with your skills & profile.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <i
+              data-lucide="file-text"
+              class="w-8 h-8 mx-auto text-indigo-600 mb-4"
+            ></i>
+            <h3 class="font-semibold mb-2">Application Tracking</h3>
+            <p class="text-slate-600">Track every application in one place.</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <i
+              data-lucide="user-check"
+              class="w-8 h-8 mx-auto text-indigo-600 mb-4"
+            ></i>
+            <h3 class="font-semibold mb-2">Profile Analytics</h3>
+            <p class="text-slate-600">Improve profile strength & visibility.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="fade-in">
+        <h2 class="text-3xl font-bold text-center mb-10 text-indigo-600">
+          Meet the Founder
+        </h2>
+
+        <div class="grid md:grid-cols-4 gap-8">
+          <div class="team-member md:col-span-4 text-center">
+            <img src="https://via.placeholder.com/120" class="mx-auto mb-3" />
+            <h3 class="font-semibold text-indigo-700">Nilesh Bagade</h3>
+            <p class="text-sm text-slate-500">Founder & Developer</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="fade-in">
+        <h2 class="text-3xl font-bold text-center mb-10 text-indigo-600">
+          Support & Help Center
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-10">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-xl font-semibold mb-3 text-indigo-700">
+              Need Assistance?
+            </h3>
+            <p class="text-slate-600 mb-4">
+              Facing any issue? Our support team will respond within 24 hours.
+            </p>
+            <ul class="space-y-2 text-slate-600">
+              <li>✔ Login & account issues</li>
+              <li>✔ Application problems</li>
+              <li>✔ Recruiter queries</li>
+              <li>✔ Bug reports</li>
+            </ul>
+          </div>
+
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-xl font-semibold mb-4 text-indigo-700">
+              Raise a Support Ticket
+            </h3>
+
+            <form id="supportForm" class="space-y-4">
+              <input
+                class="w-full border px-4 py-2 rounded-lg"
+                placeholder="Your Name"
+                required
+              />
+              <input
+                class="w-full border px-4 py-2 rounded-lg"
+                type="email"
+                placeholder="Your Email"
+                required
+              />
+
+              <select class="w-full border px-4 py-2 rounded-lg" required>
+                <option value="">Select Issue</option>
+                <option>Login Issue</option>
+                <option>Application Issue</option>
+                <option>Recruiter Issue</option>
+                <option>Other</option>
+              </select>
+
+              <textarea
+                class="w-full border px-4 py-2 rounded-lg"
+                rows="4"
+                placeholder="Describe your issue..."
+                required
+              ></textarea>
+
+              <button
+                class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold"
+              >
+                Submit Ticket
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+      <section class="faq-section fade-in">
+        <h2 class="faq-title">Frequently Asked Questions</h2>
+
+        <div class="faq-container">
+          <div class="faq-item">
+            <button class="faq-question">
+              How do I apply for a job?
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Browse available jobs, select a position that matches your
+                profile, and click the Apply button to submit your application.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              Is PlacementorAI free for students?
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Yes. Students can create profiles, apply for jobs, and track
+                applications at no cost.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              How can recruiters post jobs?
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Recruiters can register for an account and access the recruiter
+                dashboard to create and manage job postings.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              Is my personal information secure?
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Yes. We follow industry-standard security practices and only
+                share information with recruiters for jobs you apply to.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="text-center fade-in">
+        <h2 class="text-2xl font-bold mb-4 text-indigo-600">
+          Ready to get started?
+        </h2>
+        <a
+          href="register.html"
+          class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold"
+        >
+          Get Started
+        </a>
+      </section>
     </div>
-    
-    <button class="menu-toggle" id="mobile-menu-btn" aria-label="Toggle Navigation Menu">
-      <i class="fa-solid fa-bars" id="menu-icon"></i>
-    </button>
 
-    <nav class="nav-menu" id="nav-links-target">
-      <a href="index.html">Home</a>
-      <a href="About.html">About Us</a>
-      <a href="contact.html">Contact</a>
-      <a href="register.html">Sign Up</a>
-      <a href="login.html" class="login">Login</a>
-      <a href="register.html" class="btn primary" style="color: #ffffff !important;">
-        Get Started
-        <i class="fa-solid fa-arrow-up-right-from-square" style="color: #ffffff !important;"></i>
-      </a>    
-    </nav>
-  </div>
-</header>
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <h3>PlacementorAI</h3>
+            <p>
+              Your intelligent companion for career growth and recruitment
+              management. Streamlining the path from campus to corporate.
+            </p>
+            <div class="footer-social">
+              <a
+                href="https://www.linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i class="fa-brands fa-linkedin"></i>
+              </a>
 
-<section id="about">
-  <div class="container">
-    <br/><br/>
-    <h1>About PlacementorAI</h1>
-    <p>
-      PlacementorAI is a smart and user-friendly placement management system 
-      designed to simplify campus recruitment for students, recruiters, and administrators.
-    </p>
-    <p>
-      The platform ensures a structured and transparent hiring process by clearly 
-      separating user roles and responsibilities. Students can explore job opportunities 
-      based on their eligibility, recruiters can manage applications efficiently, 
-      and admins maintain full control over the system.
-    </p>
-    <br/><br/>
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i class="fa-brands fa-github"></i>
+              </a>
 
-    <h2>Our Mission</h2>
-    <p>
-      Our mission is to make the placement process simple, fair, and efficient 
-      for everyone involved, while providing AI-powered guidance to help students 
-      prepare better for their careers.
-    </p>
-    <br/><br/>
-
-    <h2>What Makes Us Unique?</h2>
-    <ul>
-      <li>Role-based system for better security and clarity</li>
-      <li>Only eligible and approved jobs are shown to students</li>
-      <li>Transparent application tracking</li>
-      <li>AI-powered career and interview guidance</li>
-      <li>Clean and easy-to-use interface</li>
-    </ul>
-    <br/><br/>
-
-    <h2>How It Works</h2>
-    <p>
-      Students create job applications, recruiters review and update application status, 
-      and admins supervise the overall process. This separation ensures there are no 
-      conflicts or unauthorized actions within the system.
-    </p>
-    <br/><br/>
-    <p>
-      We aim to continuously improve the platform and make placement management smarter 
-      with the help of technology.
-    </p>
-  </div>
-  <br/><br/>
-</section>
-
-<footer>
-  <div class="container">
-    <div class="footer-grid">
-      <div>
-        <h3>PlacementorAI</h3>
-        <p>Your intelligent companion for career growth and recruitment management. Streamlining the path from campus to corporate.</p>
-        <div class="footer-social">
-          <a href="#"><i class="fa-brands fa-linkedin"></i></a>
-          <a href="#"><i class="fa-brands fa-github"></i></a>
-          <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+              <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+                <i class="fa-brands fa-x-twitter"></i>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h4>Platform</h4>
+            <a href="index.html">Home</a>
+            <a href="About.html">About Us</a>
+            <a href="contact.html">Contact</a>
+          </div>
+          <div>
+            <h4>Resources</h4>
+            <a href="javascript:void(0)" onclick="openPortal('faq')">FAQ</a>
+            <a href="javascript:void(0)" onclick="openPortal('privacy')"
+              >Privacy Policy</a
+            >
+            <a href="javascript:void(0)" onclick="openPortal('terms')"
+              >Terms of Service</a
+            >
+          </div>
+          <div>
+            <h4>Account</h4>
+            <a href="login.html">Login</a>
+            <a href="register.html">Sign Up</a>
+            <a href="register.html">Recruiter Portal</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="copyright">
+            &copy; 2026 PlacementorAI. All rights reserved.
+          </p>
+          <div style="display: flex; gap: 20px">
+            <a href="javascript:void(0)" onclick="openPortal('privacy')"
+              >Privacy</a
+            >
+            <a href="javascript:void(0)" onclick="openPortal('terms')">Terms</a>
+          </div>
         </div>
       </div>
-      <div>
-        <h4>Platform</h4>
-        <a href="index.html">Home</a>
-        <a href="About.html">About Us</a>
-        <a href="contact.html">Contact</a>
-      </div>
-      <div>
-        <h4>Resources</h4>
-        <a href="javascript:void(0)" onclick="openPortal('faq')">FAQ</a>
-        <a href="javascript:void(0)" onclick="openPortal('privacy')">Privacy Policy</a>
-        <a href="javascript:void(0)" onclick="openPortal('terms')">Terms of Service</a>
-      </div>
-      <div>
-        <h4>Account</h4>
-        <a href="login.html">Login</a>
-        <a href="register.html">Sign Up</a>
-        <a href="register.html">Recruiter Portal</a>
+    </footer>
+
+    <div id="portal-overlay" class="portal-overlay">
+      <div class="portal-content">
+        <div class="portal-header">
+          <h2 id="portal-title">Documentation Portal</h2>
+          <i class="fa-solid fa-xmark close-portal" onclick="closePortal()"></i>
+        </div>
+        <div class="portal-nav">
+          <button
+            class="portal-nav-btn"
+            id="btn-faq"
+            onclick="switchPortalTab('faq')"
+          >
+            FAQ
+          </button>
+          <button
+            class="portal-nav-btn"
+            id="btn-privacy"
+            onclick="switchPortalTab('privacy')"
+          >
+            Privacy
+          </button>
+          <button
+            class="portal-nav-btn"
+            id="btn-terms"
+            onclick="switchPortalTab('terms')"
+          >
+            Terms
+          </button>
+        </div>
+        <div class="portal-body" id="portal-body"></div>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p class="copyright">&copy; 2026 PlacementorAI. All rights reserved.</p>
-      <div style="display: flex; gap: 20px;">
-        <a href="javascript:void(0)" onclick="openPortal('privacy')">Privacy</a>
-        <a href="javascript:void(0)" onclick="openPortal('terms')">Terms</a>
-      </div>
-    </div>
-  </div>
-</footer>
 
-<div id="portal-overlay" class="portal-overlay">
-  <div class="portal-content">
-    <div class="portal-header">
-      <h2 id="portal-title">Documentation Portal</h2>
-      <i class="fa-solid fa-xmark close-portal" onclick="closePortal()"></i>
-    </div>
-    <div class="portal-nav">
-      <button class="portal-nav-btn" id="btn-faq" onclick="switchPortalTab('faq')">FAQ</button>
-      <button class="portal-nav-btn" id="btn-privacy" onclick="switchPortalTab('privacy')">Privacy</button>
-      <button class="portal-nav-btn" id="btn-terms" onclick="switchPortalTab('terms')">Terms</button>
-    </div>
-    <div class="portal-body" id="portal-body">
-      </div>
-  </div>
-</div>
+    <script>
+      // Mobile Hamburger Toggle Logic
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const navLinksTarget = document.getElementById("nav-links-target");
+      const menuIcon = document.getElementById("menu-icon");
 
-<div id="modal" class="modal">
-  <div class="modal-box">
-    <h2 id="modal-title">Login</h2>
-    <form onsubmit="login(event)">
-      <input type="email" placeholder="Email" required />
-      <input type="password" placeholder="Password" required />
-      <div class="modal-actions">
-        <button class="btn primary" type="submit">Login</button>
-        <button class="btn secondary" type="button" onclick="closeModal()">Cancel</button>
-      </div>
-    </form>
-  </div>
-</div>
+      if (mobileMenuBtn && navLinksTarget && menuIcon) {
+        mobileMenuBtn.addEventListener("click", () => {
+          navLinksTarget.classList.toggle("active");
 
-<script>
-  // Mobile Hamburger Toggle Logic
-  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-  const navLinksTarget = document.getElementById('nav-links-target');
-  const menuIcon = document.getElementById('menu-icon');
+          if (navLinksTarget.classList.contains("active")) {
+            menuIcon.classList.remove("fa-bars");
+            menuIcon.classList.add("fa-xmark");
+          } else {
+            menuIcon.classList.remove("fa-xmark");
+            menuIcon.classList.add("fa-bars");
+          }
+        });
+      }
 
-  mobileMenuBtn.addEventListener('click', () => {
-    navLinksTarget.classList.toggle('active');
-    
-    if(navLinksTarget.classList.contains('active')) {
-      menuIcon.classList.remove('fa-bars');
-      menuIcon.classList.add('fa-xmark');
-    } else {
-      menuIcon.classList.remove('fa-xmark');
-      menuIcon.classList.add('fa-bars');
-    }
-  });
+      lucide.createIcons();
 
-  // Modal JS
-  const modal = document.getElementById("modal");
-  const title = document.getElementById("modal-title");
+      gsap.utils.toArray(".fade-in").forEach((el, i) => {
+        gsap.to(el, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          delay: i * 0.2,
+          ease: "power3.out",
+        });
+      });
 
-  function openModal(type) {
-    title.innerText = type === "student" ? "Student Login" : "Recruiter Login";
-    modal.style.display = "flex";
-  }
+      document.getElementById("supportForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        alert("✅ Support ticket submitted successfully!");
+        e.target.reset();
+      });
 
-  function closeModal() { modal.style.display = "none"; }
+      // DOCUMENTATION PORTAL JS
+      const portalOverlay = document.getElementById("portal-overlay");
+      const portalBody = document.getElementById("portal-body");
+      const portalTitle = document.getElementById("portal-title");
 
-  function login(e) {
-    e.preventDefault();
-    alert("Login successful (demo)");
-    closeModal();
-  }
-
-  // DOCUMENTATION PORTAL JS
-  const portalOverlay = document.getElementById('portal-overlay');
-  const portalBody = document.getElementById('portal-body');
-  const portalTitle = document.getElementById('portal-title');
-
-  const portalContent = {
-    faq: `
+      const portalContent = {
+        faq: `
       <h2>Frequently Asked Questions</h2>
       <section>
         <h3>How do I apply for a job?</h3>
@@ -398,7 +889,7 @@
         <p>Yes, we use industry-standard encryption and follow best practices to ensure your personal and academic data remains private.</p>
       </section>
     `,
-    privacy: `
+        privacy: `
       <h2>Privacy Policy</h2>
       <section>
         <h3>Data Collection</h3>
@@ -409,7 +900,7 @@
         <p>Your data is only shared with recruiters of companies you explicitly apply to. We do not sell your data to third parties.</p>
       </section>
     `,
-    terms: `
+        terms: `
       <h2>Terms of Service</h2>
       <section>
         <h3>User Agreement</h3>
@@ -419,32 +910,97 @@
         <h3>Platform Usage</h3>
         <p>PlacementorAI is a facilitator. We do not guarantee employment but provide the tools to improve your placement chances.</p>
       </section>
-    `
-  };
+    `,
+      };
 
-  function openPortal(tab) {
-    portalOverlay.style.display = 'flex';
-    switchPortalTab(tab);
-  }
+      function openPortal(tab) {
+        if (!portalOverlay) return;
+        portalOverlay.style.display = "flex";
+        switchPortalTab(tab);
+      }
 
-  function closePortal() {
-    portalOverlay.style.display = 'none';
-  }
+      function closePortal() {
+        portalOverlay.style.display = "none";
+      }
 
-  function switchPortalTab(tab) {
-    portalBody.innerHTML = portalContent[tab];
-    document.querySelectorAll('.portal-nav-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById('btn-' + tab).classList.add('active');
-    const titles = { faq: 'FAQ', privacy: 'Privacy Policy', terms: 'Terms of Service' };
-    portalTitle.innerText = titles[tab];
-  }
+      function switchPortalTab(tab) {
+        portalBody.innerHTML = portalContent[tab];
+        document
+          .querySelectorAll(".portal-nav-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        document.getElementById("btn-" + tab).classList.add("active");
+        const titles = {
+          faq: "FAQ",
+          privacy: "Privacy Policy",
+          terms: "Terms of Service",
+        };
+        portalTitle.innerText = titles[tab];
+      }
 
-  portalOverlay.addEventListener('click', (e) => {
-    if (e.target === portalOverlay) closePortal();
-  });
-</script>
-<script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
-<script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
+      if (portalOverlay) {
+        portalOverlay.addEventListener("click", (e) => {
+          if (e.target === portalOverlay) closePortal();
+        });
+      }
+    </script>
+    <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
+    <script
+      src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js"
+      defer
+    ></script>
 
-</body>
+    <script type="text/javascript">
+      var Tawk_API = Tawk_API || {},
+        Tawk_LoadStart = new Date();
+      (function () {
+        var s1 = document.createElement("script"),
+          s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = "https://embed.tawk.to/697b3ec92893b51c32bbd8f9/1jg4mqho3";
+        s1.charset = "UTF-8";
+        s1.setAttribute("crossorigin", "*");
+        s0.parentNode.insertBefore(s1, s0);
+      })();
+    </script>
+    <script>
+      const themeToggle = document.getElementById("theme-toggle");
+      const themeIcon = themeToggle.querySelector("i");
+
+      /* Load saved theme */
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+        themeIcon.classList.remove("fa-moon");
+        themeIcon.classList.add("fa-sun");
+      }
+
+      themeToggle.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+
+        if (document.body.classList.contains("dark-mode")) {
+          localStorage.setItem("theme", "dark");
+          themeIcon.classList.remove("fa-moon");
+          themeIcon.classList.add("fa-sun");
+        } else {
+          localStorage.setItem("theme", "light");
+          themeIcon.classList.remove("fa-sun");
+          themeIcon.classList.add("fa-moon");
+        }
+      });
+    </script>
+    <script>
+      document.querySelectorAll(".faq-question").forEach((question) => {
+        question.addEventListener("click", () => {
+          const item = question.parentElement;
+
+          document.querySelectorAll(".faq-item").forEach((faq) => {
+            if (faq !== item) {
+              faq.classList.remove("active");
+            }
+          });
+
+          item.classList.toggle("active");
+        });
+      });
+    </script>
+  </body>
 </html>

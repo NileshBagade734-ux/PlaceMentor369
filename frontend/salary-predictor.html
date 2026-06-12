@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salary Predictor</title>
+    <link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .salary-predictor{
+    max-width:1000px;
+    margin:50px auto;
+    padding:20px;
+}
+
+.predictor-card,
+.result-card{
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    margin-bottom:25px;
+}
+
+.predictor-card input,
+.predictor-card select,
+.predictor-card textarea{
+    width:100%;
+    padding:14px;
+    margin-bottom:15px;
+    border:1px solid #ddd;
+    border-radius:10px;
+}
+
+.predictor-card button{
+    width:100%;
+    padding:15px;
+    border:none;
+    background:#16a34a;
+    color:white;
+    border-radius:10px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.result-card{
+    text-align:center;
+}
+
+#salaryResult{
+    font-size:28px;
+    font-weight:700;
+    color:#16a34a;
+    margin-top:15px;
+}
+.theme-toggle{
+    width:42px;
+    height:42px;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    background:#f3f4f6;
+    font-size:18px;
+    transition:.3s;
+}
+
+.theme-toggle:hover{
+    transform:rotate(15deg);
+}
+/* Dark Mode */
+
+body.dark-mode{
+    background:#0f172a;
+    color:#f8fafc;
+}
+
+body.dark-mode .resume-form,
+body.dark-mode .resume-preview{
+    background:#1e293b;
+    color:#f8fafc;
+}
+
+body.dark-mode .resume-form input,
+body.dark-mode .resume-form textarea{
+    background:#334155;
+    border:1px solid #475569;
+    color:white;
+}
+
+body.dark-mode .resume-form input::placeholder,
+body.dark-mode .resume-form textarea::placeholder{
+    color:#cbd5e1;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3{
+    color:white;
+}
+
+body.dark-mode hr{
+    border-color:#475569;
+}
+/* Dark Mode for Salary Predictor */
+
+body.dark-mode .predictor-card,
+body.dark-mode .result-card{
+    background:#1e293b;
+    color:#f8fafc;
+}
+
+body.dark-mode .predictor-card input,
+body.dark-mode .predictor-card select,
+body.dark-mode .predictor-card textarea{
+    background:#334155;
+    border:1px solid #475569;
+    color:white;
+}
+
+body.dark-mode .predictor-card input::placeholder,
+body.dark-mode .predictor-card textarea::placeholder{
+    color:#cbd5e1;
+}
+
+body.dark-mode .predictor-card select{
+    color:white;
+}
+
+body.dark-mode #salaryResult{
+    color:#4ade80;
+}
+
+body.dark-mode .theme-toggle{
+    background:#334155;
+    color:white;
+}
+    </style>
+</head>
+<body>
+    <header class="header">
+  <div class="container nav" style="position: relative;">
+    <div class="logo">
+      <i class="fa-solid fa-arrow-up-right-dots"></i> 
+      <span>PlacementorAI</span>
+    </div>
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
+  <i class="fa-solid fa-moon"></i>
+</button>
+    <button class="menu-toggle" id="mobile-menu-btn" aria-label="Toggle Navigation Menu">
+      <i class="fa-solid fa-bars" id="menu-icon"></i>
+    </button>
+
+    <nav class="nav-menu" id="nav-links-target">
+      <a href="index.html">Home</a>
+      <a href="contact.html">Contact</a>
+      <a href="register.html">Sign Up</a>
+      <a href="login.html" class="login">Login</a>
+      <a href="register.html" class="btn primary" style="color: #ffffff !important;">
+        Get Started
+        <i class="fa-solid fa-arrow-up-right-from-square" style="color: #ffffff !important;"></i>
+      </a>    
+    </nav>
+  </div>
+</header>
+
+<section class="salary-predictor">
+
+    <div style="text-align:center; margin-bottom:30px;">
+    <h1>💰 AI Salary Predictor</h1>
+    <p style="color:#6b7280; margin-top:10px;">
+        Enter your academic performance, skills, projects,
+        internships, and achievements to estimate your
+        expected placement salary range.
+    </p>
+</div>
+
+    <div class="predictor-card">
+
+        <input type="text" id="name" placeholder="Full Name">
+
+        <select id="branch">
+            <option value="">Select Branch</option>
+            <option value="cse">Computer Science</option>
+            <option value="it">Information Technology</option>
+            <option value="ece">ECE</option>
+            <option value="eee">EEE</option>
+            <option value="mech">Mechanical</option>
+        </select>
+
+        <input type="number" id="cgpa" placeholder="CGPA">
+
+        <input type="number" id="projects" placeholder="Number of Projects">
+
+        <input type="number" id="internships" placeholder="Number of Internships">
+
+        <input type="number" id="certifications" placeholder="Certifications">
+
+        <textarea id="skills"
+            placeholder="Skills (Java, Python, React, AI, etc)">
+        </textarea>
+
+        <textarea id="achievements"
+            placeholder="Achievements, Hackathons, Coding Contests">
+        </textarea>
+
+        <button onclick="predictSalary()">
+            Predict Salary
+        </button>
+
+    </div>
+
+    <div class="result-card" id="resultCard">
+
+        <h2>Predicted Salary Range</h2>
+
+        <div id="salaryResult">
+            Complete the form to see your prediction
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h3>PlacementorAI</h3>
+        <p>Your intelligent companion for career growth and recruitment management. Streamlining the path from campus to corporate.</p>
+        
+          <div class="footer-social">
+  <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
+    <i class="fa-brands fa-linkedin"></i>
+  </a>
+
+  <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+    <i class="fa-brands fa-github"></i>
+  </a>
+
+  <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+    <i class="fa-brands fa-x-twitter"></i>
+  </a>
+</div>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <a href="index.html">Home</a>
+        <a href="About.html">About Us</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="javascript:void(0)" onclick="openPortal('faq')">FAQ</a>
+        <a href="javascript:void(0)" onclick="openPortal('privacy')">Privacy Policy</a>
+        <a href="javascript:void(0)" onclick="openPortal('terms')">Terms of Service</a>
+      </div>
+      <div>
+        <h4>Account</h4>
+        <a href="login.html">Login</a>
+        <a href="register.html">Sign Up</a>
+        <a href="register.html">Recruiter Portal</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="copyright">&copy; 2026 PlacementorAI. All rights reserved.</p>
+      <div style="display: flex; gap: 20px;">
+        <a href="javascript:void(0)" onclick="openPortal('privacy')">Privacy</a>
+        <a href="javascript:void(0)" onclick="openPortal('terms')">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+function predictSalary(){
+
+    let score = 0;
+
+    const cgpa = parseFloat(document.getElementById("cgpa").value) || 0;
+    const projects = parseInt(document.getElementById("projects").value) || 0;
+    const internships = parseInt(document.getElementById("internships").value) || 0;
+    const certifications = parseInt(document.getElementById("certifications").value) || 0;
+    const skills =
+        document.getElementById("skills").value.toLowerCase();
+
+    score += cgpa * 5;
+    score += projects * 3;
+    score += internships * 8;
+    score += certifications * 2;
+
+    const premiumSkills = [
+        "python",
+        "java",
+        "react",
+        "node",
+        "aws",
+        "ai",
+        "machine learning",
+        "data science"
+    ];
+
+    premiumSkills.forEach(skill=>{
+        if(skills.includes(skill)){
+            score += 5;
+        }
+    });
+
+    let prediction = "";
+
+    if(score < 50){
+        prediction = "₹3 LPA - ₹5 LPA";
+    }
+    else if(score < 80){
+        prediction = "₹5 LPA - ₹8 LPA";
+    }
+    else if(score < 110){
+        prediction = "₹8 LPA - ₹12 LPA";
+    }
+    else if(score < 140){
+        prediction = "₹12 LPA - ₹18 LPA";
+    }
+    else{
+        prediction = "₹18 LPA+";
+    }
+
+    document.getElementById("salaryResult").innerHTML =
+        prediction;
+}
+
+</script>
+<script>
+const themeToggle = document.getElementById("theme-toggle");
+const themeIcon = themeToggle.querySelector("i");
+
+/* Load saved theme */
+if(localStorage.getItem("theme") === "dark"){
+    document.body.classList.add("dark-mode");
+    themeIcon.classList.remove("fa-moon");
+    themeIcon.classList.add("fa-sun");
+}
+
+themeToggle.addEventListener("click", () => {
+
+    document.body.classList.toggle("dark-mode");
+
+    if(document.body.classList.contains("dark-mode")){
+        localStorage.setItem("theme","dark");
+        themeIcon.classList.remove("fa-moon");
+        themeIcon.classList.add("fa-sun");
+    }
+    else{
+        localStorage.setItem("theme","light");
+        themeIcon.classList.remove("fa-sun");
+        themeIcon.classList.add("fa-moon");
+    }
+
+});
+</script>
+</body>
+</html>

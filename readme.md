@@ -202,4 +202,29 @@ npm run dev
 Backend runs on:
 
 http://localhost:5000
+```
+---
+
+## 👥 Contributors
+
+Thanks to all the amazing people who contributed to this project ❤️
+
+<a href="https://github.com/NileshBagade734-ux/PlaceMentor369/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=NileshBagade734-ux/PlaceMentor369" />
+</a>
+
+
+## ⭐ Project Support
+
+<p align="center">
+  <a href="https://github.com/NileshBagade734-ux/PlaceMentor369/stargazers">
+    <img alt="Stars" src="https://img.shields.io/github/stars/NileshBagade734-ux/PlaceMentor369?style=social">
+  </a>
+
+  <a href="https://github.com/NileshBagade734-ux/PlaceMentor369/network/members">
+    <img alt="Forks" src="https://img.shields.io/github/forks/NileshBagade734-ux/PlaceMentor369?style=social">
+  </a>
+</p>
+## 🌐 Live Demo
+- **Live Site:** https://place-mentor369.vercel.app
 

@@ -4,8 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>PlacementorAI</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+  <link rel="icon" href="favicon.png" sizes="32x32" type="image/png">
+<link rel="shortcut icon" href="favicon.png" type="image/png">
+<link rel="stylesheet" href="style.css">
   <style>
     /* BASE */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Inter, sans-serif; }
@@ -153,6 +156,243 @@
     @media (max-width: 480px) {
       .footer-grid { grid-template-columns: 1fr; }
     }
+    /* Theme Toggle Button */
+.theme-toggle{
+  background: #f3f4f6;
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  color: #374151;
+  transition: all 0.3s ease;
+  margin-right: 12px;
+}
+
+.theme-toggle:hover{
+  transform: rotate(15deg);
+  background: #e5e7eb;
+}
+/* DARK MODE */
+
+body.dark-mode{
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+/* Header */
+body.dark-mode .header{
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+
+body.dark-mode .nav-menu a,
+body.dark-mode .logo,
+body.dark-mode .menu-toggle{
+  color: #f8fafc;
+}
+
+/* Hero Features */
+body.dark-mode .feature,
+body.dark-mode .stats-card{
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+body.dark-mode .feature p,
+body.dark-mode .hero p{
+  color: #cbd5e1;
+}
+
+/* Buttons */
+body.dark-mode .secondary{
+  background: #334155;
+  color: #fff;
+}
+
+.success{
+  color: white;
+}
+/* Documentation Portal */
+body.dark-mode .portal-content{
+  background: #1e293b;
+}
+
+body.dark-mode .portal-body,
+body.dark-mode .portal-header h2,
+body.dark-mode .portal-body h2,
+body.dark-mode .portal-body h3{
+  color: #f8fafc;
+}
+
+body.dark-mode .portal-nav{
+  background: #0f172a;
+}
+
+body.dark-mode .portal-nav-btn{
+  color: #cbd5e1;
+}
+
+/* Mobile Menu */
+body.dark-mode .nav-menu{
+  background: #1e293b;
+}
+
+/* Footer */
+body.dark-mode footer{
+  background: #020617;
+}
+.success a{
+    text-decoration: none;
+}
+
+.success h3{
+    color: #4f46e5;
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.success h3:hover{
+    background: #eef2ff;
+    transform: translateY(-3px);
+}
+.success{
+    text-align: center;
+    margin: 40px 0;
+}
+
+.success a{
+    display: inline-block;
+    /* background: #4f46e5;
+    color: white; */
+    text-decoration: none;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.success a:hover{
+    /* background: #3730a3; */
+    transform: translateY(-3px);
+}
+.ai-assistant-section{
+    padding:100px 0;
+}
+
+.ai-card{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:50px;
+    align-items:center;
+}
+
+.ai-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 16px;
+    background:#ede9fe;
+    color:#7c3aed;
+    border-radius:999px;
+    font-weight:600;
+}
+
+.ai-left h2{
+    margin-top:20px;
+    font-size:42px;
+    line-height:1.2;
+}
+
+.ai-left p{
+    margin-top:15px;
+    color:#6b7280;
+    line-height:1.8;
+}
+
+.ai-features{
+    margin-top:25px;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.ai-feature{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:500;
+}
+
+.ai-feature i{
+    color:#7c3aed;
+}
+
+.ai-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    margin-top:30px;
+    background:#7c3aed;
+    color:white;
+    text-decoration:none;
+    padding:14px 28px;
+    border-radius:12px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.ai-btn:hover{
+    background:#6d28d9;
+    transform:translateY(-3px);
+}
+
+.chat-preview{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 15px 30px rgba(0,0,0,.08);
+}
+
+.bot-msg,
+.user-msg{
+    padding:12px 15px;
+    border-radius:12px;
+    margin-bottom:12px;
+}
+
+.bot-msg{
+    background:#ede9fe;
+}
+
+.user-msg{
+    background:#f3f4f6;
+}
+body.dark-mode .chat-preview{
+    background:#1e293b;
+}
+
+body.dark-mode .bot-msg{
+    background:#312e81;
+    color:white;
+}
+
+body.dark-mode .user-msg{
+    background:#334155;
+    color:white;
+}
+
+body.dark-mode .ai-left p{
+    color:#cbd5e1;
+}
+
+body.dark-mode .ai-left h2{
+    color:white;
+}
   </style>
 </head>
 <body>
@@ -163,13 +403,16 @@
       <i class="fa-solid fa-arrow-up-right-dots"></i> 
       <span>PlacementorAI</span>
     </div>
-    
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
+  <i class="fa-solid fa-moon"></i>
+</button>
     <button class="menu-toggle" id="mobile-menu-btn" aria-label="Toggle Navigation Menu">
       <i class="fa-solid fa-bars" id="menu-icon"></i>
     </button>
 
     <nav class="nav-menu" id="nav-links-target">
       <a href="index.html">Home</a>
+      <a href="About.html">About Us</a>
       <a href="contact.html">Contact</a>
       <a href="register.html">Sign Up</a>
       <a href="login.html" class="login">Login</a>
@@ -229,6 +472,246 @@
       </div>
     </div>
   </div>
+  
+</section>
+<div class="success">
+    <a href="success-metrics.html">
+        <h3>Success Metrics</h3>
+    </a>
+</div>
+<section class="resume-builder-section">
+  <div class="container">
+
+    <div class="resume-content">
+      <div class="resume-left">
+
+        <span class="resume-badge">
+          <i class="fa-solid fa-file-lines"></i>
+          Placement Ready
+        </span>
+
+        <h2>Build an ATS-Friendly Resume in Minutes</h2>
+
+        <p>
+          Create professional resumes tailored for placements and internships.
+          Get structured templates, skill recommendations, and recruiter-friendly formatting.
+        </p>
+
+        <div class="resume-features">
+
+          <div class="resume-feature">
+            <i class="fa-solid fa-check-circle"></i>
+            ATS Optimized Templates
+          </div>
+
+          <div class="resume-feature">
+            <i class="fa-solid fa-check-circle"></i>
+            AI Skill Suggestions
+          </div>
+
+          <div class="resume-feature">
+            <i class="fa-solid fa-check-circle"></i>
+            Instant PDF Download
+          </div>
+
+          <div class="resume-feature">
+            <i class="fa-solid fa-check-circle"></i>
+            Placement Focused Format
+          </div>
+
+        </div>
+
+        <a href="resume-builder.html" class="resume-btn">
+          Build My Resume
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+      </div>
+
+      <div class="resume-right">
+
+        <div class="resume-preview">
+
+          <div class="resume-header"></div>
+
+          <div class="resume-line long"></div>
+          <div class="resume-line medium"></div>
+          <div class="resume-line short"></div>
+
+          <div class="resume-line long"></div>
+          <div class="resume-line medium"></div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="ai-assistant-section">
+  <div class="container">
+
+    <div class="ai-card">
+
+      <div class="ai-left">
+        <span class="ai-badge">
+          <i class="fa-solid fa-robot"></i>
+          AI Career Assistant
+        </span>
+
+        <h2>Get Personalized Placement Guidance</h2>
+
+        <p>
+          Our AI assistant helps students prepare for placements by
+          identifying skill gaps, recommending learning resources,
+          suggesting relevant jobs, and providing interview preparation support.
+        </p>
+
+        <div class="ai-features">
+
+          <div class="ai-feature">
+            <i class="fa-solid fa-microphone"></i>
+            Interview Preparation
+          </div>
+
+          <div class="ai-feature">
+            <i class="fa-solid fa-chart-line"></i>
+            Skill Gap Analysis
+          </div>
+
+          <div class="ai-feature">
+            <i class="fa-solid fa-briefcase"></i>
+            Job Recommendations
+          </div>
+
+          <div class="ai-feature">
+            <i class="fa-solid fa-book"></i>
+            Learning Suggestions
+          </div>
+
+        </div>
+
+        <a href="ai-assistant.html" class="ai-btn">
+          Explore AI Assistant
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+      </div>
+
+      <div class="ai-right">
+
+        <div class="chat-preview">
+
+          <div class="bot-msg">
+            Your React skills match 82% of Frontend Developer roles.
+          </div>
+
+          <div class="user-msg">
+            What should I learn next?
+          </div>
+
+          <div class="bot-msg">
+            I recommend Node.js, REST APIs and System Design fundamentals.
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<section class="feature-card">
+    <i class="fa-solid fa-users"></i>
+    <h3>Alumni Mentorship Hub</h3>
+
+    <p>
+        Connect with experienced alumni for career guidance,
+        interview preparation, resume reviews, and industry insights.
+    </p>
+
+    <a href="alumni-mentorship.html" class="btn">
+        Explore Mentorship
+    </a>
+</section>
+
+<section class="salary-section">
+  <div class="container">
+
+    <div class="salary-card">
+
+      <div class="salary-left">
+
+        <span class="salary-badge">
+          <i class="fa-solid fa-indian-rupee-sign"></i>
+          AI Salary Predictor
+        </span>
+
+        <h2>Predict Your Expected Salary Package</h2>
+
+        <p>
+          Estimate your placement package based on your branch,
+          technical skills, projects, internships, and target role.
+          Get AI-driven salary insights and industry benchmarks.
+        </p>
+
+        <div class="salary-features">
+
+          <div class="salary-feature">
+            <i class="fa-solid fa-chart-line"></i>
+            Salary Forecast
+          </div>
+
+          <div class="salary-feature">
+            <i class="fa-solid fa-building"></i>
+            Company-wise Analysis
+          </div>
+
+          <div class="salary-feature">
+            <i class="fa-solid fa-code"></i>
+            Skill-based Predictions
+          </div>
+
+          <div class="salary-feature">
+            <i class="fa-solid fa-graduation-cap"></i>
+            Branch-wise Insights
+          </div>
+
+        </div>
+
+        <a href="salary-predictor.html" class="salary-btn">
+          Predict Salary
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+      </div>
+
+      <div class="salary-right">
+
+        <div class="salary-preview">
+
+          <h3>Prediction Result</h3>
+
+          <div class="salary-amount">
+            ₹ 12.5 LPA
+          </div>
+
+          <p>Expected Package Range</p>
+
+          <div class="salary-range">
+            ₹8 LPA - ₹15 LPA
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
 </section>
 
 <footer>
@@ -237,11 +720,20 @@
       <div>
         <h3>PlacementorAI</h3>
         <p>Your intelligent companion for career growth and recruitment management. Streamlining the path from campus to corporate.</p>
-        <div class="footer-social">
-          <a href="#"><i class="fa-brands fa-linkedin"></i></a>
-          <a href="#"><i class="fa-brands fa-github"></i></a>
-          <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
-        </div>
+        
+          <div class="footer-social">
+  <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
+    <i class="fa-brands fa-linkedin"></i>
+  </a>
+
+  <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+    <i class="fa-brands fa-github"></i>
+  </a>
+
+  <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+    <i class="fa-brands fa-x-twitter"></i>
+  </a>
+</div>
       </div>
       <div>
         <h4>Platform</h4>
@@ -374,6 +866,30 @@
 </script>
 <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
+<script>
+const themeToggle = document.getElementById("theme-toggle");
+const themeIcon = themeToggle.querySelector("i");
 
+/* Load saved theme */
+if(localStorage.getItem("theme") === "dark"){
+  document.body.classList.add("dark-mode");
+  themeIcon.classList.remove("fa-moon");
+  themeIcon.classList.add("fa-sun");
+}
+
+themeToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+
+  if(document.body.classList.contains("dark-mode")){
+    localStorage.setItem("theme", "dark");
+    themeIcon.classList.remove("fa-moon");
+    themeIcon.classList.add("fa-sun");
+  } else {
+    localStorage.setItem("theme", "light");
+    themeIcon.classList.remove("fa-sun");
+    themeIcon.classList.add("fa-moon");
+  }
+});
+</script>
 </body>
 </html>

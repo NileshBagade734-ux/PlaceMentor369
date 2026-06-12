@@ -212,3 +212,58 @@ body {
 .logout-btn:hover { color: #ef4444; }.status-pending { background: #fffbeb; color: #92400e; border: 1px solid #fef3c7; }
 .status-shortlisted { background: #ecfdf5; color: #065f46; border: 1px solid #d1fae5; }
 .status-rejected { background: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; }
+/* =====================================
+   DARK MODE
+===================================== */
+
+body.dark-mode {
+    background-color: #0f172a;
+    color: #f8fafc;
+}
+
+/* Sidebar */
+body.dark-mode aside {
+    background-color: #111827;
+    border-color: #1e293b;
+}
+
+/* Main Cards */
+body.dark-mode .stat-card,
+body.dark-mode section {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #f8fafc;
+}
+
+/* Text Colors */
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode a {
+    color: #f8fafc;
+}
+
+/* Buttons */
+body.dark-mode .btn-secondary {
+    background-color: #334155;
+    border-color: #475569;
+    color: white;
+}
+
+/* Hover */
+body.dark-mode .sidebar-item:hover {
+    background-color: #1e293b;
+}
+
+/* Applications List */
+body.dark-mode #applications-list > div {
+    border-color: #334155;
+}
+
+/* Theme Button */
+body.dark-mode #themeToggle {
+    background-color: #334155;
+    color: white;
+}

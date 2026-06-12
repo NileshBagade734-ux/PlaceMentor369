@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder | PlacementorAI</title>
+    <link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .resume-builder{
+            max-width:1200px;
+            margin:50px auto;
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:40px;
+            padding:20px;
+        }
+
+        .resume-form{
+            background:white;
+            padding:30px;
+            border-radius:20px;
+            box-shadow:0 10px 20px rgba(0,0,0,.08);
+        }
+
+        .resume-form input,
+        .resume-form textarea{
+            width:100%;
+            padding:12px;
+            margin-bottom:15px;
+            border:1px solid #ddd;
+            border-radius:10px;
+        }
+
+        .resume-preview{
+            background:white;
+            padding:30px;
+            border-radius:20px;
+            box-shadow:0 10px 20px rgba(0,0,0,.08);
+        }
+
+        .resume-preview h2{
+            color:#4f46e5;
+        }
+
+        .generate-btn{
+            background:#4f46e5;
+            color:white;
+            border:none;
+            padding:12px 20px;
+            border-radius:10px;
+            cursor:pointer;
+        }
+        /* Theme Toggle Button */
+
+.theme-toggle{
+    width:42px;
+    height:42px;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    background:#f3f4f6;
+    font-size:18px;
+    transition:.3s;
+}
+
+.theme-toggle:hover{
+    transform:rotate(15deg);
+}
+/* Dark Mode */
+
+body.dark-mode{
+    background:#0f172a;
+    color:#f8fafc;
+}
+
+body.dark-mode .resume-form,
+body.dark-mode .resume-preview{
+    background:#1e293b;
+    color:#f8fafc;
+}
+
+body.dark-mode .resume-form input,
+body.dark-mode .resume-form textarea{
+    background:#334155;
+    border:1px solid #475569;
+    color:white;
+}
+
+body.dark-mode .resume-form input::placeholder,
+body.dark-mode .resume-form textarea::placeholder{
+    color:#cbd5e1;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3{
+    color:white;
+}
+
+body.dark-mode hr{
+    border-color:#475569;
+}
+    </style>
+</head>
+<body>
+<header class="header">
+  <div class="container nav" style="position: relative;">
+    <div class="logo">
+      <i class="fa-solid fa-arrow-up-right-dots"></i> 
+      <span>PlacementorAI</span>
+    </div>
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
+  <i class="fa-solid fa-moon"></i>
+</button>
+    <button class="menu-toggle" id="mobile-menu-btn" aria-label="Toggle Navigation Menu">
+      <i class="fa-solid fa-bars" id="menu-icon"></i>
+    </button>
+
+    <nav class="nav-menu" id="nav-links-target">
+      <a href="index.html">Home</a>
+      <a href="contact.html">Contact</a>
+      <a href="register.html">Sign Up</a>
+      <a href="login.html" class="login">Login</a>
+      <a href="register.html" class="btn primary" style="color: #ffffff !important;">
+        Get Started
+        <i class="fa-solid fa-arrow-up-right-from-square" style="color: #ffffff !important;"></i>
+      </a>    
+    </nav>
+  </div>
+</header>
+<h1 style="text-align:center;margin-top:30px;">
+    Resume Builder
+</h1>
+
+<div class="resume-builder">
+
+    <div class="resume-form">
+
+        <input type="text" id="name" placeholder="Full Name">
+
+        <input type="email" id="email" placeholder="Email">
+
+        <input type="text" id="phone" placeholder="Phone Number">
+
+        <textarea id="skills" placeholder="Skills"></textarea>
+
+        <textarea id="education" placeholder="Education"></textarea>
+
+        <textarea id="projects" placeholder="Projects"></textarea>
+
+        <button class="generate-btn" onclick="generateResume()">
+            Generate Resume
+        </button>
+
+    </div>
+
+    <div class="resume-preview">
+
+        <h2 id="preview-name">Your Name</h2>
+
+        <p id="preview-email">Email</p>
+
+        <p id="preview-phone">Phone</p>
+
+        <hr>
+
+        <h3>Skills</h3>
+        <p id="preview-skills"></p>
+
+        <h3>Education</h3>
+        <p id="preview-education"></p>
+
+        <h3>Projects</h3>
+        <p id="preview-projects"></p>
+
+    </div>
+
+</div>
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h3>PlacementorAI</h3>
+        <p>Your intelligent companion for career growth and recruitment management. Streamlining the path from campus to corporate.</p>
+        
+          <div class="footer-social">
+  <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
+    <i class="fa-brands fa-linkedin"></i>
+  </a>
+
+  <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+    <i class="fa-brands fa-github"></i>
+  </a>
+
+  <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+    <i class="fa-brands fa-x-twitter"></i>
+  </a>
+</div>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <a href="index.html">Home</a>
+        <a href="About.html">About Us</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="javascript:void(0)" onclick="openPortal('faq')">FAQ</a>
+        <a href="javascript:void(0)" onclick="openPortal('privacy')">Privacy Policy</a>
+        <a href="javascript:void(0)" onclick="openPortal('terms')">Terms of Service</a>
+      </div>
+      <div>
+        <h4>Account</h4>
+        <a href="login.html">Login</a>
+        <a href="register.html">Sign Up</a>
+        <a href="register.html">Recruiter Portal</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="copyright">&copy; 2026 PlacementorAI. All rights reserved.</p>
+      <div style="display: flex; gap: 20px;">
+        <a href="javascript:void(0)" onclick="openPortal('privacy')">Privacy</a>
+        <a href="javascript:void(0)" onclick="openPortal('terms')">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+function generateResume(){
+
+    document.getElementById("preview-name").innerText =
+        document.getElementById("name").value;
+
+    document.getElementById("preview-email").innerText =
+        document.getElementById("email").value;
+
+    document.getElementById("preview-phone").innerText =
+        document.getElementById("phone").value;
+
+    document.getElementById("preview-skills").innerText =
+        document.getElementById("skills").value;
+
+    document.getElementById("preview-education").innerText =
+        document.getElementById("education").value;
+
+    document.getElementById("preview-projects").innerText =
+        document.getElementById("projects").value;
+}
+</script>
+<script>
+const themeToggle = document.getElementById("theme-toggle");
+const themeIcon = themeToggle.querySelector("i");
+
+/* Load saved theme */
+if(localStorage.getItem("theme") === "dark"){
+    document.body.classList.add("dark-mode");
+    themeIcon.classList.remove("fa-moon");
+    themeIcon.classList.add("fa-sun");
+}
+
+themeToggle.addEventListener("click", () => {
+
+    document.body.classList.toggle("dark-mode");
+
+    if(document.body.classList.contains("dark-mode")){
+        localStorage.setItem("theme", "dark");
+
+        themeIcon.classList.remove("fa-moon");
+        themeIcon.classList.add("fa-sun");
+    }
+    else{
+        localStorage.setItem("theme", "light");
+
+        themeIcon.classList.remove("fa-sun");
+        themeIcon.classList.add("fa-moon");
+    }
+});
+</script>
+</body>
+</html>

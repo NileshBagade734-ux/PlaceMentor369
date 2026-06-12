@@ -21,7 +21,7 @@ const submitBtn = document.getElementById("submitBtn");
 const btnText = document.getElementById("btnText");
 const passwordInput = document.getElementById("password");
 const togglePasswordBtn = document.getElementById("togglePassword");
-const eyeIcon = document.getElementById("eyeIcon");
+const passwordErrorEl = document.getElementById("passwordError");
 
 // -------------------------
 // Password Toggle
@@ -29,7 +29,10 @@ const eyeIcon = document.getElementById("eyeIcon");
 togglePasswordBtn.addEventListener("click", () => {
   const isPassword = passwordInput.type === "password";
   passwordInput.type = isPassword ? "text" : "password";
-  eyeIcon.setAttribute("data-lucide", isPassword ? "eye-off" : "eye");
+  const eyeIcon = togglePasswordBtn.querySelector("[data-lucide]");
+  if (eyeIcon) {
+    eyeIcon.setAttribute("data-lucide", isPassword ? "eye-off" : "eye");
+  }
   lucide.createIcons();
 });
 
@@ -45,9 +48,9 @@ registerForm.onsubmit = async (e) => {
   const password = passwordInput.value;
 
   // 1️⃣ Validation Logic
-  document.getElementById("passwordError").classList.add("hidden");
+  if (passwordErrorEl) passwordErrorEl.classList.add("hidden");
   if (password.length < 8) {
-    document.getElementById("passwordError").classList.remove("hidden");
+    if (passwordErrorEl) passwordErrorEl.classList.remove("hidden");
     return;
   }
 
@@ -80,11 +83,11 @@ registerForm.onsubmit = async (e) => {
 
     // 5️⃣ Redirect based on role
     if (data.user.role === "admin") {
-      window.location.href = "/frontend/admin/admin-dashboard.html";
+      window.location.href = "admin/admin-dashboard.html";
     } else if (data.user.role === "recruiter") {
-      window.location.href = "/frontend/recruiter/recruiter-dashboard.html";
+      window.location.href = "recruiter/recruiter-dashboard.html";
     } else {
-      window.location.href = "/frontend/student/student-dashboard.html";
+      window.location.href = "student/student-dashboard.html";
     }
 
   } catch (err) {

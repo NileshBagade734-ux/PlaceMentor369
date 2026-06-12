@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/student-dashboard.css">
 </head>
-<body class="bg-slate-50 min-h-screen flex">
+<body id="dashboardBody" class="bg-slate-50 min-h-screen flex transition-all duration-300">
 
     <aside class="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col fixed h-full">
         <div class="p-6">
@@ -44,11 +44,26 @@
                 <p class="text-slate-500 text-sm">Track your applications and explore new opportunities</p>
             </div>
             <div class="flex items-center gap-4">
-                <span class="text-sm font-medium text-slate-600">Student</span>
-                <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
-                    <i data-lucide="user" class="w-5 h-5 text-indigo-600"></i>
-                </div>
-            </div>
+
+    <!-- Theme Toggle Button -->
+    <button id="themeToggle"
+        class="px-4 py-2 rounded-lg bg-slate-200 text-slate-700 text-sm font-semibold transition hover:bg-slate-300">
+        🌙 Dark Mode
+    </button>
+
+    <span id="studentLabel"
+        class="text-sm font-medium text-slate-600">
+        Student
+    </span>
+
+    <div id="profileIcon"
+        class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+
+        <i data-lucide="user"
+            class="w-5 h-5 text-indigo-600"></i>
+
+    </div>
+</div>
         </header>
 
         <section class="bg-white border border-slate-200 rounded-xl p-6 mb-8 shadow-sm">
