@@ -70,7 +70,10 @@ export const getAllRecruiterApplications = async (req, res) => {
     const jobs = await Job.find({ recruiter: req.user.id }).select("_id");
     const jobIds = jobs.map((j) => j._id);
 
-    const applications = await Application.find({ job: { $in: jobIds } })
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const applications = await Application.find({ job: { $in: jobIds } }).skip(skip).limit(limit)
       .populate("student", "name branch cgpa resume")
       .populate("job", "title");
 
