@@ -7,6 +7,10 @@ export const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
+    if (role === "admin") {
+      return res.status(403).json({ message: "Admin role registration is restricted." });
+    }
+
     const exists = await User.findOne({ email });
     if (exists) {
       return res.status(400).json({ message: "User already exists" });
