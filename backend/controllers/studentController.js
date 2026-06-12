@@ -1,3 +1,8 @@
+
+const sanitizeHTML = (str) => {
+  if (typeof str !== "string") return str;
+  return str.replace(/[&<>'"]/g, (tag) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", "\"": "&quot;" }[tag] || tag));
+};
 import mongoose from "mongoose";
 import Student from "../models/student.js";
 import Job from "../models/job.js";
@@ -26,11 +31,11 @@ export const saveProfile = async (req, res) => {
     let student = await Student.findOne({ user: req.user.id });
     if (!student) student = new Student({ user: req.user.id });
 
-    student.name = name || "";
+    student.name = sanitizeHTML(name) || "";
     student.roll = roll || "";
     student.branch = branch || "";
     student.cgpa = cgpa || 0;
-    student.college = college || "";
+    student.college = sanitizeHTML(college) || "";
     student.skills = skills || [];
     student.resume = resume || "";
 
