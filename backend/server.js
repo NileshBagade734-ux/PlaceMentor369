@@ -118,12 +118,22 @@ process.on('uncaughtException', (err) => {
 ============================ */
 const PORT = process.env.PORT || 5000;
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("✅ MongoDB Connected successfully");
-    server = app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
-  })
-  .catch((err) => {
-    console.error("❌ MongoDB connection failed:", err.message);
-  });
+const connectWithRetry = (retries = 5, delay = 5000) => {
+  mongoose
+    .connect(process.env.MONGO_URI)
+    .then(() => {
+      console.log("✅ MongoDB Connected successfully");
+      server = app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+    })
+    .catch((err) => {
+      console.error("❌ MongoDB connection failed:", err.message);
+      if (retries > 0) {
+        console.log(`Retrying connection in ${delay / 1000}s... (${retries} retries left)`);
+        setTimeout(() => connectWithRetry(retries - 1, delay), delay);
+      } else {
+        console.error("Fatal: MongoDB reconnection retries exhausted.");
+        process.exit(1);
+      }
+    });
+};
+connectWithRetry();
