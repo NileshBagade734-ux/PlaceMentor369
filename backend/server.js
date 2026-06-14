@@ -49,10 +49,9 @@ import globalErrorHandler from "./middlewares/errorMiddleware.js";
 import AppError from "./utils/AppError.js";
 
 // Handle unhandled routes
-app.all('*', (req, res, next) => {
+app.use((req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
-
 // Register Global Error Handling Middleware
 app.use(globalErrorHandler);
 
