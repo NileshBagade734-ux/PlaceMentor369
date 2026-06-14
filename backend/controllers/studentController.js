@@ -47,7 +47,30 @@ export const saveProfile = async (req, res) => {
 ============================ */
 export const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ status: "approved" });
+    const { search, branch, minCgpa, skills } = req.query;
+    const filter = { status: "approved" };
+
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { company: { $regex: search, $options: "i" } }
+      ];
+    }
+
+    if (branch) {
+      filter.branch = { $in: [branch] };
+    }
+
+    if (minCgpa) {
+      filter.cgpa = { $lte: parseFloat(minCgpa) };
+    }
+
+    if (skills) {
+      const skillArray = skills.split(",").map(s => s.trim());
+      filter.skillsRequired = { $in: skillArray };
+    }
+
+    const jobs = await Job.find(filter).sort({ createdAt: -1 });
     res.status(200).json(jobs);
   } catch (err) {
     console.error("GET JOBS ERROR:", err);
