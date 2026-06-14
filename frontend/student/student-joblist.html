@@ -48,6 +48,17 @@
         <p class="text-sm text-slate-500" id="student-info">Loading profile...</p>
       </div>
       <div id="jobs-list" class="space-y-4"></div>
+      <div id="jobs-pagination" class="mt-6 flex items-center justify-between gap-3 border-t border-slate-200 pt-4">
+        <button id="jobs-prev-page" type="button"
+          class="px-4 py-2 text-sm font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed">
+          Previous
+        </button>
+        <p id="jobs-page-info" class="text-sm text-slate-500 font-medium">Page 1 of 1</p>
+        <button id="jobs-next-page" type="button"
+          class="px-4 py-2 text-sm font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed">
+          Next
+        </button>
+      </div>
     </section>
 
     <section class="flex-1 bg-white overflow-y-auto p-10 relative">
