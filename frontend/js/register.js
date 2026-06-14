@@ -21,7 +21,6 @@ const submitBtn = document.getElementById("submitBtn");
 const btnText = document.getElementById("btnText");
 const passwordInput = document.getElementById("password");
 const togglePasswordBtn = document.getElementById("togglePassword");
-const eyeIcon = document.getElementById("eyeIcon");
 const passwordErrorEl = document.getElementById("passwordError");
 
 // -------------------------
@@ -30,7 +29,10 @@ const passwordErrorEl = document.getElementById("passwordError");
 togglePasswordBtn.addEventListener("click", () => {
   const isPassword = passwordInput.type === "password";
   passwordInput.type = isPassword ? "text" : "password";
-  eyeIcon.setAttribute("data-lucide", isPassword ? "eye-off" : "eye");
+  const eyeIcon = togglePasswordBtn.querySelector("[data-lucide]");
+  if (eyeIcon) {
+    eyeIcon.setAttribute("data-lucide", isPassword ? "eye-off" : "eye");
+  }
   lucide.createIcons();
 });
 

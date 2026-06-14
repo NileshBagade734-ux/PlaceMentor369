@@ -10,10 +10,9 @@ gsap.to("#login-card", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" });
 // -------------------------
 const loginForm = document.getElementById("loginForm");
 const loginBtn = document.getElementById("loginBtn");
+const passwordToggleBtn = document.getElementById("togglePassword");
 const btnText = document.getElementById("btnText");
 const passwordField = document.getElementById("password");
-const passwordToggleBtn = document.getElementById("togglePassword");
-const eyeIcon = document.getElementById("eyeIcon");
 
 // -------------------------
 // Password Toggle
@@ -21,7 +20,10 @@ const eyeIcon = document.getElementById("eyeIcon");
 passwordToggleBtn.addEventListener("click", () => {
   const isPassword = passwordField.type === "password";
   passwordField.type = isPassword ? "text" : "password";
-  eyeIcon.setAttribute("data-lucide", isPassword ? "eye-off" : "eye");
+  const eyeIcon = passwordToggleBtn.querySelector("[data-lucide]");
+  if (eyeIcon) {
+    eyeIcon.setAttribute("data-lucide", isPassword ? "eye-off" : "eye");
+  }
   lucide.createIcons();
 });
 

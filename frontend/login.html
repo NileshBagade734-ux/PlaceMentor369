@@ -51,6 +51,21 @@
         PlacementorAI
       </a>
 
+      <nav class="hidden md:flex items-center gap-6">
+        <a href="index.html"
+           class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium transition">
+          Home
+        </a>
+        <a href="contact.html"
+           class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium transition">
+          Contact
+        </a>
+        <a href="register.html"
+           class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition">
+          Sign Up
+        </a>
+      </nav>
+
       <button
         id="theme-toggle"
         class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 dark:text-white"
@@ -207,17 +222,6 @@
         y: 0,
         duration: 0.6,
         ease: "power3.out"
-      });
-
-      const togglePassword = document.getElementById("togglePassword");
-      const passwordInput = document.getElementById("password");
-
-      togglePassword.addEventListener("click", () => {
-        if (passwordInput.type === "password") {
-          passwordInput.type = "text";
-        } else {
-          passwordInput.type = "password";
-        }
       });
     });
   </script>

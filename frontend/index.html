@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="icon" href="favicon.png" sizes="32x32" type="image/png">
 <link rel="shortcut icon" href="favicon.png" type="image/png">
+<link rel="stylesheet" href="style.css">
   <style>
     /* BASE */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Inter, sans-serif; }
@@ -210,6 +211,9 @@ body.dark-mode .secondary{
   color: #fff;
 }
 
+.success{
+  color: white;
+}
 /* Documentation Portal */
 body.dark-mode .portal-content{
   background: #1e293b;
@@ -238,6 +242,156 @@ body.dark-mode .nav-menu{
 /* Footer */
 body.dark-mode footer{
   background: #020617;
+}
+.success a{
+    text-decoration: none;
+}
+
+.success h3{
+    color: #4f46e5;
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.success h3:hover{
+    background: #eef2ff;
+    transform: translateY(-3px);
+}
+.success{
+    text-align: center;
+    margin: 40px 0;
+}
+
+.success a{
+    display: inline-block;
+    /* background: #4f46e5;
+    color: white; */
+    text-decoration: none;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.success a:hover{
+    /* background: #3730a3; */
+    transform: translateY(-3px);
+}
+.ai-assistant-section{
+    padding:100px 0;
+}
+
+.ai-card{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:50px;
+    align-items:center;
+}
+
+.ai-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 16px;
+    background:#ede9fe;
+    color:#7c3aed;
+    border-radius:999px;
+    font-weight:600;
+}
+
+.ai-left h2{
+    margin-top:20px;
+    font-size:42px;
+    line-height:1.2;
+}
+
+.ai-left p{
+    margin-top:15px;
+    color:#6b7280;
+    line-height:1.8;
+}
+
+.ai-features{
+    margin-top:25px;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.ai-feature{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:500;
+}
+
+.ai-feature i{
+    color:#7c3aed;
+}
+
+.ai-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    margin-top:30px;
+    background:#7c3aed;
+    color:white;
+    text-decoration:none;
+    padding:14px 28px;
+    border-radius:12px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.ai-btn:hover{
+    background:#6d28d9;
+    transform:translateY(-3px);
+}
+
+.chat-preview{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 15px 30px rgba(0,0,0,.08);
+}
+
+.bot-msg,
+.user-msg{
+    padding:12px 15px;
+    border-radius:12px;
+    margin-bottom:12px;
+}
+
+.bot-msg{
+    background:#ede9fe;
+}
+
+.user-msg{
+    background:#f3f4f6;
+}
+body.dark-mode .chat-preview{
+    background:#1e293b;
+}
+
+body.dark-mode .bot-msg{
+    background:#312e81;
+    color:white;
+}
+
+body.dark-mode .user-msg{
+    background:#334155;
+    color:white;
+}
+
+body.dark-mode .ai-left p{
+    color:#cbd5e1;
+}
+
+body.dark-mode .ai-left h2{
+    color:white;
 }
   </style>
 </head>
@@ -317,6 +471,246 @@ body.dark-mode footer{
         <span>Students Placed</span>
       </div>
     </div>
+  </div>
+  
+</section>
+<div class="success">
+    <a href="success-metrics.html">
+        <h3>Success Metrics</h3>
+    </a>
+</div>
+<section class="resume-builder-section">
+  <div class="container">
+
+    <div class="resume-content">
+      <div class="resume-left">
+
+        <span class="resume-badge">
+          <i class="fa-solid fa-file-lines"></i>
+          Placement Ready
+        </span>
+
+        <h2>Build an ATS-Friendly Resume in Minutes</h2>
+
+        <p>
+          Create professional resumes tailored for placements and internships.
+          Get structured templates, skill recommendations, and recruiter-friendly formatting.
+        </p>
+
+        <div class="resume-features">
+
+          <div class="resume-feature">
+            <i class="fa-solid fa-check-circle"></i>
+            ATS Optimized Templates
+          </div>
+
+          <div class="resume-feature">
+            <i class="fa-solid fa-check-circle"></i>
+            AI Skill Suggestions
+          </div>
+
+          <div class="resume-feature">
+            <i class="fa-solid fa-check-circle"></i>
+            Instant PDF Download
+          </div>
+
+          <div class="resume-feature">
+            <i class="fa-solid fa-check-circle"></i>
+            Placement Focused Format
+          </div>
+
+        </div>
+
+        <a href="resume-builder.html" class="resume-btn">
+          Build My Resume
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+      </div>
+
+      <div class="resume-right">
+
+        <div class="resume-preview">
+
+          <div class="resume-header"></div>
+
+          <div class="resume-line long"></div>
+          <div class="resume-line medium"></div>
+          <div class="resume-line short"></div>
+
+          <div class="resume-line long"></div>
+          <div class="resume-line medium"></div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="ai-assistant-section">
+  <div class="container">
+
+    <div class="ai-card">
+
+      <div class="ai-left">
+        <span class="ai-badge">
+          <i class="fa-solid fa-robot"></i>
+          AI Career Assistant
+        </span>
+
+        <h2>Get Personalized Placement Guidance</h2>
+
+        <p>
+          Our AI assistant helps students prepare for placements by
+          identifying skill gaps, recommending learning resources,
+          suggesting relevant jobs, and providing interview preparation support.
+        </p>
+
+        <div class="ai-features">
+
+          <div class="ai-feature">
+            <i class="fa-solid fa-microphone"></i>
+            Interview Preparation
+          </div>
+
+          <div class="ai-feature">
+            <i class="fa-solid fa-chart-line"></i>
+            Skill Gap Analysis
+          </div>
+
+          <div class="ai-feature">
+            <i class="fa-solid fa-briefcase"></i>
+            Job Recommendations
+          </div>
+
+          <div class="ai-feature">
+            <i class="fa-solid fa-book"></i>
+            Learning Suggestions
+          </div>
+
+        </div>
+
+        <a href="ai-assistant.html" class="ai-btn">
+          Explore AI Assistant
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+      </div>
+
+      <div class="ai-right">
+
+        <div class="chat-preview">
+
+          <div class="bot-msg">
+            Your React skills match 82% of Frontend Developer roles.
+          </div>
+
+          <div class="user-msg">
+            What should I learn next?
+          </div>
+
+          <div class="bot-msg">
+            I recommend Node.js, REST APIs and System Design fundamentals.
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<section class="feature-card">
+    <i class="fa-solid fa-users"></i>
+    <h3>Alumni Mentorship Hub</h3>
+
+    <p>
+        Connect with experienced alumni for career guidance,
+        interview preparation, resume reviews, and industry insights.
+    </p>
+
+    <a href="alumni-mentorship.html" class="btn">
+        Explore Mentorship
+    </a>
+</section>
+
+<section class="salary-section">
+  <div class="container">
+
+    <div class="salary-card">
+
+      <div class="salary-left">
+
+        <span class="salary-badge">
+          <i class="fa-solid fa-indian-rupee-sign"></i>
+          AI Salary Predictor
+        </span>
+
+        <h2>Predict Your Expected Salary Package</h2>
+
+        <p>
+          Estimate your placement package based on your branch,
+          technical skills, projects, internships, and target role.
+          Get AI-driven salary insights and industry benchmarks.
+        </p>
+
+        <div class="salary-features">
+
+          <div class="salary-feature">
+            <i class="fa-solid fa-chart-line"></i>
+            Salary Forecast
+          </div>
+
+          <div class="salary-feature">
+            <i class="fa-solid fa-building"></i>
+            Company-wise Analysis
+          </div>
+
+          <div class="salary-feature">
+            <i class="fa-solid fa-code"></i>
+            Skill-based Predictions
+          </div>
+
+          <div class="salary-feature">
+            <i class="fa-solid fa-graduation-cap"></i>
+            Branch-wise Insights
+          </div>
+
+        </div>
+
+        <a href="salary-predictor.html" class="salary-btn">
+          Predict Salary
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+      </div>
+
+      <div class="salary-right">
+
+        <div class="salary-preview">
+
+          <h3>Prediction Result</h3>
+
+          <div class="salary-amount">
+            ₹ 12.5 LPA
+          </div>
+
+          <p>Expected Package Range</p>
+
+          <div class="salary-range">
+            ₹8 LPA - ₹15 LPA
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 </section>
 

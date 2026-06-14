@@ -1,5 +1,5 @@
 import express from "express";
-import { verifyToken } from "../middlewares/verifyToken.js";
+import { verifyToken } from "../middlewares/authMiddleware.js";
 import { recruiterOnly } from "../middlewares/roleMiddleware.js";
 
 import {
@@ -27,4 +27,4 @@ router.get("/applications", verifyToken, recruiterOnly, getAllRecruiterApplicati
 router.get("/applications/export", verifyToken, recruiterOnly, exportJobApplicantsToCSV);
 router.patch("/applications/status", verifyToken, recruiterOnly, updateApplicantStatus);
 
-export default router;
+export default router; 

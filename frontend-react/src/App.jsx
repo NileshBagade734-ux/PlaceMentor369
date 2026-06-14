@@ -1,9 +1,16 @@
+import Homepage from "./components/HomePage";
+import { Routes, Route } from "react-router-dom";
+
 function App() {
   return (
     <div>
-      <h1>Placementor369 React Foundation</h1>
-      <p>Phase 1 React Migration</p>
+     
+      <Routes>
+      <Route path="/" element={<Homepage />} />
+      {/* <Route path="/" element={<Home />} /> */}
+    </Routes>
     </div>
+    
   );
 }
 

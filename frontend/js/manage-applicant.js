@@ -15,6 +15,9 @@ if (!session || !token || session.user?.role !== "recruiter") {
   window.location.href = "login.html";
 }
 
+let applicantFetchController = null;
+let applicantFetchSequence = 0;
+
 /*********************************
  * INIT
  *********************************/
@@ -29,12 +32,20 @@ document.addEventListener("DOMContentLoaded", () => {
 async function loadApplicants(jobId = null) {
   const tableBody = document.getElementById("recruiter-table-body");
 
+  if (applicantFetchController) {
+    applicantFetchController.abort();
+  }
+
+  const currentFetchId = ++applicantFetchSequence;
+  applicantFetchController = new AbortController();
+
   try {
     let url = `${API}/applications`;
     if (jobId) url += `?jobId=${jobId}`; // backend should optionally filter by jobId
 
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${token}` },
+      signal: applicantFetchController.signal,
     });
 
     if (res.status === 401 || res.status === 403) {
@@ -44,11 +55,12 @@ async function loadApplicants(jobId = null) {
 
     if (!res.ok) throw new Error("Failed to fetch applicants");
 
-    let apps = await res.json();
-    apps = apps.filter(app => app.student && app.job); // safety filter
+    const apps = await res.json();
+    if (currentFetchId !== applicantFetchSequence) return;
 
-    renderTable(apps);
+    renderTable(apps.filter(app => app.student && app.job)); // safety filter
   } catch (err) {
+    if (err.name === "AbortError") return;
     console.error("Applicants load error:", err);
     tableBody.innerHTML = `
       <tr>
@@ -117,6 +129,11 @@ function renderTable(apps) {
  * UPDATE APPLICATION STATUS
  *********************************/
 async function updateStatus(applicationId, status) {
+  if (!applicationId) {
+    alert("❌ Invalid application selected.");
+    return;
+  }
+
   try {
     const res = await fetch(`${API}/applications/status`, {
       method: "PATCH",
@@ -132,8 +149,9 @@ async function updateStatus(applicationId, status) {
       throw new Error(errData.message || "Failed to update status");
     }
 
-    // Reload table immediately
-    loadApplicants();
+    // Reload table immediately with latest request state
+    const jobId = localStorage.getItem("filter_job_id");
+    await loadApplicants(jobId);
   } catch (err) {
     console.error("Update status error:", err);
     alert("❌ Failed to update status: " + err.message);
