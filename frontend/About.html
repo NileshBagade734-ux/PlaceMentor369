@@ -828,6 +828,52 @@
         </div>
         <div class="portal-body" id="portal-body"></div>
       </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Mobile Hamburger Toggle Logic
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const navLinksTarget = document.getElementById('nav-links-target');
+  const menuIcon = document.getElementById('menu-icon');
+
+  mobileMenuBtn.addEventListener('click', () => {
+    navLinksTarget.classList.toggle('active');
+    
+    if(navLinksTarget.classList.contains('active')) {
+      menuIcon.classList.remove('fa-bars');
+      menuIcon.classList.add('fa-xmark');
+    } else {
+      menuIcon.classList.remove('fa-xmark');
+      menuIcon.classList.add('fa-bars');
+    }
+  });
+
+  // Modal JS
+  const modal = document.getElementById("modal");
+  const title = document.getElementById("modal-title");
+
+  function openModal(type) {
+    title.innerText = type === "student" ? "Student Login" : "Recruiter Login";
+    modal.style.display = "flex";
+  }
+
+  function closeModal() { modal.style.display = "none"; }
+
+  function login(e) {
+    e.preventDefault();
+    showToast("Login successful (demo)");
+    closeModal();
+  }
+
+  // DOCUMENTATION PORTAL JS
+  const portalOverlay = document.getElementById('portal-overlay');
+  const portalBody = document.getElementById('portal-body');
+  const portalTitle = document.getElementById('portal-title');
+
+  const portalContent = {
+    faq: `
     </div>
 
     <script>

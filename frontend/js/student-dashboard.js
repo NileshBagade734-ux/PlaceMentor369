@@ -10,6 +10,7 @@ if (!session || !session.token || session.user.role !== "student") {
 const token = session.token;
 const user = session.user;
 
+
 document.addEventListener("DOMContentLoaded", () => {
 
   lucide.createIcons();
@@ -33,7 +34,6 @@ function showWelcome() {
   const el = document.getElementById("welcome-msg");
   if (el) el.innerText = `Welcome back, ${user?.name || "Student"}!`;
 }
-
 async function loadApplications() {
   try {
     const res = await fetch(`${API_BASE}/student/applications`, {
@@ -47,7 +47,7 @@ async function loadApplications() {
     if (!res.ok) {
       const message = data?.message || "Failed to load applications";
       if (res.status === 400 && message.toLowerCase().includes("profile")) {
-        alert("Please complete your student profile first.");
+        showToast("Please complete your student profile first.", "warning");
         window.location.href = "../student/student-profile.html";
         return;
       }
@@ -64,7 +64,7 @@ async function loadApplications() {
 
   } catch (err) {
     console.error("Dashboard error:", err);
-    alert(err.message || "Failed to load applications. Please refresh.");
+    showToast(err.message || "Failed to load applications.", "error");
   }
 }
 
