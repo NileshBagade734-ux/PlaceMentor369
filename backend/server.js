@@ -7,6 +7,7 @@ import redisConnection from "./config/redis.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import compression from "compression";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
 // Routes
@@ -86,6 +87,9 @@ app.use(
     credentials: true
   })
 );
+
+// ✅ Response compression
+app.use(compression());
 
 // ✅ Body parsers
 app.use(express.json({ limit: "20mb" }));
