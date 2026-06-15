@@ -236,17 +236,22 @@ export const exportJobApplicantsToCSV = async (req, res) => {
 ====================================================== */
 export const deleteJob = async (req, res) => {
   try {
+    // 1. Find the job and confirm it belongs to the logged-in recruiter
     const job = await Job.findOne({
       _id: req.params.id,
       recruiter: req.user.id,
     });
     if (!job) return res.status(404).json({ message: "Job not found" });
 
+    // 2. Clear out any student applications tied to this job
     await Application.deleteMany({ job: job._id });
-    await job.deleteOne();
+    
+    // 3. Delete the job document itself safely
+    await Job.findByIdAndDelete(job._id);
 
     res.json({ success: true });
   } catch (err) {
+    console.error("DELETE JOB ERROR:", err);
     res.status(500).json({ message: "Delete job failed" });
   }
 };
