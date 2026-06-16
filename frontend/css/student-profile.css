@@ -1,17 +1,62 @@
-/* Custom Variable Colors */
+/* =========================
+   Global Improvements
+========================= */
+
+/* Better box model handling */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Firefox scrollbar support */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f1f1;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* =========================
+   Custom Variable Colors
+========================= */
+
 :root {
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --success: #22c55e;
     --bg-gray: #f9fafb;
     --border-gray: #e5e7eb;
+
+    /* Added reusable sidebar variables */
+    --sidebar-text: #64748b;
+    --sidebar-active: #4f46e5;
+    --sidebar-active-bg: #eef2ff;
+    --scrollbar-thumb: #cbd5e1;
+    --scrollbar-thumb-hover: #94a3b8;
 }
 
-/* Base Styles */
+/* =========================
+   Base Styles
+========================= */
+
 body {
-    font-family: 'Inter', -apple-system, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
+    background-color: var(--bg-gray);
 }
+
+/* =========================
+   Sidebar
+========================= */
+
 .sidebar-item {
     display: flex;
     align-items: center;
@@ -20,40 +65,67 @@ body {
     border-radius: 0.5rem;
     font-size: 0.875rem;
     font-weight: 500;
-    color: #64748b; /* slate-500 */
-    transition: all 0.2s ease-in-out;
+    color: var(--sidebar-text);
     text-decoration: none;
+
+    /* Improved transition performance */
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
 }
 
-.sidebar-item:hover {
-    background-color: #f8fafc;
-    color: #4f46e5;
-    transform: translateX(4px);
+/* Prevent hover weirdness on touch devices */
+@media (hover: hover) {
+    .sidebar-item:hover {
+        background-color: #f8fafc;
+        color: var(--sidebar-active);
+        transform: translateX(4px);
+    }
 }
 
 .sidebar-item.active {
-    background-color: #eef2ff; /* indigo-50 */
-    color: #4f46e5; /* indigo-600 */
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-active);
     font-weight: 600;
 }
 
+/* =========================
+   Form Styling
+========================= */
 
-/* Form Styling */
-input, select {
-    transition: all 0.2s ease;
+input,
+select {
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-input:focus, select:focus {
-    background-color: #fff !important;
-    border-color: var(--primary) !important;
+input:focus,
+select:focus {
+    background-color: #fff;
+    border-color: var(--primary);
+
+    /* Accessibility improvement */
+    outline: 2px solid rgba(37, 99, 235, 0.25);
+    outline-offset: 2px;
 }
 
-/* Profile Completion Bar */
+/* =========================
+   Profile Completion Bar
+========================= */
+
 #completionBar {
-    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s ease;
+    transition:
+        width 1s cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 0.5s ease;
 }
 
-/* Skill Tags Animation */
+/* =========================
+   Skill Tags Animation
+========================= */
+
 #skillsContainer > div {
     animation: scaleIn 0.3s ease-out;
 }
@@ -63,16 +135,24 @@ input:focus, select:focus {
         opacity: 0;
         transform: scale(0.9);
     }
+
     to {
         opacity: 1;
         transform: scale(1);
     }
 }
 
-/* Resume Drop Area Styling */
+/* =========================
+   Resume Drop Area Styling
+========================= */
+
 #resumeDropArea {
     border: 2px dashed var(--border-gray);
-    transition: all 0.3s ease;
+
+    transition:
+        border-color 0.3s ease,
+        background-color 0.3s ease,
+        transform 0.3s ease;
 }
 
 #resumeDropArea:hover {
@@ -85,7 +165,10 @@ input:focus, select:focus {
     cursor: pointer;
 }
 
-/* Scrollbar Customization */
+/* =========================
+   Scrollbar Customization
+========================= */
+
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -95,18 +178,25 @@ input:focus, select:focus {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: var(--scrollbar-thumb);
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    background: var(--scrollbar-thumb-hover);
 }
 
-/* Button Elevation */
+/* =========================
+   Button Elevation
+========================= */
+
 #saveBtn {
     box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
-    transition: all 0.2s ease;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
 }
 
 #saveBtn:hover {

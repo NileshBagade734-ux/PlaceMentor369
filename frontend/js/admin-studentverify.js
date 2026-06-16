@@ -1,5 +1,3 @@
-const API_BASE = "http://localhost:5000/api/admin";
-
 /* =========================
    SESSION / TOKEN
 ========================= */
@@ -18,12 +16,7 @@ let studentsData = []; // local copy of all students
 ========================= */
 async function loadStudents() {
   try {
-    const res = await fetch(`${API_BASE}/students`, {
-      headers: { "Authorization": `Bearer ${getToken()}` }
-    });
-    if (!res.ok) throw new Error("Failed to fetch students");
-
-    studentsData = await res.json(); // save locally
+    studentsData = await apiRequest("/admin/students", "GET");
     renderStudentTable();
     renderPendingStudentsList();
   } catch (err) {
@@ -77,25 +70,13 @@ function renderStudentTable() {
 ========================= */
 async function verifyStudent(id) {
   try {
-    const res = await fetch(`${API_BASE}/students/${id}/verify`, {
-      method: "PATCH",
-      headers: { 
-        "Authorization": `Bearer ${getToken()}`,
-        "Content-Type": "application/json"
-      }
-    });
-
-    const data = await res.json();
+    const data = await apiRequest(`/admin/students/${id}/verify`, "PATCH");
     console.log("Verify response:", data);
 
-    if (!res.ok) throw new Error(data.message || "Failed to verify student");
-
-    // ✅ update locally without refetch
     studentsData = studentsData.map(s => s._id === id ? { ...s, status: "verified" } : s);
     renderStudentTable();
     renderPendingStudentsList();
 
-    // Refresh dashboard stats if available
     if (typeof loadDashboard === "function") {
       await loadDashboard();
     }
@@ -110,20 +91,9 @@ async function rejectStudent(id) {
   if (!confirm("Are you sure you want to reject this student?")) return;
 
   try {
-    const res = await fetch(`${API_BASE}/students/${id}/reject`, {
-      method: "PATCH",
-      headers: { 
-        "Authorization": `Bearer ${getToken()}`,
-        "Content-Type": "application/json"
-      }
-    });
-
-    const data = await res.json();
+    const data = await apiRequest(`/admin/students/${id}/reject`, "PATCH");
     console.log("Reject response:", data);
 
-    if (!res.ok) throw new Error(data.message || "Failed to reject student");
-
-    // ✅ update locally without refetch
     studentsData = studentsData.map(s => s._id === id ? { ...s, status: "rejected" } : s);
     renderStudentTable();
     renderPendingStudentsList();

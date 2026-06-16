@@ -4,35 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>PlacementorAI</title>
-  <link rel="icon" type="image/png" href="images/favicon.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="icon" href="favicon.png" sizes="32x32" type="image/png">
-<link rel="shortcut icon" href="favicon.png" type="image/png">
-<link rel="stylesheet" href="style.css">
+
   <style>
     /* BASE */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Inter, sans-serif; }
     body { background: linear-gradient(to bottom right, #eef2ff, #ffffff, #eff6ff); color: #1f2937; }
     .container { max-width: 1200px; margin: auto; padding: 0 20px; }
 
-    /* HEADER & RESPONSIVE NAVBAR */
-    .header { background: #fff; padding: 16px 0; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 1000; }
+    /* HEADER */
+    .header { background: #fff; padding: 16px 0; }
     .nav { display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    
-    /* Navigation Menu Links Wrapper */
-    .nav-menu { display: flex; align-items: center; }
-    .nav-menu a { margin: 0 12px; text-decoration: none; color: #374151; font-weight: 500; transition: color 0.2s; }
-    .nav-menu a:hover { color: #4f46e5; }
+    .logo { font-size: 22px; font-weight: 700; }
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    nav a { margin: 0 12px; text-decoration: none; color: #374151; font-weight: 500; }
     .login { color: #4f46e5; }
-    
-    .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; text-decoration: none; }
-    .primary { background: #161533; color: #fff !important; }
-    .primary:hover { background: #23214d; color: #fff !important; }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+    .hamburger i { font-size: 24px; color: #374151; }
+    .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; }
+    .primary { background: #161533; color: #fff; }
     .secondary { background: #e5e7eb; color: #374151; }
-
-    /* Mobile Hamburger Menu Toggle Button Button */
-    .menu-toggle { display: none; background: none; border: none; font-size: 24px; color: #374151; cursor: pointer; }
 
     /* HERO */
     .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; padding: 80px 0; align-items: center; }
@@ -41,349 +32,174 @@
     .hero p { font-size: 18px; color: #6b7280; line-height: 1.5; }
 
     .features { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; margin: 30px 0; }
-    .feature {
-      display: flex;
-      gap: 12px;
-      background: #fff;
-      padding: 14px;
-      border-radius: 12px;
-      align-items: center;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+.feature {
+  display: flex;
+  gap: 12px;
+  background: #fff;
+  padding: 14px;
+  border-radius: 12px;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-    .feature:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    }    
-    .feature h4 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.feature:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}    .feature h4 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
     .feature p { font-size: 14px; color: #6b7280; }
 
     .cta { display: flex; gap: 14px; margin-top: 20px; }
     .cta button { flex: 1; text-align: center; }
 
     /* HERO IMAGE */
-    .hero-right { position: relative; top: -8px; }
-    .hero-right img {
-      width: 100%;
-      height: auto;
-      max-height: 420px;
-      object-fit: cover;
-      display: block;
-      border-radius: 20px;
-    }
+.hero-right {
+  position: relative;
+  top: -8px;
+}
 
-    .hero-img-wrapper { position: relative; border-radius: 20px; overflow: hidden; }
-    .hero-img-wrapper::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to bottom right,
-        rgba(79,70,229,0.08),
-        rgba(255,255,255,0.02)
-      );
-    }
+.hero-right img {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: cover;
+  display: block;
+  border-radius: 20px;
+}
+
+
+
+/* ADD THIS RIGHT HERE 👇 */
+.hero-img-wrapper {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.hero-img-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom right,
+    rgba(79,70,229,0.08),
+    rgba(255,255,255,0.02)
+  );
+}
+
+
 
     .stats-card { position: absolute; bottom: -32px; left: -32px; background: #ffffff; padding: 16px 20px; border-radius: 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 12px 24px rgba(0,0,0,0.12); z-index: 10; }
     .stats-card strong { font-size: 24px; font-weight: 700; color: #111827; }
     .stats-card span { display: block; font-size: 14px; color: #6b7280; }
-    .stats-card div { text-align: center; }
+    .stats-card div {
+  text-align: center;
+}
+
 
     /* FOOTER */
-    footer { background: #0f172a; color: #f8fafc; padding: 80px 0 40px; }
-    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 60px; }
-    footer h3 { font-size: 24px; margin-bottom: 20px; color: #fff; }
-    footer h4 { font-size: 18px; margin-bottom: 20px; color: #fff; }
-    footer p { color: #94a3b8; line-height: 1.6; }
-    footer a { color: #94a3b8; text-decoration: none; margin-bottom: 12px; display: block; transition: color 0.2s; }
-    footer a:hover { color: #4f46e5; }
-    .footer-social { display: flex; gap: 15px; margin-top: 20px; }
-    .footer-social a { font-size: 20px; color: #94a3b8; }
-    .footer-social a:hover { color: #fff; }
-    .footer-bottom { border-top: 1px solid #1e293b; padding-top: 40px; display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 14px; }
-    .copyright { margin-top: 0; }
+    footer { background: #0f172a; color: #cbd5f5; padding: 50px 0; }
+    .footer-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 40px; }
+    footer a { display: block; color: #94a3b8; text-decoration: none; margin-top: 8px; }
+    .copyright { text-align: center; margin-top: 40px; font-size: 14px; color: #94a3b8; }
 
-    /* DOCUMENTATION PORTAL */
-    .portal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
-    .portal-content { background: rgba(255, 255, 255, 0.98); width: 100%; max-width: 800px; max-height: 90vh; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.3); animation: slideUp 0.4s ease-out; }
-    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .portal-header { padding: 24px 32px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-    .portal-nav { display: flex; gap: 12px; padding: 12px 32px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-    .portal-nav-btn { background: none; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 500; color: #64748b; transition: all 0.2s; }
-    .portal-nav-btn.active { background: #4f46e5; color: #fff; }
-    .portal-body { padding: 32px; overflow-y: auto; color: #334155; line-height: 1.7; }
-    .portal-body h2 { margin-bottom: 16px; color: #0f172a; font-size: 24px; }
-    .portal-body section { margin-bottom: 32px; }
-    .portal-body section h3 { font-size: 18px; margin-bottom: 12px; color: #1e293b; }
-    .close-portal { cursor: pointer; font-size: 24px; color: #64748b; transition: color 0.2s; }
-    .close-portal:hover { color: #ef4444; }
+    /* MODAL */
+    .modal { position: fixed; inset: 0; display: none; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
+    .modal-box { background: #fff; padding: 30px; border-radius: 16px; width: 360px; }
+    .modal-box input { width: 100%; padding: 10px; margin: 10px 0; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 
-    /* RESPONSIVE BREAKPOINTS WITH MOBILE DROPDOWN NAVIGATION FIX */
+    /* RESPONSIVE */
     @media (max-width: 768px) {
-      .menu-toggle { display: block; }
-      
-      .nav-menu {
-        display: none;
+      .hamburger { display: block; }
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 260px;
+        height: 100vh;
+        background: #fff;
         flex-direction: column;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: #ffffff;
-        padding: 20px;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-        border-top: 1px solid #f3f4f6;
-        gap: 16px;
-        text-align: center;
+        padding: 80px 24px 24px;
+        box-shadow: -4px 0 12px rgba(0,0,0,0.1);
+        transition: right 0.3s ease;
+        z-index: 999;
+        align-items: flex-start;
       }
-      
-      .nav-menu.active { display: flex; }
-      .nav-menu a { margin: 8px 0; width: 100%; font-size: 16px; }
-      .nav-menu .btn { width: 100%; justify-content: center; }
-
+      .nav-links.active { right: 0; }
+      .nav-links a { margin: 8px 0; width: 100%; }
+      .nav-links .btn { width: 100%; text-align: center; }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 998;
+      }
+      .overlay.active { display: block; }
       .hero { grid-template-columns: 1fr; gap: 30px; text-align: center; }
       .hero-left { order: 2; }
       .hero-right { order: 1; }
       .features { grid-template-columns: 1fr; }
-      .feature-wide { grid-column: span 1; }
       .cta { flex-direction: column; }
       .stats-card { left: 50%; transform: translateX(-50%); bottom: -24px; }
-
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-      .footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
     }
-
     @media (max-width: 480px) {
       .footer-grid { grid-template-columns: 1fr; }
     }
-    /* Theme Toggle Button */
-.theme-toggle{
-  background: #f3f4f6;
-  border: none;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
+     .btn i {
+  margin-left: 6px;
+  font-size: 14px;
+}
+footer h3,
+footer h4 {
+  color: #ffffff;
+}
+.feature-wide {
+  grid-column: span 2;        /* covers both columns */
+  background: #ffffff;
+  padding: 18px 22px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
   cursor: pointer;
-  font-size: 18px;
-  color: #374151;
-  transition: all 0.3s ease;
-  margin-right: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.theme-toggle:hover{
-  transform: rotate(15deg);
-  background: #e5e7eb;
+.feature-wide:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
 }
-/* DARK MODE */
-
-body.dark-mode{
-  background: #0f172a;
-  color: #f8fafc;
+.feature-wide:hover .fa-arrow-right {
+  transform: translateX(4px);
+  transition: transform 0.2s ease;
 }
 
-/* Header */
-body.dark-mode .header{
-  background: #1e293b;
-  border-bottom: 1px solid #334155;
+
+.feature-wide--big {
+  width: calc(100% + 300px);
+  margin-left: -1px;
 }
 
-body.dark-mode .nav-menu a,
-body.dark-mode .logo,
-body.dark-mode .menu-toggle{
-  color: #f8fafc;
+/* Make last wide box text same as normal feature boxes */
+.feature-wide h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
 }
 
-/* Hero Features */
-body.dark-mode .feature,
-body.dark-mode .stats-card{
-  background: #1e293b;
-  color: #f8fafc;
+.feature-wide p {
+  font-size: 14px;
+  color: #6b7280;
 }
 
-body.dark-mode .feature p,
-body.dark-mode .hero p{
-  color: #cbd5e1;
-}
-
-/* Buttons */
-body.dark-mode .secondary{
-  background: #334155;
-  color: #fff;
-}
-
-.success{
-  color: white;
-}
-/* Documentation Portal */
-body.dark-mode .portal-content{
-  background: #1e293b;
-}
-
-body.dark-mode .portal-body,
-body.dark-mode .portal-header h2,
-body.dark-mode .portal-body h2,
-body.dark-mode .portal-body h3{
-  color: #f8fafc;
-}
-
-body.dark-mode .portal-nav{
-  background: #0f172a;
-}
-
-body.dark-mode .portal-nav-btn{
-  color: #cbd5e1;
-}
-
-/* Mobile Menu */
-body.dark-mode .nav-menu{
-  background: #1e293b;
-}
-
-/* Footer */
-body.dark-mode footer{
-  background: #020617;
-}
-.success a{
-    text-decoration: none;
-}
-
-.success h3{
-    color: #4f46e5;
-    font-size: 1.5rem;
-    font-weight: 700;
-    padding: 12px 24px;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-}
-
-.success h3:hover{
-    background: #eef2ff;
-    transform: translateY(-3px);
-}
-.success{
-    text-align: center;
-    margin: 40px 0;
-}
-
-.success a{
-    display: inline-block;
-    /* background: #4f46e5;
-    color: white; */
-    text-decoration: none;
-    padding: 14px 28px;
-    border-radius: 12px;
-    font-weight: 600;
-    transition: 0.3s ease;
-}
-
-.success a:hover{
-    /* background: #3730a3; */
-    transform: translateY(-3px);
-}
-.ai-assistant-section{
-    padding:100px 0;
-}
-
-.ai-card{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:50px;
-    align-items:center;
-}
-
-.ai-badge{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:8px 16px;
-    background:#ede9fe;
-    color:#7c3aed;
-    border-radius:999px;
-    font-weight:600;
-}
-
-.ai-left h2{
-    margin-top:20px;
-    font-size:42px;
-    line-height:1.2;
-}
-
-.ai-left p{
-    margin-top:15px;
-    color:#6b7280;
-    line-height:1.8;
-}
-
-.ai-features{
-    margin-top:25px;
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:15px;
-}
-
-.ai-feature{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-weight:500;
-}
-
-.ai-feature i{
-    color:#7c3aed;
-}
-
-.ai-btn{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    margin-top:30px;
-    background:#7c3aed;
-    color:white;
-    text-decoration:none;
-    padding:14px 28px;
-    border-radius:12px;
-    font-weight:600;
-    transition:.3s;
-}
-
-.ai-btn:hover{
-    background:#6d28d9;
-    transform:translateY(-3px);
-}
-
-.chat-preview{
-    background:white;
-    padding:25px;
-    border-radius:20px;
-    box-shadow:0 15px 30px rgba(0,0,0,.08);
-}
-
-.bot-msg,
-.user-msg{
-    padding:12px 15px;
-    border-radius:12px;
-    margin-bottom:12px;
-}
-
-.bot-msg{
-    background:#ede9fe;
-}
-
-.user-msg{
-    background:#f3f4f6;
-}
-body.dark-mode .chat-preview{
-    background:#1e293b;
-}
-
-body.dark-mode .bot-msg{
-    background:#312e81;
-    color:white;
-}
-
-body.dark-mode .user-msg{
-    background:#334155;
-    color:white;
+.ai-icon {
+  color: #4c45ce;               /* same as primary button */
+  background: #eef2ff;          /* soft indigo bg */
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 16px;
 }
 
 body.dark-mode .ai-left p{
@@ -393,84 +209,425 @@ body.dark-mode .ai-left p{
 body.dark-mode .ai-left h2{
     color:white;
 }
+
+/* ---------- Section wrapper ---------- */
+.journey-section {
+  padding: 90px 0 60px;
+  position: relative;
+}
+
+/* ---------- Header ---------- */
+.journey-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.journey-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #e0e7ff;
+  color: #4338ca;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.journey-header h2 {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #111827;
+  margin-bottom: 12px;
+}
+
+.journey-accent {
+  color: #4f46e5;
+}
+
+.journey-header p {
+  font-size: 17px;
+  color: #6b7280;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ---------- Timeline ---------- */
+.journey-timeline {
+  position: relative;
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Vertical centre line */
+.journey-timeline::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(to bottom, #e0e7ff, #c7d2fe, #e0e7ff);
+}
+
+/* ---------- Each row ---------- */
+.journey-item {
+  display: grid;
+  grid-template-columns: 1fr 48px 1fr;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
+
+/* Spacer keeps card on correct side */
+.journey-spacer {
+  /* empty — just takes up grid space */
+}
+
+/* ---------- Node (circle on spine) ---------- */
+.journey-node {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #c7d2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  color: #4f46e5;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+  z-index: 2;
+  flex-shrink: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.journey-item:hover .journey-node,
+.journey-item:focus-within .journey-node {
+  transform: scale(1.15);
+  border-color: #4f46e5;
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.25);
+}
+
+.journey-node--final {
+  background: #4f46e5;
+  border-color: #4f46e5;
+  color: #fff;
+}
+
+/* ---------- Card ---------- */
+.journey-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 22px 24px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  cursor: default;
+  outline: none;
+}
+
+.journey-item--left .journey-card {
+  margin-right: 24px;
+  text-align: right;
+}
+
+.journey-item--right .journey-card {
+  margin-left: 24px;
+  text-align: left;
+}
+
+.journey-card:hover,
+.journey-item:focus-within .journey-card {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.1);
+  border-color: #c7d2fe;
+}
+
+.journey-card--final {
+  border-color: #c7d2fe;
+  background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+}
+
+/* Step tag */
+.journey-step-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #6366f1;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  opacity: 0.75;
+}
+
+/* Card header: icon + title */
+.journey-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.journey-item--left .journey-card-header {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
+
+.journey-item--right .journey-card-header {
+  flex-direction: row;
+}
+
+.journey-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #e0e7ff;
+  color: #4f46e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.journey-card:hover .journey-icon,
+.journey-item:focus-within .journey-icon {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.journey-icon--final {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.journey-card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.3;
+}
+
+.journey-card p {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.65;
+}
+
+/* ---------- End marker ---------- */
+.journey-end {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+  background: #e0e7ff;
+  color: #4338ca;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 24px;
+  border-radius: 999px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---------- Scroll reveal animation ---------- */
+.journey-reveal {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.journey-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Dark mode ---------- */
+body.dark-mode .journey-header h2 {
+  color: #f8fafc;
+}
+
+body.dark-mode .journey-header p {
+  color: #94a3b8;
+}
+
+body.dark-mode .journey-badge {
+  background: #312e81;
+  color: #a5b4fc;
+}
+
+body.dark-mode .journey-timeline::before {
+  background: linear-gradient(to bottom, #1e293b, #334155, #1e293b);
+}
+
+body.dark-mode .journey-node {
+  background: #1e293b;
+  border-color: #4f46e5;
+  color: #a5b4fc;
+}
+
+body.dark-mode .journey-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+body.dark-mode .journey-card h3 {
+  color: #f8fafc;
+}
+
+body.dark-mode .journey-card p {
+  color: #94a3b8;
+}
+
+body.dark-mode .journey-card--final {
+  background: #1e1b4b;
+  border-color: #4f46e5;
+}
+
+body.dark-mode .journey-icon {
+  background: #312e81;
+  color: #a5b4fc;
+}
+
+body.dark-mode .journey-card:hover .journey-icon,
+body.dark-mode .journey-item:focus-within .journey-icon {
+  background: #4f46e5;
+  color: #fff;
+}
+
+body.dark-mode .journey-end {
+  background: #1e1b4b;
+  color: #a5b4fc;
+}
+
+/* ---------- Responsive: tablet ---------- */
+@media (max-width: 768px) {
+  .journey-header h2 {
+    font-size: 28px;
+  }
+
+  .journey-timeline {
+    gap: 24px;
+  }
+
+  /* Switch to single column on mobile */
+  .journey-timeline::before {
+    left: 24px;
+  }
+
+  .journey-item {
+    grid-template-columns: 48px 1fr;
+    grid-template-rows: auto;
+  }
+
+  /* Hide the spacer column on mobile */
+  .journey-spacer {
+    display: none;
+  }
+
+  /* Both left and right cards go to the right of the spine */
+  .journey-item--left,
+  .journey-item--right {
+    grid-template-columns: 48px 1fr;
+  }
+
+  /* Node always first column */
+  .journey-item--left .journey-node,
+  .journey-item--right .journey-node {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  /* Card always second column */
+  .journey-item--left .journey-card,
+  .journey-item--right .journey-card {
+    grid-column: 2;
+    grid-row: 1;
+    margin-left: 16px;
+    margin-right: 0;
+    text-align: left;
+  }
+
+  /* Fix card header direction on mobile */
+  .journey-item--left .journey-card-header {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .journey-section {
+    padding: 60px 0 40px;
+  }
+
+  .journey-card {
+    padding: 16px 18px;
+  }
+}
   </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header class="header">
-  <div class="container nav" style="position: relative;">
-    <div class="logo">
-      <i class="fa-solid fa-arrow-up-right-dots"></i> 
-      <span>PlacementorAI</span>
-    </div>
-    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
-  <i class="fa-solid fa-moon"></i>
-</button>
-    <button class="menu-toggle" id="mobile-menu-btn" aria-label="Toggle Navigation Menu">
-      <i class="fa-solid fa-bars" id="menu-icon"></i>
+  <div class="container nav">
+    <div class="logo"><i class="fa-solid fa-arrow-up-right-dots"></i> <span>PlacementorAI</span></div>
+    <button class="hamburger" aria-label="Toggle navigation menu" onclick="toggleMenu()">
+      <i class="fa-solid fa-bars" id="menuIcon"></i>
     </button>
-
-    <nav class="nav-menu" id="nav-links-target">
+    <div class="nav-links" id="navLinks">
       <a href="index.html">Home</a>
-      <a href="About.html">About Us</a>
       <a href="contact.html">Contact</a>
       <a href="register.html">Sign Up</a>
       <a href="login.html" class="login">Login</a>
-      <a href="register.html" class="btn primary" style="color: #ffffff !important;">
+      <a href="register.html" class="btn primary">
         Get Started
-        <i class="fa-solid fa-arrow-up-right-from-square" style="color: #ffffff !important;"></i>
-      </a>    
-    </nav>
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+      </a>
+    </div>
   </div>
 </header>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
+<!-- HERO -->
 <section class="hero container">
   <div class="hero-left">
     <span class="badge">Smart Placement Platform for Students & Recruiters</span>
     <h1>Manage Jobs, Applications,<br/>and Placements Effortlessly</h1>
     <p>Post jobs, apply to opportunities, and track the hiring process in one centralized platform. Students build profiles, recruiters manage applicants, admins monitor stats.</p>
-    
     <div class="features">
-      <div class="feature">     
-        <i class="fa-solid fa-clipboard-list"></i>
-        <div><h4>Job Listings</h4><p>Students can explore and apply to jobs</p></div>
-      </div>
-      <div class="feature">
-        <i class="fa-regular fa-id-card"></i>
-        <div><h4>Profile Management</h4><p>Students manage academic & skill profiles</p></div>
-      </div>
-      <div class="feature">
-        <i class="fa-solid fa-user-check"></i>
-        <div><h4>Applicant Tracking</h4><p>Recruiters track and shortlist candidates easily</p></div>
-      </div>
-      <div class="feature">
-        <i class="fa-solid fa-circle-check"></i>
-        <div><h4>Status Updates</h4><p>Track application progress in real-time</p></div>
-      </div>
-      
-      <a href="recommendations.html" style="text-decoration:none; color:inherit; grid-column: span 1;" class="feature-wide-anchor">
-        <div class="feature-wide feature-wide--big">
-          <i class="fa-solid fa-brain ai-icon"></i>
-          <div>
-            <h4>AI-Recommended Learning Path</h4>
-            <p>Get curated videos and resources based on your course, skills, and career goals</p>
-          </div>
-          <i class="fa-solid fa-arrow-right" style="margin-left:auto; color:#000000;"></i>
-        </div>
-      </a>
-    </div>
-  </div>
+      <div class="feature">     <i class="fa-solid fa-clipboard-list"></i>
 
-  <div class="hero-right">
-    <div class="hero-img-wrapper">
-      <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b" alt="students"/>
+<div><h4>Job Listings</h4><p>Students can explore and apply to jobs</p></div></div>
+      <div class="feature"><i class="fa-regular fa-id-card"></i><div><h4>Profile Management</h4><p>Students manage academic & skill profiles</p></div></div>
+      <div class="feature"><i class="fa-solid fa-user-check"></i><div><h4>Applicant Tracking</h4><p>Recruiters track and shortlist candidates easily</p></div></div>
+      <div class="feature"><i class="fa-solid fa-circle-check"></i><div><h4>Status Updates</h4><p>Track application progress in real-time</p></div></div>
+<a href="recommendations.html" style="text-decoration:none; color:inherit;">
+  <div class="feature-wide feature-wide--big">
+<i class="fa-solid fa-brain ai-icon"></i>
+    <div>
+      <h4>AI-Recommended Learning Path</h4>
+      <p>
+        Get curated videos and resources based on your course, skills, and career goals
+      </p>
+      
     </div>
-    <div class="stats-card">
-      <div>
-        <strong>3,000+</strong>
-        <span>Students Placed</span>
-      </div>
-    </div>
+    <i class="fa-solid fa-arrow-right" style="margin-left:auto; color:#000000;"></i>
+  </div>
+</a>
+ </div>
+    
   </div>
   
 </section>
@@ -489,7 +646,180 @@ body.dark-mode .ai-left h2{
           <i class="fa-solid fa-file-lines"></i>
           Placement Ready
         </span>
+        <!-- ============================================================
+     PLACEMENT JOURNEY SECTION
+     Paste this block in index.html AFTER the <div class="success">
+     block and BEFORE the <section class="resume-builder-section">
+     ============================================================ -->
 
+<section class="journey-section" id="placement-journey" aria-label="Placement Journey">
+  <div class="container">
+
+    <div class="journey-header">
+      <span class="journey-badge">
+        <i class="fa-solid fa-route"></i>
+        Your Journey
+      </span>
+      <h2>From Student to <span class="journey-accent">Placed Professional</span></h2>
+      <p>Eight steps. One intelligent platform. A career outcome you can measure in real time.</p>
+    </div>
+
+    <div class="journey-timeline" role="list">
+
+      <!-- Step 1 -->
+      <div class="journey-item journey-item--left journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-card">
+          <span class="journey-step-tag">Step 01</span>
+          <div class="journey-card-header">
+            <div class="journey-icon" aria-hidden="true">
+              <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <h3>Create Profile</h3>
+          </div>
+          <p>Set up your student profile with academic background, target roles, and career goals. Your personalised AI journey begins here.</p>
+        </div>
+        <div class="journey-node" aria-hidden="true">
+          <span>1</span>
+        </div>
+        <div class="journey-spacer"></div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="journey-item journey-item--right journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-spacer"></div>
+        <div class="journey-node" aria-hidden="true">
+          <span>2</span>
+        </div>
+        <div class="journey-card">
+          <span class="journey-step-tag">Step 02</span>
+          <div class="journey-card-header">
+            <div class="journey-icon" aria-hidden="true">
+              <i class="fa-solid fa-file-arrow-up"></i>
+            </div>
+            <h3>Upload Resume</h3>
+          </div>
+          <p>Drop in your resume and let our parser extract your skills, projects, and experience — instantly structured for AI analysis.</p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="journey-item journey-item--left journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-card">
+          <span class="journey-step-tag">Step 03</span>
+          <div class="journey-card-header">
+            <div class="journey-icon" aria-hidden="true">
+              <i class="fa-solid fa-magnifying-glass-chart"></i>
+            </div>
+            <h3>Resume Analysis</h3>
+          </div>
+          <p>Our AI engine deep-reads your resume — scoring clarity, ATS compatibility, and keyword density against thousands of job descriptions.</p>
+        </div>
+        <div class="journey-node" aria-hidden="true">
+          <span>3</span>
+        </div>
+        <div class="journey-spacer"></div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="journey-item journey-item--right journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-spacer"></div>
+        <div class="journey-node" aria-hidden="true">
+          <span>4</span>
+        </div>
+        <div class="journey-card">
+          <span class="journey-step-tag">Step 04</span>
+          <div class="journey-card-header">
+            <div class="journey-icon" aria-hidden="true">
+              <i class="fa-solid fa-layer-group"></i>
+            </div>
+            <h3>Skill Gap Identification</h3>
+          </div>
+          <p>Pinpoint exactly which skills you're missing for your target roles. No guesswork — just precise, data-backed gap mapping.</p>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="journey-item journey-item--left journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-card">
+          <span class="journey-step-tag">Step 05</span>
+          <div class="journey-card-header">
+            <div class="journey-icon" aria-hidden="true">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <h3>AI-Based Recommendations</h3>
+          </div>
+          <p>Get a tailored learning roadmap — curated courses, projects, and resources that close your gaps and align with recruiter expectations.</p>
+        </div>
+        <div class="journey-node" aria-hidden="true">
+          <span>5</span>
+        </div>
+        <div class="journey-spacer"></div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="journey-item journey-item--right journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-spacer"></div>
+        <div class="journey-node" aria-hidden="true">
+          <span>6</span>
+        </div>
+        <div class="journey-card">
+          <span class="journey-step-tag">Step 06</span>
+          <div class="journey-card-header">
+            <div class="journey-icon" aria-hidden="true">
+              <i class="fa-solid fa-comments"></i>
+            </div>
+            <h3>Mock Interviews</h3>
+          </div>
+          <p>Practice with AI interviewers trained on real company formats. Get instant feedback on answers, tone, and technical depth.</p>
+        </div>
+      </div>
+
+      <!-- Step 7 -->
+      <div class="journey-item journey-item--left journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-card">
+          <span class="journey-step-tag">Step 07</span>
+          <div class="journey-card-header">
+            <div class="journey-icon" aria-hidden="true">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <h3>Placement Readiness</h3>
+          </div>
+          <p>Your readiness score tracks growth across resume strength, skill coverage, and interview performance — all in one live dashboard.</p>
+        </div>
+        <div class="journey-node" aria-hidden="true">
+          <span>7</span>
+        </div>
+        <div class="journey-spacer"></div>
+      </div>
+
+      <!-- Step 8 -->
+      <div class="journey-item journey-item--right journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-spacer"></div>
+        <div class="journey-node journey-node--final" aria-hidden="true">
+          <span>8</span>
+        </div>
+        <div class="journey-card journey-card--final">
+          <span class="journey-step-tag">Step 08</span>
+          <div class="journey-card-header">
+            <div class="journey-icon journey-icon--final" aria-hidden="true">
+              <i class="fa-solid fa-trophy"></i>
+            </div>
+            <h3>Successful Placement</h3>
+          </div>
+          <p>Match with verified hiring partners, apply with a single click, and land the role you've been building toward. Your career, launched.</p>
+        </div>
+      </div>
+
+    </div><!-- /.journey-timeline -->
+
+    <!-- End marker -->
+    <div class="journey-end" aria-hidden="true">
+      <i class="fa-solid fa-circle-check"></i>
+      <span>Placement Achieved</span>
+    </div>
+
+  </div>
+</section>
         <h2>Build an ATS-Friendly Resume in Minutes</h2>
 
         <p>
@@ -546,350 +876,81 @@ body.dark-mode .ai-left h2{
       </div>
     </div>
 
+  <div class="hero-right">
+  <div class="hero-img-wrapper">
+    <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b" alt="students"/>
   </div>
-</section>
-
-<section class="ai-assistant-section">
-  <div class="container">
-
-    <div class="ai-card">
-
-      <div class="ai-left">
-        <span class="ai-badge">
-          <i class="fa-solid fa-robot"></i>
-          AI Career Assistant
-        </span>
-
-        <h2>Get Personalized Placement Guidance</h2>
-
-        <p>
-          Our AI assistant helps students prepare for placements by
-          identifying skill gaps, recommending learning resources,
-          suggesting relevant jobs, and providing interview preparation support.
-        </p>
-
-        <div class="ai-features">
-
-          <div class="ai-feature">
-            <i class="fa-solid fa-microphone"></i>
-            Interview Preparation
-          </div>
-
-          <div class="ai-feature">
-            <i class="fa-solid fa-chart-line"></i>
-            Skill Gap Analysis
-          </div>
-
-          <div class="ai-feature">
-            <i class="fa-solid fa-briefcase"></i>
-            Job Recommendations
-          </div>
-
-          <div class="ai-feature">
-            <i class="fa-solid fa-book"></i>
-            Learning Suggestions
-          </div>
-
-        </div>
-
-        <a href="ai-assistant.html" class="ai-btn">
-          Explore AI Assistant
-          <i class="fa-solid fa-arrow-right"></i>
-        </a>
-
-      </div>
-
-      <div class="ai-right">
-
-        <div class="chat-preview">
-
-          <div class="bot-msg">
-            Your React skills match 82% of Frontend Developer roles.
-          </div>
-
-          <div class="user-msg">
-            What should I learn next?
-          </div>
-
-          <div class="bot-msg">
-            I recommend Node.js, REST APIs and System Design fundamentals.
-          </div>
-
-        </div>
-
-      </div>
-
+  <div class="stats-card">
+    <div>
+      <strong>3,000+</strong>
+      <span>Students Placed</span>
     </div>
-
   </div>
-</section>
-
-<section class="feature-card">
-    <i class="fa-solid fa-users"></i>
-    <h3>Alumni Mentorship Hub</h3>
-
-    <p>
-        Connect with experienced alumni for career guidance,
-        interview preparation, resume reviews, and industry insights.
-    </p>
-
-    <a href="alumni-mentorship.html" class="btn">
-        Explore Mentorship
-    </a>
-</section>
-
-<section class="salary-section">
-  <div class="container">
-
-    <div class="salary-card">
-
-      <div class="salary-left">
-
-        <span class="salary-badge">
-          <i class="fa-solid fa-indian-rupee-sign"></i>
-          AI Salary Predictor
-        </span>
-
-        <h2>Predict Your Expected Salary Package</h2>
-
-        <p>
-          Estimate your placement package based on your branch,
-          technical skills, projects, internships, and target role.
-          Get AI-driven salary insights and industry benchmarks.
-        </p>
-
-        <div class="salary-features">
-
-          <div class="salary-feature">
-            <i class="fa-solid fa-chart-line"></i>
-            Salary Forecast
-          </div>
-
-          <div class="salary-feature">
-            <i class="fa-solid fa-building"></i>
-            Company-wise Analysis
-          </div>
-
-          <div class="salary-feature">
-            <i class="fa-solid fa-code"></i>
-            Skill-based Predictions
-          </div>
-
-          <div class="salary-feature">
-            <i class="fa-solid fa-graduation-cap"></i>
-            Branch-wise Insights
-          </div>
-
-        </div>
-
-        <a href="salary-predictor.html" class="salary-btn">
-          Predict Salary
-          <i class="fa-solid fa-arrow-right"></i>
-        </a>
-
-      </div>
-
-      <div class="salary-right">
-
-        <div class="salary-preview">
-
-          <h3>Prediction Result</h3>
-
-          <div class="salary-amount">
-            ₹ 12.5 LPA
-          </div>
-
-          <p>Expected Package Range</p>
-
-          <div class="salary-range">
-            ₹8 LPA - ₹15 LPA
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-<footer>
-  <div class="container">
-    <div class="footer-grid">
-      <div>
-        <h3>PlacementorAI</h3>
-        <p>Your intelligent companion for career growth and recruitment management. Streamlining the path from campus to corporate.</p>
-        
-          <div class="footer-social">
-  <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
-    <i class="fa-brands fa-linkedin"></i>
-  </a>
-
-  <a href="https://github.com" target="_blank" rel="noopener noreferrer">
-    <i class="fa-brands fa-github"></i>
-  </a>
-
-  <a href="https://x.com" target="_blank" rel="noopener noreferrer">
-    <i class="fa-brands fa-x-twitter"></i>
-  </a>
 </div>
-      </div>
-      <div>
-        <h4>Platform</h4>
-        <a href="index.html">Home</a>
-        <a href="About.html">About Us</a>
-        <a href="contact.html">Contact</a>
-      </div>
-      <div>
-        <h4>Resources</h4>
-        <a href="javascript:void(0)" onclick="openPortal('faq')">FAQ</a>
-        <a href="javascript:void(0)" onclick="openPortal('privacy')">Privacy Policy</a>
-        <a href="javascript:void(0)" onclick="openPortal('terms')">Terms of Service</a>
-      </div>
-      <div>
-        <h4>Account</h4>
-        <a href="login.html">Login</a>
-        <a href="register.html">Sign Up</a>
-        <a href="register.html">Recruiter Portal</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p class="copyright">&copy; 2026 PlacementorAI. All rights reserved.</p>
-      <div style="display: flex; gap: 20px;">
-        <a href="javascript:void(0)" onclick="openPortal('privacy')">Privacy</a>
-        <a href="javascript:void(0)" onclick="openPortal('terms')">Terms</a>
-      </div>
-    </div>
+
+
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container footer-grid">
+    <div><h3>PlacementorAI</h3><p>AI-powered placement readiness platform.</p></div>
+    <div><h4>Product</h4><a href="#">Features</a><a href="#">Career Paths</a><a href="#">Pricing</a></div>
+    <div><h4>Company</h4><a href="login.html">Login</a><a href="contact.html" >Contact</a><a href="About.html">About</a></div>
+    <div><h4>Social</h4><a href="https://www.linkedin.com/" target="_blank">LinkedIn</a><a href="https://x.com/?lang=en" target="_blank">Twitter</a><a href="https://github.com/" target="_blank">GitHub</a></div>
   </div>
+  <p class="copyright">© 2026 PlacementorAI</p>
 </footer>
 
-<div id="portal-overlay" class="portal-overlay">
-  <div class="portal-content">
-    <div class="portal-header">
-      <h2 id="portal-title">Documentation Portal</h2>
-      <i class="fa-solid fa-xmark close-portal" onclick="closePortal()"></i>
-    </div>
-    <div class="portal-nav">
-      <button class="portal-nav-btn" id="btn-faq" onclick="switchPortalTab('faq')">FAQ</button>
-      <button class="portal-nav-btn" id="btn-privacy" onclick="switchPortalTab('privacy')">Privacy</button>
-      <button class="portal-nav-btn" id="btn-terms" onclick="switchPortalTab('terms')">Terms</button>
-    </div>
-    <div class="portal-body" id="portal-body">
+<!-- LOGIN MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-box">
+    <h2 id="modal-title">Login</h2>
+    <form onsubmit="login(event)">
+      <input type="email" placeholder="Email" required />
+      <input type="password" placeholder="Password" required />
+      <div class="modal-actions">
+        <button class="btn primary" type="submit">Login</button>
+        <button class="btn secondary" type="button" onclick="closeModal()">Cancel</button>
       </div>
+    </form>
   </div>
 </div>
 
+<!-- SCRIPTS -->
 <script>
-  // Mobile Hamburger Toggle Logic
-  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-  const navLinksTarget = document.getElementById('nav-links-target');
-  const menuIcon = document.getElementById('menu-icon');
-
-  mobileMenuBtn.addEventListener('click', () => {
-    navLinksTarget.classList.toggle('active');
-    
-    if(navLinksTarget.classList.contains('active')) {
-      menuIcon.classList.remove('fa-bars');
-      menuIcon.classList.add('fa-xmark');
-    } else {
-      menuIcon.classList.remove('fa-xmark');
-      menuIcon.classList.add('fa-bars');
-    }
-  });
-
-  // DOCUMENTATION PORTAL JS
-  const portalOverlay = document.getElementById('portal-overlay');
-  const portalBody = document.getElementById('portal-body');
-  const portalTitle = document.getElementById('portal-title');
-
-  const portalContent = {
-    faq: `
-      <h2>Frequently Asked Questions</h2>
-      <section>
-        <h3>How do I apply for a job?</h3>
-        <p>Students can browse the 'Job Listings' section, build their profile, and click 'Apply' on any open position.</p>
-      </section>
-      <section>
-        <h3>How do recruiters post jobs?</h3>
-        <p>Recruiters can sign up for a Recruiter account and access their dedicated dashboard to post and manage job listings.</p>
-      </section>
-      <section>
-        <h3>Is my data secure?</h3>
-        <p>Yes, we use industry-standard encryption and follow best practices to ensure your personal and academic data remains private.</p>
-      </section>
-    `,
-    privacy: `
-      <h2>Privacy Policy</h2>
-      <section>
-        <h3>Data Collection</h3>
-        <p>We collect information necessary to facilitate the recruitment process, including names, emails, and academic records.</p>
-      </section>
-      <section>
-        <h3>Data Usage</h3>
-        <p>Your data is only shared with recruiters of companies you explicitly apply to. We do not sell your data to third parties.</p>
-      </section>
-    `,
-    terms: `
-      <h2>Terms of Service</h2>
-      <section>
-        <h3>User Agreement</h3>
-        <p>By using PlacementorAI, you agree to provide accurate information and follow our community guidelines.</p>
-      </section>
-      <section>
-        <h3>Platform Usage</h3>
-        <p>PlacementorAI is a facilitator. We do not guarantee employment but provide the tools to improve your placement chances.</p>
-      </section>
-    `
-  };
-
-  function openPortal(tab) {
-    portalOverlay.style.display = 'flex';
-    switchPortalTab(tab);
+  function toggleMenu() {
+    const navLinks = document.getElementById("navLinks");
+    const overlay = document.getElementById("overlay");
+    const menuIcon = document.getElementById("menuIcon");
+    navLinks.classList.toggle("active");
+    overlay.classList.toggle("active");
+    menuIcon.className = navLinks.classList.contains("active")
+      ? "fa-solid fa-xmark"
+      : "fa-solid fa-bars";
   }
 
-  function closePortal() {
-    portalOverlay.style.display = 'none';
+  // Modal JS
+  const modal = document.getElementById("modal");
+  const title = document.getElementById("modal-title");
+
+  function openModal(type) {
+    title.innerText = type === "student" ? "Student Login" : "Recruiter Login";
+    modal.style.display = "flex";
   }
 
-  function switchPortalTab(tab) {
-    portalBody.innerHTML = portalContent[tab];
-    document.querySelectorAll('.portal-nav-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById('btn-' + tab).classList.add('active');
-    const titles = { faq: 'FAQ', privacy: 'Privacy Policy', terms: 'Terms of Service' };
-    portalTitle.innerText = titles[tab];
-  }
+  function closeModal() { modal.style.display = "none"; }
 
-  portalOverlay.addEventListener('click', (e) => {
-    if (e.target === portalOverlay) closePortal();
-  });
+  function login(e) {
+    e.preventDefault();
+    alert("Login successful (demo)");
+    closeModal();
+  }
 </script>
 <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
-<script>
-const themeToggle = document.getElementById("theme-toggle");
-const themeIcon = themeToggle.querySelector("i");
 
-/* Load saved theme */
-if(localStorage.getItem("theme") === "dark"){
-  document.body.classList.add("dark-mode");
-  themeIcon.classList.remove("fa-moon");
-  themeIcon.classList.add("fa-sun");
-}
+<!-- Botpress Chatbot Scripts -->
 
-themeToggle.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-
-  if(document.body.classList.contains("dark-mode")){
-    localStorage.setItem("theme", "dark");
-    themeIcon.classList.remove("fa-moon");
-    themeIcon.classList.add("fa-sun");
-  } else {
-    localStorage.setItem("theme", "light");
-    themeIcon.classList.remove("fa-sun");
-    themeIcon.classList.add("fa-moon");
-  }
-});
-</script>
 </body>
 </html>
