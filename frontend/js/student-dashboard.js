@@ -1,4 +1,38 @@
+const API_BASE = "http://localhost:5000/api";
+
 const APPLICATION_KEY = "student_applications";
+
+const session = JSON.parse(localStorage.getItem("placementor_session"));
+
+if (!session || !session.token || session.user.role !== "student") {
+  window.location.href = "../login.html";
+}
+
+const token = session.token;
+
+async function apiRequest(endpoint, method = "GET", body = null) {
+  const options = {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  if (body) {
+    options.body = JSON.stringify(body);
+  }
+
+  const response = await fetch(`${API_BASE}${endpoint}`, options);
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Request failed");
+  }
+
+  return data;
+}
 
 const session = JSON.parse(localStorage.getItem("placementor_session"));
 
@@ -133,7 +167,9 @@ function renderRecentlyAppliedCompanies(apps) {
 
     const company = app.job?.company || "Unknown Company";
 
-    const status = app.status || "Pending";
+    const status = (app.status || "Pending")
+  .toLowerCase()
+  .replace(/\s+/g, "-");
 
     const appliedDate = app.createdAt
       ? new Date(app.createdAt).toLocaleDateString()
@@ -158,9 +194,9 @@ function renderRecentlyAppliedCompanies(apps) {
 
         </div>
 
-        <span class="company-status status-${status.toLowerCase()}">
-          ${status}
-        </span>
+        <span class="company-status status-${status}">
+  ${status.toUpperCase()}
+</span>
 
       </div>
     `;
