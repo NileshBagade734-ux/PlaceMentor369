@@ -11,53 +11,89 @@
 <body class="bg-slate-50 overflow-hidden">
 
 <div class="flex h-screen">
-<aside class="w-64 bg-white border-r border-slate-200 p-6 hidden lg:flex flex-col">
+  <aside class="w-64 bg-white border-r border-slate-200 p-6 hidden lg:flex flex-col">
     <h1 class="text-xl font-bold text-indigo-600 mb-10 flex items-center gap-2">
-        <i data-lucide="zap"></i>
-        <span>Placementor</span>
+      <i data-lucide="zap"></i>
+      <span>Placementor</span>
     </h1>
-
     <nav class="flex-1 px-4 space-y-1">
-        <a href="../student/student-dashboard.html" class="sidebar-item">
-            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-            <span>Dashboard</span>
-        </a>
-
-        <a href="../student/student-profile.html" class="sidebar-item">
-            <i data-lucide="user" class="w-4 h-4"></i>
-            <span>Profile</span>
-        </a>
-
-        <a href="../student/student-joblist.html" class="sidebar-item active">
-            <i data-lucide="briefcase" class="w-4 h-4"></i>
-            <span>Jobs</span>
-        </a>
-
-        <a href="../student/student-application.html" class="sidebar-item">
-            <i data-lucide="file-text" class="w-4 h-4"></i>
-            <span>My Applications</span>
-        </a>
+      <a href="../student/student-dashboard.html" class="sidebar-item">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="../student/student-profile.html" class="sidebar-item">
+        <i data-lucide="user" class="w-4 h-4"></i>
+        <span>Profile</span>
+      </a>
+      <a href="../student/student-joblist.html" class="sidebar-item active">
+        <i data-lucide="briefcase" class="w-4 h-4"></i>
+        <span>Jobs</span>
+      </a>
+      <a href="../student/student-application.html" class="sidebar-item">
+        <i data-lucide="file-text" class="w-4 h-4"></i>
+        <span>My Applications</span>
+      </a>
     </nav>
-</aside>
-
+  </aside>
 
   <main class="flex-1 flex overflow-hidden">
+
+    <!-- Left panel: search + job list -->
     <section class="w-full md:w-2/5 border-r border-slate-200 overflow-y-auto p-6">
-      <div class="mb-6">
+      <div class="mb-4">
         <h2 class="text-2xl font-bold text-slate-800">Job Board</h2>
         <p class="text-sm text-slate-500" id="student-info">Loading profile...</p>
       </div>
+
+      <!-- Search & Filter Bar -->
+      <div class="search-filter-bar mb-4">
+
+        <!-- Search input -->
+        <div class="search-input-wrapper">
+          <i data-lucide="search" class="search-icon"></i>
+          <input
+            type="text"
+            id="job-search"
+            placeholder="Search by title or company..."
+            class="search-input"
+          />
+        </div>
+
+        <!-- Branch dropdown + Clear button -->
+        <div class="filter-row">
+          <select id="branch-filter" class="branch-select">
+            <option value="">All Branches</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Information Technology">Information Technology</option>
+            <option value="Electronics">Electronics &amp; Communication</option>
+            <option value="Mechanical">Mechanical Engineering</option>
+            <option value="Civil">Civil Engineering</option>
+            <option value="Electrical">Electrical Engineering</option>
+            <option value="Chemical Engineering">Chemical Engineering</option>
+            <option value="AI & Data Science">AI &amp; Data Science</option>
+          </select>
+          <button id="clear-filters" class="clear-btn">
+            <i data-lucide="x" class="w-3.5 h-3.5"></i> Clear
+          </button>
+        </div>
+
+        <!-- Results count -->
+        <p id="filter-count" class="filter-count"></p>
+      </div>
+
+      <!-- Job cards -->
       <div id="jobs-list" class="space-y-4"></div>
     </section>
 
+    <!-- Right panel: job detail -->
     <section class="flex-1 bg-white overflow-y-auto p-10 relative">
       <div id="empty-state" class="flex flex-col items-center justify-center h-full text-slate-400">
         <i data-lucide="layers" size="48" class="mb-4 opacity-20"></i>
         <p>Select a job to view details and apply</p>
       </div>
-      <div id="job-details" class="hidden">
-        </div>
+      <div id="job-details" class="hidden"></div>
     </section>
+
   </main>
 </div>
 
@@ -65,7 +101,5 @@
 <script src="../js/student-joblist.js"></script>
 <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
-
-<!-- Botpress Chatbot Scripts -->
 </body>
 </html>

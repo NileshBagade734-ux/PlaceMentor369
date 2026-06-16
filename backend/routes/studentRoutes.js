@@ -6,6 +6,7 @@ import {
   getJobs,
   applyJob,
   getApplications,
+  getSkillGapAnalysis,
   uploadResume
 } from "../controllers/studentController.js";
 import multer from "multer";
@@ -24,13 +25,20 @@ router.patch("/profile", verifyToken, saveProfile);
 router.get("/jobs", verifyToken, getJobs);
 
 // Apply for a job
-// backend/routes/studentRoutes.js
 router.post("/apply/:jobId", verifyToken, applyJob);
 
 // Get all applications of this student
 router.get("/applications", verifyToken, getApplications);
 
+// AI-powered skill gap analysis for a specific job
+router.get("/skill-gap/:jobId", verifyToken, getSkillGapAnalysis);
+
 // Upload resume and parse via AI
-router.post("/upload-resume", verifyToken, upload.single("resume"), uploadResume);
+router.post(
+  "/upload-resume",
+  verifyToken,
+  upload.single("resume"),
+  uploadResume
+);
 
 export default router;

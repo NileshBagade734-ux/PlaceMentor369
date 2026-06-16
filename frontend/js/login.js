@@ -1,9 +1,17 @@
+```javascript
 // login.js
+
 // -------------------------
 // Initialize Lucide & GSAP
 // -------------------------
 lucide.createIcons();
-gsap.to("#login-card", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" });
+
+gsap.to("#login-card", {
+  opacity: 1,
+  y: 0,
+  duration: 0.8,
+  ease: "power3.out"
+});
 
 // -------------------------
 // Elements
@@ -16,42 +24,18 @@ const toggleBtn = document.getElementById("togglePassword");
 const eyeIcon = document.getElementById("eyeIcon");
 
 // -------------------------
-// Toast Notification Helper
-// -------------------------
-function showToast(message, type = "error") {
-  const existingToast = document.querySelector(".toast-notification");
-  if (existingToast) existingToast.remove();
-
-  const toast = document.createElement("div");
-  toast.className = `toast-notification toast-${type}`;
-  toast.textContent = message;
-  toast.style.cssText = `
-    position: fixed; top: 20px; right: 20px; padding: 14px 20px;
-    border-radius: 10px; color: #fff; font-size: 14px; font-weight: 500;
-    z-index: 10000; opacity: 0; transform: translateX(100%);
-    transition: all 0.3s ease; max-width: 320px;
-    background: ${type === "error" ? "#ef4444" : "#10b981"};
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  `;
-  document.body.appendChild(toast);
-  requestAnimationFrame(() => {
-    toast.style.opacity = "1";
-    toast.style.transform = "translateX(0)";
-  });
-  setTimeout(() => {
-    toast.style.opacity = "0";
-    toast.style.transform = "translateX(100%)";
-    setTimeout(() => toast.remove(), 300);
-  }, 4000);
-}
-
-// -------------------------
 // Password Toggle
 // -------------------------
 toggleBtn.addEventListener("click", () => {
   const isPassword = passwordField.type === "password";
+
   passwordField.type = isPassword ? "text" : "password";
-  eyeIcon.setAttribute("data-lucide", isPassword ? "eye-off" : "eye");
+
+  eyeIcon.setAttribute(
+    "data-lucide",
+    isPassword ? "eye-off" : "eye"
+  );
+
   lucide.createIcons();
 });
 
@@ -59,63 +43,179 @@ toggleBtn.addEventListener("click", () => {
 // Login Form Submit
 // -------------------------
 loginForm.addEventListener("submit", async (e) => {
-  if (!loginForm.checkValidity()) {
-    return;
-  }
+  if (!loginForm.checkValidity()) return;
 
   e.preventDefault();
 
-  const email = document.getElementById("email")?.value;
+  const email = document.getElementById("email")?.value?.trim();
   const password = passwordField?.value;
   const role = document.getElementById("role")?.value;
 
   if (!email || !password || !role) {
-    showToast("Please fill all fields!");
-    return;
+    return showToast("Please fill all fields!", "error");
   }
 
   loginBtn.disabled = true;
-  btnText.innerHTML = '<span class="spinner"></span> Authenticating...';
+  btnText.innerHTML =
+    '<span class="spinner"></span> Authenticating...';
 
   try {
-    const res = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, role })
+    const data = await apiRequest("/auth/login", "POST", {
+      email,
+      password,
+      role
     });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      showToast(data.message || "Login failed. Please check your credentials.");
-      return;
-    }
 
     showToast("Login successful! Redirecting...", "success");
 
     localStorage.setItem(
       "placementor_session",
-      JSON.stringify({ token: data.token, user: data.user })
+      JSON.stringify({
+        token: data.token,
+        user: data.user
+      })
     );
 
     setTimeout(() => {
-      if (data.user.role === "admin") {
-        window.location.href = "/frontend/admin/admin-dashboard.html";
-      } else if (data.user.role === "recruiter") {
-        window.location.href = "/frontend/recruiter/recruiter-dashboard.html";
-      } else {
-        window.location.href = "/frontend/student/student-dashboard.html";
+      switch (data.user.role) {
+        case "admin":
+          window.location.href =
+            "/frontend/admin/admin-dashboard.html";
+          break;
+
+        case "recruiter":
+          window.location.href =
+            "/frontend/recruiter/recruiter-dashboard.html";
+          break;
+
+        default:
+          window.location.href =
+            "/frontend/student/student-dashboard.html";
       }
     }, 800);
 
   } catch (err) {
     console.error("Login Error:", err);
-    showToast("Server error. Try again later.");
+
+    showToast(
+      err.message || "Server error. Try again later.",
+      "error"
+    );
   } finally {
     setTimeout(() => {
       loginBtn.disabled = false;
-      btnText.innerHTML = '<i data-lucide="log-in"></i> <span id="btnText">Sign In</span>';
+
+      btnText.innerHTML =
+        '<i data-lucide="log-in"></i> <span>Sign In</span>';
+
       lucide.createIcons();
     }, 800);
   }
 });
+
+// ============================
+// PREMIUM TOAST SYSTEM
+// ============================
+function showToast(message, type = "success") {
+  let container = document.getElementById("toast-container");
+
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "toast-container";
+    container.className =
+      "fixed top-5 right-5 z-[9999] flex flex-col gap-3 max-w-sm w-full px-4 md:px-0";
+
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement("div");
+  const isSuccess = type === "success";
+
+  toast.className = `
+    flex items-start gap-3 p-4 rounded-xl border backdrop-blur-md
+    shadow-xl transition-all duration-300 transform
+    translate-x-full opacity-0
+    ${
+      isSuccess
+        ? "bg-white/95 border-emerald-100 shadow-emerald-100/50"
+        : "bg-white/95 border-rose-100 shadow-rose-100/50"
+    }
+  `;
+
+  const successIcon = `
+    <svg class="w-5 h-5 text-emerald-500 flex-shrink-0"
+      fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24">
+      <path stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z">
+      </path>
+    </svg>
+  `;
+
+  const errorIcon = `
+    <svg class="w-5 h-5 text-rose-500 flex-shrink-0"
+      fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24">
+      <path stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
+      </path>
+    </svg>
+  `;
+
+  const closeIcon = `
+    <svg class="w-4 h-4 text-slate-400 hover:text-slate-600 transition"
+      fill="none" stroke="currentColor" stroke-width="2.5"
+      viewBox="0 0 24 24">
+      <path stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M6 18L18 6M6 6l12 12">
+      </path>
+    </svg>
+  `;
+
+  toast.innerHTML = `
+    ${isSuccess ? successIcon : errorIcon}
+    <div class="flex-1 text-sm font-semibold text-slate-800 leading-relaxed">
+      ${message}
+    </div>
+    <button class="flex-shrink-0 focus:outline-none ml-1">
+      ${closeIcon}
+    </button>
+  `;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.remove("translate-x-full", "opacity-0");
+    toast.classList.add("translate-x-0", "opacity-100");
+  }, 50);
+
+  toast.querySelector("button").addEventListener("click", () => {
+    closeToast(toast);
+  });
+
+  setTimeout(() => {
+    closeToast(toast);
+  }, 4000);
+}
+
+function closeToast(toast) {
+  if (!toast.parentNode) return;
+
+  toast.classList.remove(
+    "translate-x-0",
+    "opacity-100"
+  );
+
+  toast.classList.add(
+    "translate-x-full",
+    "opacity-0"
+  );
+
+  setTimeout(() => {
+    toast.remove();
+  }, 300);
+}
+```

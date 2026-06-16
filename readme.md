@@ -1,4 +1,4 @@
-# PlacementorAI - Full-Stack Placement Management System
+# 🎯 PlacementorAI – Full-Stack Placement Management System
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-brightgreen.svg)](https://nodejs.org/)
@@ -6,35 +6,12 @@
 [![Express.js](https://img.shields.io/badge/Express-5.x-lightgrey.svg)](https://expressjs.com/)
 
 PlacementorAI is a role-based placement management platform designed to simplify campus recruitment workflows using a clean architecture and AI-guided assistance.
+
 The system clearly separates **Students, Recruiters, and Admins** to ensure security, transparency, and real-world usability.
 
 ---
 
-## Quick Start
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/KGFCH2/PlaceMentor369.git
-cd PlaceMentor369
-
-# 2. Set up environment variables
-cp backend/.env.example backend/.env
-# Edit backend/.env with your MongoDB connection string and JWT secret
-
-# 3. Install dependencies
-npm install
-cd backend && npm install && cd ..
-
-# 4. Start the backend server
-cd backend
-npm run dev
-```
-
-The backend runs on `http://localhost:5000`.
-
----
-
-## Project Overview
+# 🚀 Project Overview
 
 PlacementorAI helps educational institutions and recruiters manage placements efficiently by:
 
@@ -45,205 +22,323 @@ PlacementorAI helps educational institutions and recruiters manage placements ef
 
 ---
 
-## User Roles & Responsibilities
+# ⚡ Quick Start
 
-### Student
+```bash
+# Clone repository
+git clone https://github.com/KGFCH2/PlaceMentor369.git
+
+cd PlaceMentor369
+
+# Install dependencies
+npm install
+
+cd backend
+npm install
+
+# Create environment file
+cp .env.example .env
+
+# Start backend
+npm run dev
+```
+
+Backend runs on:
+
+```txt
+http://localhost:5000
+```
+
+---
+
+# 👥 User Roles & Responsibilities
+
+## 🎓 Student
 
 - Register & login securely
 - Create and manage profile (CGPA, branch, skills, resume)
 - View approved & eligible jobs
-- Apply to jobs (creates application records)
+- Apply to jobs
 - Track application status (read-only)
 - Get AI guidance for:
   - Resume improvement
   - Interview preparation
   - Career and skill advice
 
-> Students cannot update or delete applications.
+❌ Students cannot update or delete applications.
 
-### Recruiter
+---
+
+## 🧑‍💼 Recruiter
 
 - Register & login
 - Post job openings
 - View applicants for their jobs
-- Update application status (Shortlisted / Rejected)
+- Update application status
+  - Shortlisted
+  - Rejected
 - Follow best hiring practices with AI guidance
 
-> Recruiters cannot apply to jobs.
+❌ Recruiters cannot apply to jobs.
 
-### Admin
+---
+
+## 🛡️ Admin
 
 - Login via platform-provided credentials
 - Verify students and recruiters
 - Approve or reject job postings
-- Monitor platform-wide metrics and statistics
-- Maintain governance and platform integrity
+- Monitor platform-wide metrics
+- Maintain platform governance
 
-> Admins cannot create or update applications.
+❌ Admins cannot create or update applications.
 
 ---
 
-## Core System Rule
+# 🔐 Core System Rule
 
-> **Students create applications**
-> **Recruiters update application status**
-> **Admins only observe and approve**
+> Students create applications  
+> Recruiters update application status  
+> Admins only observe and approve
 
 This strict separation avoids bugs, conflicts, and unauthorized actions.
 
 ---
 
-## AI Usage & Governance
+# 🤖 AI Usage & Governance
 
-- AI is **advisory only**
+- AI is advisory only
 - AI never:
   - Logs users in
   - Stores credentials
   - Applies to jobs
-  - Shortlists or rejects candidates
-- All decisions are **human-driven**
-- AI explains workflows in simple language
+  - Shortlists candidates
+  - Rejects candidates
+- All decisions remain human-driven
+- AI provides explanations and guidance only
 
 ---
 
-## Tech Stack
+# 🛠️ Tech Stack
 
-### Frontend
+## Frontend
 
 | Technology | Purpose |
-|------------|---------|
+|------------|----------|
 | HTML5 | Semantic markup |
-| CSS3 | Styling with custom properties |
-| JavaScript (ES6+) | Interactive logic |
-| Tailwind CSS | Utility-first styling |
-| Lucide Icons | Modern icon set |
+| CSS3 | Styling |
+| JavaScript (ES6+) | Client-side logic |
+| Tailwind CSS | UI styling |
+| Lucide Icons | Icons |
 | GSAP | Animations |
 
-### Backend
+## Backend
 
 | Technology | Purpose |
-|------------|---------|
-| Node.js | Runtime environment |
-| Express.js 5.x | Web framework |
+|------------|----------|
+| Node.js | Runtime |
+| Express.js | API framework |
 | MongoDB | Database |
-| Mongoose | ODM for MongoDB |
+| Mongoose | ODM |
 | JWT | Authentication |
 | bcryptjs | Password hashing |
-| express-validator | Input validation |
+| express-validator | Validation |
+| BullMQ | Background jobs |
+| Redis | Queue processing |
+| Socket.IO | Real-time notifications |
 
 ---
 
-## Project Structure
+# 📁 Project Folder Structure
 
+## Backend
+
+```txt
+backend/
+│
+├── config/
+│   ├── db.js
+│   ├── env.js
+│   └── redis.js
+│
+├── controllers/
+│   ├── authController.js
+│   ├── adminController.js
+│   ├── recruiterController.js
+│   └── studentController.js
+│
+├── middlewares/
+│   ├── authMiddleware.js
+│   ├── roleMiddleware.js
+│   ├── errorHandler.js
+│   └── errorMiddleware.js
+│
+├── models/
+│   ├── User.js
+│   ├── Student.js
+│   ├── Recruiter.js
+│   ├── Job.js
+│   └── Application.js
+│
+├── routes/
+│   ├── authRoutes.js
+│   ├── adminRoutes.js
+│   ├── recruiterRoutes.js
+│   └── studentRoutes.js
+│
+├── workers/
+│   └── aiWorker.js
+│
+├── utils/
+│   ├── jwt.js
+│   ├── response.js
+│   └── AppError.js
+│
+├── seed.js
+├── app.js
+└── server.js
 ```
-PlaceMentor369/
-├── backend/
-│   ├── config/          # Database & environment config
-│   ├── controllers/     # Request handlers
-│   ├── middlewares/     # Auth, validation, error handling
-│   ├── models/          # Mongoose schemas
-│   ├── routes/          # API route definitions
-│   ├── utils/           # Helper functions
-│   ├── server.js        # Express app entry point
-│   └── seed.js          # Database seeder
-├── frontend/
-│   ├── admin/           # Admin dashboard pages
-│   ├── recruiter/       # Recruiter dashboard pages
-│   ├── student/         # Student dashboard pages
-│   ├── css/             # Stylesheets
-│   ├── js/              # JavaScript modules
-│   ├── utils/           # Shared frontend utilities
-│   ├── index.html       # Landing page
-│   ├── login.html       # Login page
-│   └── register.html    # Registration page
-├── SECURITY.md          # Security policy
-├── Contributing.md      # Contribution guidelines
-└── readme.md            # Project documentation
+
+## Frontend
+
+```txt
+frontend/
+│
+├── admin/
+│   ├── admin-dashboard.html
+│   ├── admin-managejob.html
+│   └── admin-studentverify.html
+│
+├── recruiter/
+│   ├── recruiter-dashboard.html
+│   ├── postjob.html
+│   └── manage-applicant.html
+│
+├── student/
+│   ├── student-dashboard.html
+│   ├── student-joblist.html
+│   ├── student-application.html
+│   └── student-profile.html
+│
+├── css/
+├── js/
+├── utils/
+│
+├── index.html
+├── login.html
+└── register.html
 ```
 
 ---
 
-## Environment Variables
+# ⚙️ Environment Variables
 
-Create a `.env` file in the `backend/` directory:
+Create a `.env` file inside `backend/`.
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `PORT` | Server port | `5000` |
-| `MONGO_URI` | MongoDB connection string | `mongodb://localhost:27017/placementorai` |
-| `JWT_SECRET` | Secret key for JWT signing | `your-secret-key` |
-| `FRONTEND_URL` | Allowed CORS origin | `http://localhost:5500` |
-| `NODE_ENV` | Environment mode | `development` |
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+FRONTEND_URL=http://localhost:5500
+NODE_ENV=development
+```
 
-> Copy `backend/.env.example` to get started: `cp backend/.env.example backend/.env`
+Example:
 
----
-
-## API Endpoints
-
-### Authentication
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Register a new user |
-| POST | `/api/auth/login` | Login with credentials |
-
-### Student (Protected)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/student/profile` | Get student profile |
-| PUT | `/api/student/profile` | Update student profile |
-| GET | `/api/student/jobs` | Get eligible jobs |
-| GET | `/api/student/applications` | Get applications |
-| POST | `/api/student/apply` | Apply to a job |
-
-### Recruiter (Protected)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/recruiter/jobs` | Create job posting |
-| GET | `/api/recruiter/jobs` | Get recruiter's jobs |
-| GET | `/api/recruiter/applications` | Get applicants |
-| PUT | `/api/recruiter/applications/:id` | Update application status |
-
-### Admin (Protected)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/admin/stats` | Get platform statistics |
-| GET | `/api/admin/users` | List all users |
-| PUT | `/api/admin/users/:id/verify` | Verify a user |
-| GET | `/api/admin/jobs` | List all job postings |
-| PUT | `/api/admin/jobs/:id/approve` | Approve/reject a job |
+```env
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/placementorai
+JWT_SECRET=mySuperSecretKey
+FRONTEND_URL=http://localhost:5500
+NODE_ENV=development
+```
 
 ---
 
-## Contributing
+# 📡 API Endpoints
 
-We welcome contributions! Please read our [Contributing Guide](Contributing.md) for details on our code of conduct and the process for submitting pull requests.
+## Authentication
 
-### Development Workflow
+| Method | Endpoint |
+|----------|----------|
+| POST | /api/auth/register |
+| POST | /api/auth/login |
+
+## Student
+
+| Method | Endpoint |
+|----------|----------|
+| GET | /api/student/profile |
+| PATCH | /api/student/profile |
+| GET | /api/student/jobs |
+| POST | /api/student/apply/:jobId |
+| GET | /api/student/applications |
+| POST | /api/student/upload-resume |
+| GET | /api/student/skill-gap/:jobId |
+
+## Recruiter
+
+| Method | Endpoint |
+|----------|----------|
+| POST | /api/recruiter/jobs |
+| GET | /api/recruiter/jobs |
+| GET | /api/recruiter/applications |
+| PATCH | /api/recruiter/applications/:id |
+
+## Admin
+
+| Method | Endpoint |
+|----------|----------|
+| GET | /api/admin/stats |
+| GET | /api/admin/users |
+| PATCH | /api/admin/users/:id/verify |
+| GET | /api/admin/jobs |
+| PATCH | /api/admin/jobs/:id/approve |
+
+---
+
+# 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature-name`
-3. Make your changes
-4. Commit with a descriptive message: `git commit -m "feat: add your feature"`
-5. Push to your fork: `git push origin feature/your-feature-name`
-6. Open a Pull Request
+2. Create a branch
+
+```bash
+git checkout -b feature/my-feature
+```
+
+3. Commit changes
+
+```bash
+git commit -m "feat: add new feature"
+```
+
+4. Push changes
+
+```bash
+git push origin feature/my-feature
+```
+
+5. Open a Pull Request
 
 ---
 
-## Security
+# 🔒 Security
 
-Please read our [Security Policy](SECURITY.md) for information on how to report security vulnerabilities.
+- JWT authentication
+- Password hashing with bcrypt
+- Role-based authorization
+- Input validation
+- Protected API routes
+- Environment variable protection
 
 ---
 
-## License
+# 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License.
 
 ---
 
-Built with by the PlaceMentor369 Team
+## ❤️ Built by PlaceMentor369 Team
+
+Making placement management smarter with AI-assisted workflows.
