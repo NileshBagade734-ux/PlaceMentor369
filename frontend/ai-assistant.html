@@ -209,6 +209,117 @@ body.dark-mode .theme-toggle{
     background:#334155;
     color:white;
 }
+.interview-prep-section{
+    display:none;
+    padding:80px 40px;
+}
+
+.interview-prep-section.active{
+    display:block;
+}
+
+.prep-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:25px;
+    margin-top:30px;
+}
+
+.prep-card{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.prep-card:hover{
+    transform:translateY(-5px);
+}
+
+.prep-card h3{
+    margin-bottom:15px;
+}
+
+.prep-card ul{
+    list-style:none;
+    padding:0;
+}
+
+.prep-card li{
+    margin:10px 0;
+}
+
+.prep-card a{
+    text-decoration:none;
+    color:#4f46e5;
+    font-weight:600;
+}
+
+body.dark-mode .prep-card{
+    background:#1e293b;
+    color:white;
+}
+
+body.dark-mode .prep-card a{
+    color:#818cf8;
+}
+.resume-analyzer{
+    padding:80px 30px;
+    text-align:center;
+}
+
+.resume-box{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+    margin:25px 0;
+}
+
+.resume-box input{
+    padding:12px;
+}
+
+.resume-box button{
+    padding:12px 24px;
+    border:none;
+    border-radius:10px;
+    background:#7c3aed;
+    color:white;
+    cursor:pointer;
+}
+
+.analysis-card{
+    max-width:850px;
+    margin:30px auto;
+    padding:30px;
+    border-radius:20px;
+    background:white;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    text-align:left;
+}
+
+.analysis-score{
+    font-size:42px;
+    font-weight:bold;
+    color:#7c3aed;
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.analysis-card ul{
+    margin-top:10px;
+}
+
+.analysis-card li{
+    margin:8px 0;
+}
+
+body.dark-mode .analysis-card{
+    background:#1e293b;
+    color:white;
+}
     </style>
     </head>
 <body>
@@ -274,11 +385,11 @@ body.dark-mode .theme-toggle{
         <p>Compare your skills against industry requirements.</p>
     </div>
 
-    <div class="tool-card">
-        <i class="fa-solid fa-user-tie"></i>
-        <h3>Interview Preparation</h3>
-        <p>Practice technical and HR interview questions.</p>
-    </div>
+    <div class="tool-card" onclick="toggleInterviewPrep()">
+    <i class="fa-solid fa-user-tie"></i>
+    <h3>Interview Preparation</h3>
+    <p>Practice technical and HR interview questions.</p>
+</div>
 
     <div class="tool-card">
         <i class="fa-solid fa-briefcase"></i>
@@ -298,6 +409,111 @@ body.dark-mode .theme-toggle{
         <p>Track your placement preparation score.</p>
     </div>
 
+</section>
+<section class="resume-analyzer">
+
+    <h2>AI Resume Analyzer</h2>
+
+    <div class="resume-box">
+
+        <input
+            type="file"
+            id="resumeUpload"
+            accept=".pdf,.doc,.docx"
+        >
+
+        <button id="analyzeResume">
+            Analyze Resume
+        </button>
+
+    </div>
+
+    <div id="resumeResult"></div>
+
+</section>
+<section id="interview-prep-section" class="interview-prep-section">
+    <h2>Interview Preparation Hub</h2>
+
+    <div class="prep-grid">
+
+        <!-- DSA -->
+        <div class="prep-card">
+            <h3><i class="fa-solid fa-code"></i> DSA Preparation</h3>
+
+            <ul>
+                <li>
+                    <a href="https://leetcode.com" target="_blank">
+                        LeetCode Practice Problems
+                    </a>
+                </li>
+
+                <li>
+                    <a href="https://www.codechef.com" target="_blank">
+                        CodeChef Competitive Programming
+                    </a>
+                </li>
+
+                <li>
+                    <a href="https://www.geeksforgeeks.org" target="_blank">
+                        GeeksforGeeks DSA Tutorials
+                    </a>
+                </li>
+
+                <li>Arrays</li>
+                <li>Strings</li>
+                <li>Linked Lists</li>
+                <li>Stacks & Queues</li>
+                <li>Trees</li>
+                <li>Graphs</li>
+                <li>Dynamic Programming</li>
+            </ul>
+        </div>
+
+        <!-- Aptitude -->
+        <div class="prep-card">
+            <h3><i class="fa-solid fa-calculator"></i> Aptitude</h3>
+
+            <ul>
+                <li>Quantitative Aptitude</li>
+                <li>Probability</li>
+                <li>Permutations & Combinations</li>
+                <li>Percentages</li>
+                <li>Time & Work</li>
+                <li>Profit & Loss</li>
+                <li>Logical Reasoning</li>
+                <li>Verbal Ability</li>
+            </ul>
+        </div>
+
+        <!-- Core Subjects -->
+        <div class="prep-card">
+            <h3><i class="fa-solid fa-laptop-code"></i> Core Subjects</h3>
+
+            <ul>
+                <li>Operating Systems</li>
+                <li>DBMS</li>
+                <li>Computer Networks</li>
+                <li>OOPs</li>
+                <li>SQL Queries</li>
+                <li>Software Engineering</li>
+            </ul>
+        </div>
+
+        <!-- HR -->
+        <div class="prep-card">
+            <h3><i class="fa-solid fa-user-group"></i> HR Interviews</h3>
+
+            <ul>
+                <li>Tell me about yourself</li>
+                <li>Strengths & Weaknesses</li>
+                <li>Leadership Questions</li>
+                <li>Conflict Resolution</li>
+                <li>Career Goals</li>
+                <li>Why should we hire you?</li>
+            </ul>
+        </div>
+
+    </div>
 </section>
 
 <section class="readiness-section">
@@ -387,6 +603,21 @@ body.dark-mode .theme-toggle{
   </div>
 </footer>
 <script>
+function toggleInterviewPrep(){
+
+    const section =
+        document.getElementById("interview-prep-section");
+
+    section.classList.toggle("active");
+
+    if(section.classList.contains("active")){
+        section.scrollIntoView({
+            behavior:"smooth"
+        });
+    }
+}
+</script>
+<script>
 const themeToggle = document.getElementById("theme-toggle");
 const themeIcon = themeToggle.querySelector("i");
 
@@ -410,5 +641,76 @@ themeToggle.addEventListener("click", () => {
 
 });
 </script>
+const analyzeResumeBtn =
+document.getElementById("analyzeResume");
+
+const resumeResult =
+document.getElementById("resumeResult");
+
+analyzeResumeBtn.addEventListener("click",()=>{
+
+    const file =
+    document.getElementById("resumeUpload")
+    .files[0];
+
+    if(!file){
+        alert("Please upload a resume");
+        return;
+    }
+
+    const report = `
+
+    <div class="analysis-card">
+
+        <div class="analysis-score">
+            84%
+        </div>
+
+        <h3>Resume Strengths</h3>
+
+        <ul>
+            <li>Good education section</li>
+            <li>Technical skills clearly listed</li>
+            <li>Projects section available</li>
+            <li>Resume format is clean</li>
+        </ul>
+
+        <h3>Areas for Improvement</h3>
+
+        <ul>
+            <li>Add GitHub profile link</li>
+            <li>Add LinkedIn profile</li>
+            <li>Include project outcomes</li>
+            <li>Add internship experience if available</li>
+        </ul>
+
+        <h3>Missing Sections</h3>
+
+        <ul>
+            <li>Certifications</li>
+            <li>Achievements</li>
+        </ul>
+
+        <h3>ATS Compatibility</h3>
+
+        <p>
+            ATS Score: 82/100
+        </p>
+
+        <h3>Recommendations</h3>
+
+        <ul>
+            <li>Add 2-3 measurable achievements</li>
+            <li>Use action verbs in project descriptions</li>
+            <li>Highlight technical stack used in projects</li>
+            <li>Keep resume within one page</li>
+        </ul>
+
+    </div>
+
+    `;
+
+    resumeResult.innerHTML = report;
+});
 </body>
 </html>

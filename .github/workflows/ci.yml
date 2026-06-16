@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint & Format Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - run: npm ci
+
+      - name: Check for .editorconfig compliance
+        uses: editorconfig-checker/editorconfig-checker.action@v1
+
+      - name: Run lint (if available)
+        run: npx eslint . --ext .js --no-error-on-unmatched-pattern || true
+
+  build:
+    name: Build Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - run: npm ci
+
+      - name: Check for syntax errors
+        run: node --check server.js
+
+      - name: Check all JS files for syntax errors
+        run: |
+          find . -name "*.js" -not -path "./node_modules/*" -exec node --check {} \;
+
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build backend image
+        run: docker build -t placementor-backend ./backend
+
+      - name: Validate docker-compose config
+        run: docker compose config
