@@ -139,3 +139,9 @@ window.viewApplicants = function(jobId) {
   localStorage.setItem("filter_job_id", jobId);
   location.href = "manage-applicant.html";
 }
+
+// ---------------- VIEW ALL APPLICANTS ----------------
+window.viewAllApplicants = function() {
+  localStorage.removeItem("filter_job_id");
+  location.href = "manage-applicant.html";
+}
