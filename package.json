@@ -1,22 +1,24 @@
 {
-  "name": "amentor",
+  "name": "placementor369",
   "version": "1.0.0",
-  "description": "��#\u0000 \u0000P\u0000l\u0000a\u0000c\u0000e\u0000M\u0000e\u0000n\u0000t\u0000o\u0000r\u0000\r\u0000 \u0000",
-  "main": "index.js",
+  "description": "AI-powered campus placement management system",
+  "main": "backend/server.js",
   "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NileshBagade734-ux/PlaceMentor.git"
+    "url": "git+https://github.com/NileshBagade734-ux/PlaceMentor369.git"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/NileshBagade734-ux/PlaceMentor/issues"
+    "url": "https://github.com/NileshBagade734-ux/PlaceMentor369/issues"
   },
-  "homepage": "https://github.com/NileshBagade734-ux/PlaceMentor#readme",
+  "homepage": "https://github.com/NileshBagade734-ux/PlaceMentor369#readme",
   "devDependencies": {
     "autoprefixer": "^10.4.23",
     "nodemon": "^3.1.11",

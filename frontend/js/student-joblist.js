@@ -1,7 +1,6 @@
 /* ==========================================================
    STORAGE KEYS & TOKEN
 ========================================================== */
-const API = "http://localhost:5000/api/student";
 const USER_KEY = "current_user";
 const APPLICATION_KEY = "student_applications";
 
@@ -13,17 +12,11 @@ function getToken() {
 /* ==========================================================
    SESSION & DATA
 ========================================================== */
-
-// ✅ FIXED: Replace hardcoded fallback with session data
-const placementorSession = JSON.parse(
-  localStorage.getItem("placementor_session")
-);
-
 let studentSession = JSON.parse(localStorage.getItem(USER_KEY)) || {
-  name: placementorSession?.user?.name || "Student",
-  cgpa: 0,
-  branch: "",
-  skills: []
+  name: "Guest Student",
+  cgpa: 9.0,
+  branch: "Computer Science",
+  skills: ["React", "Node.js", "JavaScript"]
 };
 
 let skills = [...studentSession.skills];
@@ -57,20 +50,14 @@ async function init() {
   // Fetch student profile
   // -----------------------------
   try {
-    const resProfile = await fetch("http://localhost:5000/api/student/profile", {
-      headers: { "Authorization": `Bearer ${token}` }
-    });
-
-    if (resProfile.ok) {
-      const profile = await resProfile.json();
-      studentSession = {
-        name: profile.name || studentSession.name,
-        cgpa: profile.cgpa || studentSession.cgpa,
-        branch: profile.branch || studentSession.branch,
-        skills: profile.skills || studentSession.skills
-      };
-      skills = [...studentSession.skills];
-    }
+    const profile = await apiRequest("/student/profile", "GET");
+    studentSession = {
+      name: profile.name || studentSession.name,
+      cgpa: profile.cgpa || studentSession.cgpa,
+      branch: profile.branch || studentSession.branch,
+      skills: profile.skills || studentSession.skills
+    };
+    skills = [...studentSession.skills];
 
     const infoTag = document.getElementById("student-info");
     if (infoTag)
@@ -83,11 +70,8 @@ async function init() {
   // Fetch all approved jobs
   // -----------------------------
   try {
-    const resJobs = await fetch("http://localhost:5000/api/student/jobs", {
-      headers: { "Authorization": `Bearer ${token}` }
-    });
-    const jobsData = await resJobs.json();
-    if (resJobs.ok && jobsData.length > 0) {
+    const jobsData = await apiRequest("/student/jobs", "GET");
+    if (jobsData.length > 0) {
       allAvailableJobs = jobsData.map(job => ({
         id: job._id,
         title: job.title,
@@ -111,17 +95,9 @@ async function init() {
   // Fetch applied jobs
   // -----------------------------
   try {
-    const resApps = await fetch("http://localhost:5000/api/student/applications", {
-      headers: { "Authorization": `Bearer ${token}` }
-    });
-
-    if (resApps.ok) {
-      const apps = await resApps.json();
-      appliedJobs = apps.map(a => a.job._id);
-      localStorage.setItem(APPLICATION_KEY, JSON.stringify(appliedJobs));
-    } else {
-      appliedJobs = JSON.parse(localStorage.getItem(APPLICATION_KEY)) || [];
-    }
+    const apps = await apiRequest("/student/applications", "GET");
+    appliedJobs = apps.map(a => a.job._id);
+    localStorage.setItem(APPLICATION_KEY, JSON.stringify(appliedJobs));
   } catch (err) {
     console.error("Failed to fetch applied jobs:", err);
     appliedJobs = JSON.parse(localStorage.getItem(APPLICATION_KEY)) || [];
@@ -143,6 +119,7 @@ function renderJobList() {
 
   list.innerHTML = allAvailableJobs
     .map(job => {
+      // ✅ Eligibility logic fixed
       const isEligible =
         studentCGPA >= (job.cgpa || 0) &&
         (!job.branches || job.branches.length === 0 || job.branches.includes(studentBranch));
@@ -255,7 +232,7 @@ window.selectJob = function(id) {
 window.handleApply = async function (jobId) {
   console.log("🆔 jobId received:", jobId);
 
-  const token = getToken();
+  const token = getToken(); // ✅ FIX
 
   if (!token) {
     alert("Login required");
@@ -268,30 +245,16 @@ window.handleApply = async function (jobId) {
   }
 
   try {
-    const res = await fetch(`${API}/apply/${jobId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "Apply failed");
-    }
-
+    await apiRequest(`/student/apply/${jobId}`, "POST");
     alert("✅ Applied successfully");
-
     appliedJobs.push(jobId);
     localStorage.setItem(APPLICATION_KEY, JSON.stringify(appliedJobs));
-
   } catch (err) {
     console.error("Apply Error:", err);
     alert(err.message);
   }
 };
+
 
 /* ==========================================================
    DOM READY INIT
