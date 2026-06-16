@@ -47,8 +47,8 @@
                 <section class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                     <h3 class="font-bold mb-4">Personal Details</h3>
                     <div class="space-y-4">
-                        <input type="text" id="fullName" placeholder="Full Name" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
-                        <input type="text" id="rollNumber" placeholder="Roll Number" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="firstName" placeholder="First Name" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="lastName" placeholder="Last Name" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </section>
 
@@ -106,7 +106,10 @@ class="text-sm text-red-500 mt-2 hidden"></p>
         </button>
     </div>
 </section>
-            <div class="flex justify-end pt-4">
+            <div class="flex justify-end gap-3 pt-4">
+                <button id="resetProfileBtn" class="border border-rose-200 hover:bg-rose-50 text-rose-600 px-6 py-3 rounded-xl font-semibold transition transform active:scale-95">
+                    Reset Profile Data
+                </button>
                 <button id="saveBtn" class="bg-blue-600 text-white px-10 py-3 rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition transform active:scale-95">
                     Save Profile Changes
                 </button>
@@ -115,6 +118,7 @@ class="text-sm text-red-500 mt-2 hidden"></p>
     </main>
 </div>
 
+<script src="../js/config.js"></script>
 <script src="../js/student-profile.js"></script>
 <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>

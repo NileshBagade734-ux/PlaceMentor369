@@ -2,50 +2,35 @@
  * RECRUITER DASHBOARD JS
  *********************************/
 
-// ---------------- CONFIG ----------------
-const JOBS_API = "http://localhost:5000/api/recruiter/jobs";
-const APPS_API = "http://localhost:5000/api/recruiter/applications";
-
 // Get session & token
-const session = JSON.parse(localStorage.getItem("placementor_session"));
-if (!session || !session.token || session.user.role !== "recruiter") {
-  alert("Session invalid. Please login again.");
-  window.location.href = "login.html";
-}
-const token = session.token;
+//const session = JSON.parse(localStorage.getItem("placementor_session"));
+////if (!session || !session.token || session.user.role !== "recruiter") {
+//  alert("Session invalid. Please login again.");
+//  window.location.href = "login.html";
+//}
+//const token = session.token;
+const token = "";
 
 // ---------------- INIT ----------------
+"use strict";
+
 document.addEventListener("DOMContentLoaded", initDashboard);
 
 async function initDashboard() {
   try {
-    // -------- FETCH JOBS --------
-    const jobsRes = await fetch(JOBS_API, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    if (!jobsRes.ok) throw new Error("Failed to fetch jobs");
-    const jobs = await jobsRes.json();
+    const jobs = await apiRequest("/recruiter/jobs", "GET");
+    const applications = await apiRequest("/recruiter/applications", "GET");
 
-    // -------- FETCH APPLICATIONS --------
-    const appsRes = await fetch(APPS_API, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    if (!appsRes.ok) throw new Error("Failed to fetch applications");
-    const applications = await appsRes.json();
-
-    // -------- STATS --------
     const jobsCount = jobs.length;
     const appsCount = applications.length;
     const shortlistedCount = applications.filter(
       a => a.status?.toLowerCase() === "shortlisted"
     ).length;
 
-    // -------- UPDATE DOM STATS --------
     document.getElementById("count-jobs").textContent = jobsCount;
     document.getElementById("count-apps").textContent = appsCount;
     document.getElementById("count-shortlisted").textContent = shortlistedCount;
 
-    // -------- RENDER JOBS --------
     renderJobs(jobs, applications);
 
   } catch (err) {
@@ -76,6 +61,16 @@ function renderJobs(jobs, apps) {
 
   container.innerHTML = [...jobs].reverse().map(job => {
     const specificApps = apps.filter(a => a.job?._id === job._id).length;
+    const today = new Date();
+    const deadline = new Date(job.deadline);
+ 
+    const isExpired = deadline < today;
+
+    const jobStatus = isExpired ? "Inactive" : "Active";
+
+    const expiryColor = isExpired
+    ? "text-red-500"
+    : "text-green-600";  
     const badge = statusColors[job.status?.toLowerCase()] || "bg-slate-50 text-slate-600 border-slate-200";
 
     return `
@@ -83,8 +78,15 @@ function renderJobs(jobs, apps) {
         <div>
           <h4 class="font-bold text-slate-800">${job.title}</h4>
           <p class="text-sm text-slate-500">
-            <span class="capitalize">${job.status || 'Pending'}</span> • ${job.location || 'Remote'}
+          <span class="${expiryColor} font-semibold">
+          ${jobStatus}
+          </span>
+          • ${job.location || 'Remote'}
           </p>
+
+        <p class="text-xs mt-1 ${expiryColor}">
+        Deadline: ${deadline.toLocaleDateString()}
+      </p>
         </div>
 
         <div class="flex items-center gap-6">
@@ -96,6 +98,10 @@ function renderJobs(jobs, apps) {
             <button onclick="viewApplicants('${job._id}')" class="bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-50 shadow-sm transition-colors">
               Manage
             </button>
+            <button onclick="editJob('${job._id}')" 
+           class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors">
+           Edit
+          </button>
             <button onclick="deleteJob('${job._id}')" class="text-slate-400 hover:text-red-500 p-2 transition-colors">
               <i data-lucide="trash-2" class="w-5 h-5"></i>
             </button>
@@ -114,20 +120,18 @@ window.deleteJob = async function(jobId) {
   if(!confirm("Are you sure you want to delete this job?")) return;
 
   try {
-    const res = await fetch(`${JOBS_API}/${jobId}`, {
-      method: "DELETE",
-      headers: { 
-        "Authorization": `Bearer ${token}`
-      }
-    });
-
-    if (!res.ok) throw new Error("Failed to delete job");
-
+    await apiRequest(`/recruiter/jobs/${jobId}`, "DELETE");
     initDashboard();
   } catch (err) {
     console.error("Delete job error:", err);
     alert("Failed to delete job. Try again.");
   }
+}
+
+// ---------------- EDIT JOB ----------------
+window.editJob = function(jobId) {
+  localStorage.setItem("edit_job_id", jobId);
+  location.href = "postjob.html";
 }
 
 // ---------------- VIEW APPLICANTS ----------------

@@ -1,5 +1,3 @@
-const API_BASE = "http://localhost:5000/api/admin";
-
 function getToken() {
   const session = JSON.parse(localStorage.getItem("placementor_session"));
   return session?.token;
@@ -10,12 +8,7 @@ function getToken() {
 ========================= */
 async function loadAdminJobs() {
   try {
-    const res = await fetch(`${API_BASE}/jobs`, {
-      headers: { "Authorization": `Bearer ${getToken()}` }
-    });
-    if (!res.ok) throw new Error("Failed to fetch jobs");
-
-    const jobs = await res.json();
+    const jobs = await apiRequest("/admin/jobs", "GET");
     renderJobTable(jobs);
   } catch (err) {
     alert("Failed to load jobs");
@@ -71,11 +64,7 @@ function renderJobTable(jobs) {
 ========================= */
 async function approveJob(id) {
   try {
-    const res = await fetch(`${API_BASE}/jobs/${id}/approve`, {
-      method: "PATCH",
-      headers: { "Authorization": `Bearer ${getToken()}` }
-    });
-    if (!res.ok) throw new Error("Approval failed");
+    await apiRequest(`/admin/jobs/${id}/approve`, "PATCH");
     loadAdminJobs();
   } catch (err) {
     alert("Job approval failed");
@@ -86,11 +75,7 @@ async function approveJob(id) {
 async function deleteJob(id) {
   if (!confirm("Are you sure you want to reject/delete this job?")) return;
   try {
-    const res = await fetch(`${API_BASE}/jobs/${id}`, {
-      method: "DELETE",
-      headers: { "Authorization": `Bearer ${getToken()}` }
-    });
-    if (!res.ok) throw new Error("Delete failed");
+    await apiRequest(`/admin/jobs/${id}`, "DELETE");
     loadAdminJobs();
   } catch (err) {
     alert("Job deletion failed");

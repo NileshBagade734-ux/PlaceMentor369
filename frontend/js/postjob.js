@@ -136,27 +136,12 @@ if (jobForm) {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/api/recruiter/jobs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${session.token}`
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        alert("✅ Job posted successfully!");
-        window.location.href = "recruiter-dashboard.html";
-      } else {
-        console.error("Job post failed:", data);
-        alert(data.message || "Job post failed. Check console for details.");
-      }
+      const data = await apiRequest("/recruiter/jobs", "POST", payload);
+      alert("✅ Job posted successfully!");
+      window.location.href = "recruiter-dashboard.html";
     } catch (err) {
       console.error("Job Post Error:", err);
-      alert("Server error. Try again later.");
+      alert(err.message || "Server error. Try again later.");
     }
   });
 }
