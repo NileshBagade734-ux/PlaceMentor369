@@ -171,47 +171,65 @@ body {
     .md\:ml-64 {
         margin-left: 0;
     }
-}body { font-family: 'Inter', sans-serif; }
-
-.sidebar-item {
-    display: flex; align-items: center; gap: 0.75rem;
-    padding: 0.75rem 1rem; border-radius: 0.5rem;
-    font-size: 0.875rem; font-weight: 500;
-    color: #64748b; transition: all 0.2s;
-}
-.sidebar-item:hover, .sidebar-item.active {
-    background-color: #f1f5f9; color: #4f46e5;
 }
 
-.stat-card {
-    background: white; border: 1px solid #e2e8f0;
-    padding: 1.5rem; border-radius: 1rem;
-    display: flex; align-items: center; justify-content: space-between;
-    transition: transform 0.2s;
-}
-.stat-card:hover { transform: translateY(-3px); }
+/* =========================
+   Recently Applied Companies
+========================= */
 
-.stat-title { font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase; }
-.stat-value { font-size: 1.75rem; font-weight: 700; color: #0f172a; }
-
-.icon-box { width: 3rem; height: 3rem; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; }
-
-.btn-primary {
-    background: #4f46e5; color: white; padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;
-}
-.btn-secondary {
-    background: white; border: 1px solid #e2e8f0; padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;
+.company-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    padding: 1rem;
+    background: white;
+    transition: all 0.3s ease;
 }
 
-.logout-btn {
-    width: 100%; text-align: left; padding: 0.75rem 1rem;
-    color: #94a3b8; font-size: 0.875rem; display: flex; align-items: center; gap: 0.75rem;
+.company-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
-.logout-btn:hover { color: #ef4444; }.status-pending { background: #fffbeb; color: #92400e; border: 1px solid #fef3c7; }
-.status-shortlisted { background: #ecfdf5; color: #065f46; border: 1px solid #d1fae5; }
-.status-rejected { background: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; }
+
+.company-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.company-logo {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.company-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.company-date {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.company-status {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
 /* =====================================
    DARK MODE
 ===================================== */
@@ -221,13 +239,11 @@ body.dark-mode {
     color: #f8fafc;
 }
 
-/* Sidebar */
 body.dark-mode aside {
     background-color: #111827;
     border-color: #1e293b;
 }
 
-/* Main Cards */
 body.dark-mode .stat-card,
 body.dark-mode section {
     background-color: #1e293b;
@@ -235,7 +251,6 @@ body.dark-mode section {
     color: #f8fafc;
 }
 
-/* Text Colors */
 body.dark-mode h2,
 body.dark-mode h3,
 body.dark-mode h4,
@@ -245,25 +260,39 @@ body.dark-mode a {
     color: #f8fafc;
 }
 
-/* Buttons */
 body.dark-mode .btn-secondary {
     background-color: #334155;
     border-color: #475569;
     color: white;
 }
 
-/* Hover */
 body.dark-mode .sidebar-item:hover {
     background-color: #1e293b;
 }
 
-/* Applications List */
 body.dark-mode #applications-list > div {
     border-color: #334155;
 }
 
-/* Theme Button */
 body.dark-mode #themeToggle {
     background-color: #334155;
     color: white;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fef3c7;
+}
+
+.status-shortlisted {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #d1fae5;
+}
+
+.status-rejected {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fee2e2;
 }

@@ -1,4 +1,38 @@
+const API_BASE = "http://localhost:5000/api";
+
 const APPLICATION_KEY = "student_applications";
+
+const session = JSON.parse(localStorage.getItem("placementor_session"));
+
+if (!session || !session.token || session.user.role !== "student") {
+  window.location.href = "../login.html";
+}
+
+const token = session.token;
+
+async function apiRequest(endpoint, method = "GET", body = null) {
+  const options = {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  if (body) {
+    options.body = JSON.stringify(body);
+  }
+
+  const response = await fetch(`${API_BASE}${endpoint}`, options);
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Request failed");
+  }
+
+  return data;
+}
 
 const session = JSON.parse(localStorage.getItem("placementor_session"));
 
@@ -22,17 +56,13 @@ async function initDashboard() {
 
 async function loadProfileCompletion() {
   try {
-    const res = await fetch(`${API_BASE}/student/profile`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    if (!res.ok) return;
-    const profile = await res.json();
+    const profile = await apiRequest("/student/profile", "GET");
 
     if (!profile) return;
 
-    const isBranchFilled = profile.branch && 
-                           profile.branch.trim() !== "" && 
-                           profile.branch.trim().toLowerCase() !== "select branch" && 
+    const isBranchFilled = profile.branch &&
+                           profile.branch.trim() !== "" &&
+                           profile.branch.trim().toLowerCase() !== "select branch" &&
                            profile.branch.trim().toLowerCase() !== "choose your branch";
 
     const nameParts = (profile.name || "").trim().split(/\s+/);
@@ -65,11 +95,17 @@ function showWelcome() {
 }
 
 async function loadApplications() {
-  const data = await apiRequest("/student/applications", "GET");
+  try {
+    const data = await apiRequest("/student/applications", "GET");
 
-  localStorage.setItem(APPLICATION_KEY, JSON.stringify(data));
-  updateStats(data);
-  renderDashboardTable(data);
+    localStorage.setItem(APPLICATION_KEY, JSON.stringify(data));
+    updateStats(data);
+    renderDashboardTable(data);
+    renderRecentlyAppliedCompanies(data);
+  } catch (err) {
+    console.error("Dashboard error:", err);
+    alert(err.message || "Failed to load applications. Please refresh.");
+  }
 }
 
 function updateStats(apps) {
@@ -87,19 +123,85 @@ function renderDashboardTable(apps) {
     return;
   }
 
-  list.innerHTML = apps.slice(0, 3).map(app => `
-    <div class="flex justify-between p-4">
+  list.innerHTML = apps.slice(0, 3).map(app => {
+    const status = (app.status || "Pending").toLowerCase().replace(/\s+/g, "-");
+    const appliedDate = app.createdAt
+      ? new Date(app.createdAt).toLocaleDateString()
+      : "N/A";
+
+    return `
+    <div class="flex justify-between p-4 border-b border-slate-200">
       <div>
         <p class="font-semibold">${app.job?.title || "Untitled Job"}</p>
         <p class="text-xs text-slate-500">${app.job?.company || "Company"}</p>
+        <p class="text-xs text-slate-400">Applied: ${appliedDate}</p>
       </div>
-      <span class="text-xs font-bold">${(app.status || "Pending").toUpperCase()}</span>
+      <span class="status-badge status-${status}">
+        ${app.status ? app.status.toUpperCase() : "PENDING"}
+      </span>
     </div>
-  `).join("");
+  `;
+  }).join("");
 
   lucide.createIcons();
 }
 
+function renderRecentlyAppliedCompanies(apps) {
+
+  const container = document.getElementById("recent-companies-list");
+
+  if (!container) return;
+
+  if (apps.length === 0) {
+
+    container.innerHTML = `
+      <div class="text-slate-400 text-center col-span-full">
+        No recently applied companies 🚀
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML = apps.slice(0, 4).map(app => {
+
+    const company = app.job?.company || "Unknown Company";
+
+    const status = (app.status || "Pending")
+  .toLowerCase()
+  .replace(/\s+/g, "-");
+
+    const appliedDate = app.createdAt
+      ? new Date(app.createdAt).toLocaleDateString()
+      : "N/A";
+
+    return `
+      <div class="company-card">
+
+        <div class="company-header">
+
+          <div class="company-logo">
+            ${company.charAt(0)}
+          </div>
+
+          <div>
+            <h4 class="company-name">${company}</h4>
+
+            <p class="company-date">
+              Applied: ${appliedDate}
+            </p>
+          </div>
+
+        </div>
+
+        <span class="company-status status-${status}">
+  ${status.toUpperCase()}
+</span>
+
+      </div>
+    `;
+  }).join("");
+}
 function attachLogout() {
   document.getElementById("logoutBtn")?.addEventListener("click", () => {
     localStorage.clear();
