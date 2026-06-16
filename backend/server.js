@@ -8,6 +8,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import requestId from "./middlewares/requestId.js";
 
 // Routes
 import studentRoutes from "./routes/studentRoutes.js";
@@ -78,6 +79,9 @@ if (redisConnection) {
 /* ============================
    GLOBAL MIDDLEWARE
 ============================ */
+
+// ✅ Request ID correlation
+app.use(requestId);
 
 // ✅ CORS (allow frontend URLs)
 app.use(
