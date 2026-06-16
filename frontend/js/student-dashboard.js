@@ -1,4 +1,3 @@
-const API_BASE = "http://localhost:5000/api";
 const APPLICATION_KEY = "student_applications";
 
 const session = JSON.parse(localStorage.getItem("placementor_session"));
@@ -7,7 +6,6 @@ if (!session || !session.token || session.user.role !== "student") {
   window.location.href = "../login.html";
 }
 
-const token = session.token;
 const user = session.user;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -18,7 +16,47 @@ document.addEventListener("DOMContentLoaded", () => {
 async function initDashboard() {
   showWelcome();
   await loadApplications();
+  await loadProfileCompletion();
   attachLogout();
+}
+
+async function loadProfileCompletion() {
+  try {
+    const res = await fetch(`${API_BASE}/student/profile`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!res.ok) return;
+    const profile = await res.json();
+
+    if (!profile) return;
+
+    const isBranchFilled = profile.branch && 
+                           profile.branch.trim() !== "" && 
+                           profile.branch.trim().toLowerCase() !== "select branch" && 
+                           profile.branch.trim().toLowerCase() !== "choose your branch";
+
+    const nameParts = (profile.name || "").trim().split(/\s+/);
+    const hasFirstName = nameParts[0] && nameParts[0].trim() !== "";
+    const hasLastName = nameParts[1] && nameParts[1].trim() !== "";
+
+    const filled = [
+      hasFirstName ? "true" : "",
+      hasLastName ? "true" : "",
+      isBranchFilled ? profile.branch.trim() : "",
+      profile.cgpa && profile.cgpa > 0 ? "true" : "",
+      profile.skills && profile.skills.length > 0 ? "true" : "",
+      profile.resume ? "true" : ""
+    ].filter(Boolean).length;
+
+    const percent = Math.floor((filled / 6) * 100);
+
+    const bar = document.getElementById("progress-bar");
+    const label = document.getElementById("completion-label");
+    if (bar) bar.style.width = percent + "%";
+    if (label) label.textContent = percent + "%";
+  } catch (err) {
+    console.error("Error loading profile completion:", err);
+  }
 }
 
 function showWelcome() {
@@ -27,37 +65,11 @@ function showWelcome() {
 }
 
 async function loadApplications() {
-  try {
-    const res = await fetch(`${API_BASE}/student/applications`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+  const data = await apiRequest("/student/applications", "GET");
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      const message = data?.message || "Failed to load applications";
-      if (res.status === 400 && message.toLowerCase().includes("profile")) {
-        alert("Please complete your student profile first.");
-        window.location.href = "../student/student-profile.html";
-        return;
-      }
-      throw new Error(message);
-    }
-
-    if (!Array.isArray(data)) {
-      throw new Error("Unexpected response format");
-    }
-
-    localStorage.setItem(APPLICATION_KEY, JSON.stringify(data));
-    updateStats(data);
-    renderDashboardTable(data);
-
-  } catch (err) {
-    console.error("Dashboard error:", err);
-    alert(err.message || "Failed to load applications. Please refresh.");
-  }
+  localStorage.setItem(APPLICATION_KEY, JSON.stringify(data));
+  updateStats(data);
+  renderDashboardTable(data);
 }
 
 function updateStats(apps) {

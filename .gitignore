@@ -4,7 +4,12 @@ node_modules/
 
 # Environment files (root + subfolders)
 .env
-.env.*
 **/.env
-**/.env.*
+**/.env.local
+**/.env.production
+**/.env.development
+
+# Allow .env.example files
+!.env.example
+!**/.env.example
 

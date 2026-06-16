@@ -2,34 +2,73 @@
 
 ## Supported Versions
 
-Currently, only the latest version of PlaceMentor369 is supported for security updates.
-
 | Version | Supported          |
 | ------- | ------------------ |
 | 1.0.x   | :white_check_mark: |
-| < 1.0   | :x:                |
 
 ## Reporting a Vulnerability
 
-We take the security of PlaceMentor369 seriously. If you believe you have found a security vulnerability, please report it to us as follows:
+We take the security of PlaceMentor369 seriously. If you discover a security vulnerability, please follow these steps:
 
-1. **Do not open a public GitHub issue.**
-2. Send an email to **security@placementorai.com** (placeholder) with a detailed description of the vulnerability.
-3. Include steps to reproduce the issue, potential impact, and any suggested fixes.
+### 1. Do **NOT** Open a Public Issue
 
-### What to Expect
+Security vulnerabilities should **not** be reported through public GitHub issues to prevent exploitation before a fix is released.
 
-- You will receive an acknowledgment of your report within 48 hours.
-- We will work to validate the vulnerability and provide a timeline for a fix.
-- Once fixed, we will coordinate a public disclosure and give you proper credit for the discovery.
+### 2. Send a Detailed Report
+
+Email your findings to the repository maintainer with the following information:
+
+- **Type of vulnerability** (e.g., XSS, CSRF, SQL Injection, Authentication Bypass)
+- **Affected component** (e.g., login page, API endpoint, session management)
+- **Steps to reproduce** with clear instructions
+- **Potential impact** of the vulnerability
+- **Screenshots or proof-of-concept** (if applicable)
+
+### 3. Expected Response Time
+
+- **Acknowledgment**: Within 48 hours of receiving your report
+- **Initial Assessment**: Within 5 business days
+- **Fix Timeline**: Depends on severity
+  - Critical: 7 days
+  - High: 14 days
+  - Medium: 30 days
+  - Low: 60 days
+
+### 4. What to Expect
+
+- You will receive a confirmation that your report has been received
+- The security team will investigate and validate the vulnerability
+- You will be updated on the progress of the fix
+- Once resolved, you may be credited in the release notes (optional)
 
 ## Security Best Practices
 
-For users and contributors:
-- Never commit `.env` files or hardcoded secrets.
-- Use strong, unique passwords for all accounts.
-- Keep your dependencies updated to the latest stable versions.
-- Report any suspicious activity immediately.
+### For Contributors
+
+- Never commit secrets, API keys, or credentials to the repository
+- Use environment variables for all sensitive configuration
+- Follow secure coding practices (input validation, parameterized queries)
+- Keep dependencies updated and review security advisories
+- Use HTTPS for all external API calls
+
+### Known Security Measures
+
+- JWT-based authentication with token expiration
+- Password hashing using bcrypt
+- Role-based access control (RBAC)
+- CORS configuration for trusted origins
+- Input sanitization on API endpoints
+
+## Security Checklist
+
+- [ ] All passwords are hashed using bcrypt
+- [ ] JWT tokens have appropriate expiration times
+- [ ] API endpoints are protected with authentication middleware
+- [ ] Role-based access control is enforced
+- [ ] Input validation is performed on all user-supplied data
+- [ ] CORS is configured to allow only trusted origins
+- [ ] Dependencies are regularly updated for security patches
 
 ---
-*Thank you for helping keep PlaceMentor369 secure!*
+
+Thank you for helping keep PlaceMentor369 secure!
