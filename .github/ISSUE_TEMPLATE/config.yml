@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/KGFCH2/PlaceMentor369/discussions
+    about: Please ask and answer questions here.
+  - name: Security Policy
+    url: https://github.com/KGFCH2/PlaceMentor369/security/policy
+    about: Please report security vulnerabilities here.
