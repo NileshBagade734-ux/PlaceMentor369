@@ -13,6 +13,23 @@
     .nav-menu { display: flex; align-items: center; }
     .nav-menu a { margin: 0 12px; text-decoration: none; color: #374151; font-weight: 500; transition: color 0.2s; }
     .nav-menu a:hover { color: #4f46e5; }
+    .nav-menu a.active {
+  color: #4f46e5;
+  font-weight: 700;
+  position: relative;
+}
+
+.nav-menu a.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+  background: #4f46e5;
+  border-radius: 2px;
+}
+    
     .login { color: #4f46e5; }
     
     .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; display: inline-flex; align-items: center; text-decoration: none; }
@@ -175,7 +192,13 @@ body.dark-mode .header{
   background: #1e293b;
   border-bottom: 1px solid #334155;
 }
+body.dark-mode .nav-menu a.active {
+  color: #818cf8;
+}
 
+body.dark-mode .nav-menu a.active::after {
+  background: #818cf8;
+}
 body.dark-mode .nav-menu a,
 body.dark-mode .logo,
 body.dark-mode .menu-toggle{
