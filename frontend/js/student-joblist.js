@@ -193,8 +193,42 @@ window.selectJob = function(id) {
               ? "bg-red-400 cursor-not-allowed"
               : "bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-1 active:scale-95"
           }">
-          ${isApplied ? "Application Sent" : !isEligible ? "Criteria Not Met" : "Apply Now"}
-        </button>
+<div class="flex gap-3 items-start">
+  <button
+    onclick="handleApply('${job.id}')"
+    ${isApplied || !isEligible ? "disabled" : ""}
+    class="px-10 py-4 rounded-xl font-bold text-white shadow-lg transition-all ${
+      isApplied
+        ? "bg-slate-300 cursor-not-allowed"
+        : !isEligible
+        ? "bg-red-400 cursor-not-allowed"
+        : "bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-1 active:scale-95"
+    }">
+    ${
+      isApplied
+        ? "Application Sent"
+        : !isEligible
+        ? "Criteria Not Met"
+        : "Apply Now"
+    }
+  </button>
+
+  <a
+    href="../student/skill-gap.html?jobId=${job.id}"
+    class="flex items-center justify-center gap-2 px-10 py-3 rounded-xl font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition-all text-sm">
+    📊 Skill Gap Analysis
+  </a>
+
+  ${
+    !isEligible && !isApplied
+      ? `
+      <p class="text-sm text-rose-600 bg-rose-50 border border-rose-100 rounded-xl p-3 mt-2">
+        You may not meet all job requirements.
+      </p>
+      `
+      : ""
+  }
+</div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
         <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">

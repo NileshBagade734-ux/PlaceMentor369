@@ -1,0 +1,196 @@
+/* ===========================
+   Skill Gap Analysis Styles
+=========================== */
+
+/* Sidebar */
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+.sidebar-item:hover {
+  background-color: #f8fafc;
+  color: #4f46e5;
+  transform: translateX(4px);
+}
+.sidebar-item.active {
+  background-color: #eef2ff;
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+/* Score ring */
+.score-ring-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+.score-ring-svg {
+  transform: rotate(-90deg);
+}
+.score-ring-bg {
+  fill: none;
+  stroke: #e2e8f0;
+  stroke-width: 10;
+}
+.score-ring-fill {
+  fill: none;
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.score-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Skill badges */
+.skill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+.skill-badge.matched {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #bbf7d0;
+}
+.skill-badge.missing {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+/* Recommendation card */
+.rec-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.rec-card:hover {
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.08);
+  border-color: #c7d2fe;
+}
+.rec-icon {
+  width: 40px;
+  height: 40px;
+  background: #eef2ff;
+  color: #4f46e5;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.1rem;
+}
+.rec-link {
+  color: #4f46e5;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.25rem;
+}
+.rec-link:hover { text-decoration: underline; }
+
+/* Readiness badge */
+.readiness-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.readiness-green  { background: #dcfce7; color: #15803d; }
+.readiness-blue   { background: #dbeafe; color: #1d4ed8; }
+.readiness-yellow { background: #fef9c3; color: #a16207; }
+.readiness-red    { background: #fee2e2; color: #b91c1c; }
+
+/* Progress bar */
+.score-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Stat mini-cards */
+.stat-mini {
+  text-align: center;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+}
+.stat-mini .value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+.stat-mini .label {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.15rem;
+}
+
+/* Skeleton loader */
+.skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 0.5rem;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Empty / error state */
+.state-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: #94a3b8;
+}
+.state-box .icon { font-size: 3rem; opacity: 0.5; }
+
+/* Fade-in animation */
+.fade-in {
+  animation: fadeIn 0.4s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
