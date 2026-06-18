@@ -72,16 +72,16 @@ async function init() {
   try {
     const jobsData = await apiRequest("/student/jobs", "GET");
     if (jobsData.length > 0) {
-      allAvailableJobs = jobsData.map(job => ({
-        id: job._id,
-        title: job.title,
-        company: job.company,
-        cgpa: job.cgpa || 0,
-        branch: job.branch || [],
-        deadline: job.deadline ? new Date(job.deadline).toLocaleDateString() : "Open",
-        skills: job.skillsRequired || [],
-        description: job.description
-      }));
+     allAvailableJobs = jobsData.map(job => ({
+  id: job._id,
+  title: job.title,
+  company: job.company,
+  cgpa: job.cgpa || 0,
+  branches: job.branch || [],
+  deadline: job.deadline ? new Date(job.deadline).toLocaleDateString() : "Open",
+  skills: job.skillsRequired || [],
+  description: job.description
+}));
     } else {
       console.warn("No jobs found. Using fallback.");
       allAvailableJobs = defaultJobs;
@@ -249,6 +249,8 @@ window.handleApply = async function (jobId) {
     alert("✅ Applied successfully");
     appliedJobs.push(jobId);
     localStorage.setItem(APPLICATION_KEY, JSON.stringify(appliedJobs));
+    renderJobList();
+    selectJob(jobId);
   } catch (err) {
     console.error("Apply Error:", err);
     alert(err.message);
