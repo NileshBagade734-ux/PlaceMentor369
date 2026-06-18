@@ -16,6 +16,8 @@ if (!session || !token || session.user?.role !== "recruiter") {
 /*********************************
  * INIT
  *********************************/
+"use strict";
+
 document.addEventListener("DOMContentLoaded", () => {
   const jobId = localStorage.getItem("filter_job_id"); // optional: filter per job
   loadApplicants(jobId);
