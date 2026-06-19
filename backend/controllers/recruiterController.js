@@ -40,7 +40,7 @@ export const createJob = async (req, res) => {
       skillsRequired,
       deadline: new Date(deadline),
       recruiter: recruiterId,
-      status: "approved",
+      status: "pending",
     });
 
     res.status(201).json({ success: true, job });

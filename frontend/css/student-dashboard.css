@@ -267,3 +267,13 @@ body.dark-mode #themeToggle {
     background-color: #334155;
     color: white;
 }
+/* Mobile responsiveness overrides */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .nav-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

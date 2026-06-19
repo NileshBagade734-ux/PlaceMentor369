@@ -1,6 +1,6 @@
 import express from "express";
 import { createJob, getJobs } from "../controllers/jobController.js";
-import { protect } from "../middlewares/auth.js";
+import { protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 

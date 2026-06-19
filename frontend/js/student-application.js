@@ -18,26 +18,17 @@ async function renderApplications() {
     const tableBody = document.getElementById("applicationsTable");
     if (!tableBody) return;
 
+    const token = JSON.parse(localStorage.getItem("placementor_session"))?.token;
+    if (!token) {
+        tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:40px; color:#64748b;">Login required.</td></tr>`;
+        return;
+    }
+
     try {
-        // Get token
-        const token = JSON.parse(localStorage.getItem("placementor_session"))?.token;
-        if (!token) {
-            tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:40px; color:#64748b;">Login required.</td></tr>`;
-            return;
-        }
-
-        // Fetch applications from backend
-        const res = await fetch("http://localhost:5000/api/student/applications", {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-
-        if (!res.ok) throw new Error("Failed to fetch applications");
-
-        const applications = await res.json();
+        const applications = await apiRequest("/student/applications", "GET");
 
         tableBody.innerHTML = "";
 
-        // Empty state
         if (!Array.isArray(applications) || applications.length === 0) {
             tableBody.innerHTML = `
                 <tr>
@@ -50,7 +41,6 @@ async function renderApplications() {
             return;
         }
 
-        // Render latest applications first
         applications.slice().reverse().forEach(app => {
             const statusText = app.status || "Pending";
             const statusClass = statusText.toLowerCase();
@@ -69,7 +59,6 @@ async function renderApplications() {
             `;
         });
 
-        // Save to localStorage (optional cache)
         localStorage.setItem("student_applications", JSON.stringify(applications));
 
     } catch (err) {

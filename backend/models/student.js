@@ -8,6 +8,8 @@ const studentSchema = new mongoose.Schema({
   college: { type: String, default: "" },
   skills: [{ type: String }],
   resume: { type: String },
+  aiReadinessScore: { type: Number, default: 0 },
+  aiRoadmap: [{ type: String }],
 
   // 🔥 ADD THIS
   status: {

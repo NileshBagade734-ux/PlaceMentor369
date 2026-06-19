@@ -1,6 +1,6 @@
 // protectedRoutes.js
 import express from "express";
-import { verifyToken } from "../middlewares/verifyToken.js"; // ✅ note the .js extension
+import { verifyToken } from "../middlewares/authMiddleware.js"; // ✅ note the .js extension
 
 const router = express.Router();
 

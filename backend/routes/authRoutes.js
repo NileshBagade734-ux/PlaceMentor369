@@ -1,10 +1,10 @@
 import express from "express";
 import { login, register } from "../controllers/authController.js";
-import { authLimiter } from "../middlewares/rateLimiter.js";
+import { validateRegister, validateLogin } from "../middlewares/validationMiddleware.js";
 
 const router = express.Router();
 
-router.post("/login", authLimiter, login);
-router.post("/register", authLimiter, register);   // 👈 THIS WAS MISSING
+router.post("/login", validateLogin, login);
+router.post("/register", validateRegister, register);
 
 export default router;
