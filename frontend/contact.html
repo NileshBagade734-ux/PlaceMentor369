@@ -196,13 +196,13 @@
 
   <header class="header">
     <div class="nav" style="position: relative;">
-      <div class="text-xl font-bold"><i class="fa-solid fa-arrow-up-right-dots"></i>  PlacementorAI</div>
+      <div class="text-xl font-bold"><i class="fa-solid fa-arrow-up-right-dots" aria-hidden="true"></i>  PlacementorAI</div>
       
-      <button class="menu-toggle" id="mobile-menu-btn" aria-label="Toggle Navigation Menu">
-        <i class="fa-solid fa-bars" id="menu-icon"></i>
+      <button class="menu-toggle" id="mobile-menu-btn" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="nav-links-target">
+        <i class="fa-solid fa-bars" id="menu-icon" aria-hidden="true"></i>
       </button>
 
-      <nav class="nav-menu" id="nav-links-target">
+      <nav class="nav-menu" id="nav-links-target" aria-label="Main Navigation">
         <a href="index.html">Home</a>
         <a href="contact.html">Contact</a>
         <a href="register.html">Sign Up</a>
@@ -314,10 +314,10 @@
           </h3>
 
           <form id="supportForm" class="space-y-4">
-            <input class="w-full border px-4 py-2 rounded-lg" placeholder="Your Name" required>
-            <input class="w-full border px-4 py-2 rounded-lg" type="email" placeholder="Your Email" required>
+            <input id="support-name" class="w-full border px-4 py-2 rounded-lg" placeholder="Your Name" aria-label="Your Name" required>
+            <input id="support-email" class="w-full border px-4 py-2 rounded-lg" type="email" placeholder="Your Email" aria-label="Your Email" required>
 
-            <select class="w-full border px-4 py-2 rounded-lg" required>
+            <select id="support-issue" class="w-full border px-4 py-2 rounded-lg" aria-label="Select Issue" required>
               <option value="">Select Issue</option>
               <option>Login Issue</option>
               <option>Application Issue</option>
@@ -325,10 +325,10 @@
               <option>Other</option>
             </select>
 
-            <textarea class="w-full border px-4 py-2 rounded-lg" rows="4"
-              placeholder="Describe your issue..." required></textarea>
+            <textarea id="support-message" class="w-full border px-4 py-2 rounded-lg" rows="4"
+              placeholder="Describe your issue..." aria-label="Describe your issue" required></textarea>
 
-            <button class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold">
+            <button class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold" aria-label="Submit Ticket">
               Submit Ticket
             </button>
           </form>
@@ -415,9 +415,10 @@
 
     if (mobileMenuBtn && navLinksTarget && menuIcon) {
       mobileMenuBtn.addEventListener('click', () => {
-        navLinksTarget.classList.toggle('active');
+        const isActive = navLinksTarget.classList.toggle('active');
+        mobileMenuBtn.setAttribute('aria-expanded', isActive ? 'true' : 'false');
         
-        if(navLinksTarget.classList.contains('active')) {
+        if(isActive) {
           menuIcon.classList.remove('fa-bars');
           menuIcon.classList.add('fa-xmark');
         } else {

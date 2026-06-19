@@ -201,15 +201,15 @@
 <header class="header">
   <div class="container nav" style="position: relative;">
     <div class="logo">
-      <i class="fa-solid fa-arrow-up-right-dots"></i> 
+      <i class="fa-solid fa-arrow-up-right-dots" aria-hidden="true"></i> 
       <span>PlacementorAI</span>
     </div>
     
-    <button class="menu-toggle" id="mobile-menu-btn" aria-label="Toggle Navigation Menu">
-      <i class="fa-solid fa-bars" id="menu-icon"></i>
+    <button class="menu-toggle" id="mobile-menu-btn" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="nav-links-target">
+      <i class="fa-solid fa-bars" id="menu-icon" aria-hidden="true"></i>
     </button>
 
-    <nav class="nav-menu" id="nav-links-target">
+    <nav class="nav-menu" id="nav-links-target" aria-label="Main Navigation">
       <a href="index.html">Home</a>
       <a href="About.html">About Us</a>
       <a href="contact.html">Contact</a>
@@ -217,7 +217,7 @@
       <a href="login.html" class="login">Login</a>
       <a href="register.html" class="btn primary" style="color: #ffffff !important;">
         Get Started
-        <i class="fa-solid fa-arrow-up-right-from-square" style="color: #ffffff !important;"></i>
+        <i class="fa-solid fa-arrow-up-right-from-square" style="color: #ffffff !important;" aria-hidden="true"></i>
       </a>    
     </nav>
   </div>
@@ -329,12 +329,12 @@
   </div>
 </div>
 
-<div id="modal" class="modal">
+<div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
   <div class="modal-box">
     <h2 id="modal-title">Login</h2>
     <form onsubmit="login(event)">
-      <input type="email" placeholder="Email" required />
-      <input type="password" placeholder="Password" required />
+      <input type="email" placeholder="Email" aria-label="Email Address" required />
+      <input type="password" placeholder="Password" aria-label="Password" required />
       <div class="modal-actions">
         <button class="btn primary" type="submit">Login</button>
         <button class="btn secondary" type="button" onclick="closeModal()">Cancel</button>
@@ -350,9 +350,10 @@
   const menuIcon = document.getElementById('menu-icon');
 
   mobileMenuBtn.addEventListener('click', () => {
-    navLinksTarget.classList.toggle('active');
+    const isActive = navLinksTarget.classList.toggle('active');
+    mobileMenuBtn.setAttribute('aria-expanded', isActive ? 'true' : 'false');
     
-    if(navLinksTarget.classList.contains('active')) {
+    if(isActive) {
       menuIcon.classList.remove('fa-bars');
       menuIcon.classList.add('fa-xmark');
     } else {

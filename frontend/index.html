@@ -582,20 +582,20 @@ body.dark-mode .journey-end {
 <!-- HEADER -->
 <header class="header">
   <div class="container nav">
-    <div class="logo"><i class="fa-solid fa-arrow-up-right-dots"></i> <span>PlacementorAI</span></div>
-    <button class="hamburger" aria-label="Toggle navigation menu" onclick="toggleMenu()">
-      <i class="fa-solid fa-bars" id="menuIcon"></i>
+    <div class="logo"><i class="fa-solid fa-arrow-up-right-dots" aria-hidden="true"></i> <span>PlacementorAI</span></div>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks" onclick="toggleMenu()">
+      <i class="fa-solid fa-bars" id="menuIcon" aria-hidden="true"></i>
     </button>
-    <div class="nav-links" id="navLinks">
+    <nav class="nav-links" id="navLinks" aria-label="Main Navigation">
       <a href="index.html">Home</a>
       <a href="contact.html">Contact</a>
       <a href="register.html">Sign Up</a>
       <a href="login.html" class="login">Login</a>
       <a href="register.html" class="btn primary">
         Get Started
-        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
       </a>
-    </div>
+    </nav>
   </div>
 </header>
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
@@ -903,12 +903,12 @@ body.dark-mode .journey-end {
 </footer>
 
 <!-- LOGIN MODAL -->
-<div id="modal" class="modal">
+<div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
   <div class="modal-box">
     <h2 id="modal-title">Login</h2>
     <form onsubmit="login(event)">
-      <input type="email" placeholder="Email" required />
-      <input type="password" placeholder="Password" required />
+      <input type="email" placeholder="Email" aria-label="Email Address" required />
+      <input type="password" placeholder="Password" aria-label="Password" required />
       <div class="modal-actions">
         <button class="btn primary" type="submit">Login</button>
         <button class="btn secondary" type="button" onclick="closeModal()">Cancel</button>
@@ -923,9 +923,13 @@ body.dark-mode .journey-end {
     const navLinks = document.getElementById("navLinks");
     const overlay = document.getElementById("overlay");
     const menuIcon = document.getElementById("menuIcon");
-    navLinks.classList.toggle("active");
+    const hamburgerBtn = document.getElementById("hamburgerBtn");
+    const isActive = navLinks.classList.toggle("active");
     overlay.classList.toggle("active");
-    menuIcon.className = navLinks.classList.contains("active")
+    if (hamburgerBtn) {
+      hamburgerBtn.setAttribute("aria-expanded", isActive ? "true" : "false");
+    }
+    menuIcon.className = isActive
       ? "fa-solid fa-xmark"
       : "fa-solid fa-bars";
   }
