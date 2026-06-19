@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interview Prep Tracker – PlacementorAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      /* Align styling with project dashboard standards */
+      .sidebar-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.625rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #475569;
+        transition: all 0.2s;
+        text-decoration: none;
+      }
+      .sidebar-item:hover {
+        background-color: #f8fafc;
+        color: #1e1b4b;
+      }
+      .sidebar-item.active {
+        background-color: #e0e7ff;
+        color: #4f46e5;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 min-h-screen text-slate-800">
+    <header
+      class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center md:hidden"
+    >
+      <h1 class="text-lg font-bold text-indigo-600">PlacementorAI</h1>
+      <a
+        href="./student-dashboard.html"
+        class="text-xs font-semibold bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg flex items-center gap-1"
+      >
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Exit Tracker
+      </a>
+    </header>
+
+    <div class="flex">
+      <aside
+        class="w-64 bg-white border-r border-slate-200 min-h-screen p-6 hidden md:block"
+      >
+        <h1 class="text-xl font-bold text-indigo-600 mb-10">PlacementorAI</h1>
+        <nav class="space-y-1">
+          <a href="./student-dashboard.html" class="sidebar-item">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+          </a>
+          <a href="./student-profile.html" class="sidebar-item">
+            <i data-lucide="user" class="w-4 h-4"></i> Profile
+          </a>
+          <a href="./student-joblist.html" class="sidebar-item">
+            <i data-lucide="briefcase" class="w-4 h-4"></i> Jobs
+          </a>
+          <a href="./student-application.html" class="sidebar-item">
+            <i data-lucide="file-text" class="w-4 h-4"></i> My Applications
+          </a>
+          <a href="./prep-dashboard.html" class="sidebar-item active">
+            <i data-lucide="sliders" class="w-4 h-4"></i> Prep Tracker
+          </a>
+        </nav>
+      </aside>
+
+      <main class="flex-1 p-6 md:p-8 max-w-6xl mx-auto">
+        <header
+          class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+        >
+          <div>
+            <h2 class="text-2xl font-bold text-slate-800">
+              Interview Preparation
+            </h2>
+            <p class="text-slate-500 text-sm">
+              Monitor your module tracking status and analytics targets.
+            </p>
+          </div>
+          <div
+            class="bg-white border border-slate-200 rounded-xl px-5 py-3 flex items-center gap-4 shadow-sm w-full sm:w-auto"
+          >
+            <div>
+              <p
+                class="text-xs text-slate-400 font-bold uppercase tracking-wider"
+              >
+                Overall Completion
+              </p>
+              <h4
+                class="text-2xl font-black text-indigo-600"
+                id="overall-percentage"
+              >
+                0%
+              </h4>
+            </div>
+            <div
+              class="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 ml-auto"
+            >
+              <i data-lucide="award" class="w-6 h-6"></i>
+            </div>
+          </div>
+        </header>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 gap-6"
+          id="prep-modules-container"
+        ></div>
+      </main>
+    </div>
+
+    <script>
+      // Module Data Matrix matching instructions
+      const preparationModules = [
+        {
+          id: "aptitude",
+          name: "Aptitude & Logical Reasoning",
+          total: 40,
+          completed: 28,
+          color: "bg-amber-500",
+          icon: "brain",
+        },
+        {
+          id: "dsa",
+          name: "Data Structures & Algorithms",
+          total: 150,
+          completed: 95,
+          color: "bg-indigo-500",
+          icon: "code-2",
+        },
+        {
+          id: "core",
+          name: "Core CS Subjects (OS, DBMS, CN)",
+          total: 30,
+          completed: 12,
+          color: "bg-blue-500",
+          icon: "database",
+        },
+        {
+          id: "mock",
+          name: "Mock Interviews & Soft Skills",
+          total: 10,
+          completed: 6,
+          color: "bg-emerald-500",
+          icon: "video",
+        },
+      ];
+
+      function renderDashboard() {
+        const container = document.getElementById("prep-modules-container");
+        let totalTasks = 0;
+        let totalCompleted = 0;
+
+        const htmlContent = preparationModules
+          .map((mod) => {
+            const percentage = Math.round((mod.completed / mod.total) * 100);
+            totalTasks += mod.total;
+            totalCompleted += mod.completed;
+
+            return `
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:border-indigo-200 hover:shadow-md transition-all duration-300">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-700">
+                            <i data-lucide="${mod.icon}" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-base">${mod.name}</h4>
+                            <p class="text-xs text-slate-400 font-medium">${mod.completed} of ${mod.total} topics cleared</p>
+                        </div>
+                    </div>
+                    <span class="text-sm font-bold px-2.5 py-1 rounded-md bg-slate-50 text-slate-700 border border-slate-100">${percentage}%</span>
+                </div>
+                
+                <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden mb-2">
+                    <div class="${mod.color} h-2.5 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+                </div>
+            </div>
+          `;
+          })
+          .join("");
+
+        container.innerHTML = htmlContent;
+
+        // Calculate Global Target Progress
+        const overallPercentage = Math.round(
+          (totalCompleted / totalTasks) * 100,
+        );
+        document.getElementById("overall-percentage").textContent =
+          `${overallPercentage}%`;
+
+        if (window.lucide) lucide.createIcons();
+      }
+
+      document.addEventListener("DOMContentLoaded", renderDashboard);
+    </script>
+  </body>
+</html>

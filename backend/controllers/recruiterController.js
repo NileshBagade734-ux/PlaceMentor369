@@ -22,6 +22,7 @@ export const createJob = async (req, res) => {
       description,
       cgpa,
       branch,
+      branches,
       skillsRequired,
       deadline,
     } = req.body;
@@ -35,11 +36,11 @@ export const createJob = async (req, res) => {
       company,
       description,
       cgpa,
-      branch,
+      branch: branch || branches || [],
       skillsRequired,
       deadline: new Date(deadline),
       recruiter: recruiterId,
-      status: "approved",
+      status: "pending",
     });
 
     res.status(201).json({ success: true, job });
@@ -84,8 +85,12 @@ export const getAllRecruiterApplications = async (req, res) => {
 ====================================================== */
 export const updateApplicantStatus = async (req, res) => {
   try {
-    const { applicationId } = req.params;
+    const applicationId = req.params.applicationId || req.body.applicationId;
     const { status } = req.body;
+
+    if (!applicationId) {
+      return res.status(400).json({ message: "Application ID is required" });
+    }
 
     const application = await Application.findById(applicationId)
       .populate("student", "name email")
@@ -233,7 +238,7 @@ export const deleteJob = async (req, res) => {
   try {
     const job = await Job.findOne({
       _id: req.params.id,
-      recruiter: req.user._id,
+      recruiter: req.user.id,
     });
     if (!job) return res.status(404).json({ message: "Job not found" });
 

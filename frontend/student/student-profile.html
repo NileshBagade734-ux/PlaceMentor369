@@ -47,8 +47,8 @@
                 <section class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                     <h3 class="font-bold mb-4">Personal Details</h3>
                     <div class="space-y-4">
-                        <input type="text" id="fullName" placeholder="Full Name" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
-                        <input type="text" id="rollNumber" placeholder="Roll Number" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="firstName" placeholder="First Name" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="lastName" placeholder="Last Name" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </section>
 
@@ -57,14 +57,14 @@
                     <div class="space-y-4">
                         <select id="branch" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
     <option value="">Select Branch</option>
-    <option value="CSE">Computer Science</option>
-    <option value="IT">Information Technology</option>
-    <option value="ECE">Electronics & Communication</option>
-    <option value="ME">Mechanical Engineering</option>
-    <option value="CE">Civil Engineering</option>
-    <option value="EE">Electrical Engineering</option>
-    <option value="CHE">Chemical Engineering</option>
-    <option value="AIDS">AI & Data Science</option>
+    <option value="Computer Science">Computer Science</option>
+    <option value="Information Technology">Information Technology</option>
+    <option value="Electronics">Electronics & Communication</option>
+    <option value="Mechanical">Mechanical Engineering</option>
+    <option value="Civil">Civil Engineering</option>
+    <option value="Electrical">Electrical Engineering</option>
+    <option value="Chemical Engineering">Chemical Engineering</option>
+    <option value="AI & Data Science">AI & Data Science</option>
 </select>
                         <input type="number" id="cgpa" step="0.01" placeholder="Current CGPA" class="w-full p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
@@ -92,7 +92,8 @@
         <p class="text-xs text-gray-400 mt-1">PDF format preferred (Max 2MB)</p>
         <input type="file" id="resumeInput" accept=".pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
     </div>
-    
+    <p id="resumeError"
+class="text-sm text-red-500 mt-2 hidden"></p>
     <div id="resumeActions" class="mt-4 flex gap-3 hidden">
         <div class="flex-1 p-3 bg-blue-50 rounded-lg flex items-center justify-between">
             <span id="resumeFileName" class="text-sm text-blue-700 font-medium truncate px-2"></span>
@@ -105,7 +106,10 @@
         </button>
     </div>
 </section>
-            <div class="flex justify-end pt-4">
+            <div class="flex justify-end gap-3 pt-4">
+                <button id="resetProfileBtn" class="border border-rose-200 hover:bg-rose-50 text-rose-600 px-6 py-3 rounded-xl font-semibold transition transform active:scale-95">
+                    Reset Profile Data
+                </button>
                 <button id="saveBtn" class="bg-blue-600 text-white px-10 py-3 rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition transform active:scale-95">
                     Save Profile Changes
                 </button>
@@ -114,6 +118,7 @@
     </main>
 </div>
 
+<script src="../js/config.js"></script>
 <script src="../js/student-profile.js"></script>
 <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
