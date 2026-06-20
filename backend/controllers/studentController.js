@@ -101,9 +101,9 @@ export const applyJob = async (req, res) => {
       student: studentProfile._id,
       job: jobId
     });
+    job.applicants.push(application._id);
+    await job.save();
     console.log("🧰 application created:", application);
-
-    // ⚡ UPDATE JOB DOCUMENT: push application ID
    
 
     res.status(201).json({
