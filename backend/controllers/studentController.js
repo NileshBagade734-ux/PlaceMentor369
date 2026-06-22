@@ -88,6 +88,21 @@ export const applyJob = async (req, res) => {
       return res.status(400).json({ message: "Complete your profile first" });
     }
 
+    // Enforce student verification status
+    if (studentProfile.status !== "verified") {
+      return res.status(403).json({ message: "Your profile must be verified by an administrator before applying." });
+    }
+
+    // Enforce academic criteria (CGPA cutoff)
+    if (job.cgpa && studentProfile.cgpa < job.cgpa) {
+      return res.status(400).json({ message: `Your CGPA (${studentProfile.cgpa}) is below the required cutoff of ${job.cgpa}.` });
+    }
+
+    // Enforce branch eligibility checks
+    if (job.branch && job.branch.length > 0 && !job.branch.includes(studentProfile.branch)) {
+      return res.status(400).json({ message: `Your branch (${studentProfile.branch}) is not eligible for this job.` });
+    }
+
     // ✅ Check if already applied
     const exists = await Application.findOne({
       student: studentProfile._id,
