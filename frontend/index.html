@@ -7,6 +7,71 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
+    .readiness-section{
+    max-width:1000px;
+    margin:60px auto;
+    padding:30px;
+    background:white;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.readiness-section h2{
+    text-align:center;
+    margin-bottom:30px;
+    color:#4f46e5;
+}
+
+.readiness-form{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.readiness-form label{
+    font-weight:600;
+}
+
+.readiness-form input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+}
+
+.score-card{
+    text-align:center;
+    margin-top:40px;
+}
+
+.score-circle{
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#4f46e5,#7c3aed);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:auto;
+    font-size:3rem;
+    font-weight:bold;
+}
+
+#scoreStatus{
+    margin-top:20px;
+}
+
+#scoreInsight{
+    margin-top:10px;
+    color:#6b7280;
+}
+
+@media(max-width:768px){
+    .readiness-form{
+        grid-template-columns:1fr;
+    }
+}
     /* BASE */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Inter, sans-serif; }
     body { background: linear-gradient(to bottom right, #eef2ff, #ffffff, #eff6ff); color: #1f2937; }
@@ -952,7 +1017,47 @@ body.dark-mode .feature-card p{
     </div>
   </div>
 </section> cd
+<section class="readiness-section">
 
+    <h2>Placement Readiness Score</h2>
+
+    <div class="readiness-form">
+
+        <label>Technical Skills (0-10)</label>
+        <input type="number" id="skills" min="0" max="10">
+
+        <label>Projects Completed</label>
+        <input type="number" id="projects" min="0">
+
+        <label>Coding Profile Rating</label>
+        <input type="number" id="coding" min="0" max="100">
+
+        <label>Certifications</label>
+        <input type="number" id="certifications" min="0">
+
+        <label>Internships</label>
+        <input type="number" id="internships" min="0">
+
+        <label>Academic Percentage</label>
+        <input type="number" id="academic" min="0" max="100">
+
+    </div>
+
+    <div class="score-card">
+
+        <div class="score-circle">
+            <span id="scoreValue">0</span>
+        </div>
+
+        <h3 id="scoreStatus">Not Evaluated</h3>
+
+        <p id="scoreInsight">
+            Enter your details to calculate readiness.
+        </p>
+
+    </div>
+
+</section>
 <section class="feature-card">
     <i class="fa-solid fa-users"></i>
 
@@ -1108,7 +1213,109 @@ body.dark-mode .feature-card p{
 </script>
 <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
+<script>
 
+const inputs = document.querySelectorAll(
+"#skills,#projects,#coding,#certifications,#internships,#academic"
+);
+
+inputs.forEach(input=>{
+    input.addEventListener("input",calculateScore);
+});
+
+function calculateScore(){
+
+    const skills =
+        Number(document.getElementById("skills").value || 0);
+
+    const projects =
+        Number(document.getElementById("projects").value || 0);
+
+    const coding =
+        Number(document.getElementById("coding").value || 0);
+
+    const certifications =
+        Number(document.getElementById("certifications").value || 0);
+
+    const internships =
+        Number(document.getElementById("internships").value || 0);
+
+    const academic =
+        Number(document.getElementById("academic").value || 0);
+
+    /*
+    Weight Distribution
+    Skills         25
+    Projects       20
+    Coding         20
+    Certifications 10
+    Internships    15
+    Academics      10
+    */
+
+    let score = 0;
+
+    score += (skills/10)*25;
+
+    score += Math.min(projects,5)/5*20;
+
+    score += (coding/100)*20;
+
+    score += Math.min(certifications,5)/5*10;
+
+    score += Math.min(internships,3)/3*15;
+
+    score += (academic/100)*10;
+
+    score = Math.round(score);
+
+    document.getElementById("scoreValue").innerText = score;
+
+    const status =
+        document.getElementById("scoreStatus");
+
+    const insight =
+        document.getElementById("scoreInsight");
+
+    if(score >= 85){
+
+        status.innerText =
+        "Excellent Placement Ready 🚀";
+
+        insight.innerText =
+        "You have strong placement potential. Focus on mock interviews and company-specific preparation.";
+
+    }
+    else if(score >= 70){
+
+        status.innerText =
+        "Good Readiness 👍";
+
+        insight.innerText =
+        "Improve coding consistency and build one or two impactful projects.";
+
+    }
+    else if(score >= 50){
+
+        status.innerText =
+        "Average Readiness ⚡";
+
+        insight.innerText =
+        "Add certifications, improve coding profiles, and gain internship experience.";
+
+    }
+    else{
+
+        status.innerText =
+        "Needs Improvement 📚";
+
+        insight.innerText =
+        "Focus on skills, projects, DSA, internships, and certifications to boost placement chances.";
+
+    }
+}
+
+</script>
 <!-- Botpress Chatbot Scripts -->
 
 </body>
