@@ -128,6 +128,7 @@ window.deleteJob = async function(jobId) {
   }
 }
 
+// ---------------- VIEW APPLICANTS (Specific Job) ----------------
 // ---------------- EDIT JOB ----------------
 window.editJob = function(jobId) {
   localStorage.setItem("edit_job_id", jobId);
@@ -137,5 +138,13 @@ window.editJob = function(jobId) {
 // ---------------- VIEW APPLICANTS ----------------
 window.viewApplicants = function(jobId) {
   localStorage.setItem("filter_job_id", jobId);
+  location.href = "manage-applicant.html";
+}
+
+// ---------------- VIEW ALL APPLICANTS ----------------
+// ✅ FIX: Clears stale filter_job_id so "View All Applicants"
+// actually shows all applicants instead of the last viewed job's
+window.viewAllApplicants = function() {
+  localStorage.removeItem("filter_job_id");
   location.href = "manage-applicant.html";
 }
