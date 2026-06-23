@@ -1,6 +1,8 @@
 
     /* BASE */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Inter, sans-serif; }
+    html, body { overflow-x: hidden; max-width: 100%; }
+
     body { background: linear-gradient(to bottom right, #eef2ff, #ffffff, #eff6ff); color: #1f2937; }
     .container { max-width: 1200px; margin: auto; padding: 0 20px; }
 
@@ -109,6 +111,16 @@
 
     /* RESPONSIVE BREAKPOINTS WITH MOBILE DROPDOWN NAVIGATION FIX */
     @media (max-width: 768px) {
+        .stats-card {
+  position: static;
+  transform: none;
+  margin-top: 16px;
+  width: fit-content;
+}
+.hero-right { top: 0; }
+.feature-wide { grid-column: span 1; }
+.resume-content { grid-template-columns: 1fr; }
+.salary-card { grid-template-columns: 1fr; }
       .menu-toggle { display: block; }
       
       .nav-menu {
@@ -769,11 +781,16 @@ body.dark-mode .feature-card p{
     margin:0;
     font-size:18px;
 }
-.recruiters-grid{
-    display:flex;
-    gap:20px;
-    overflow-x:auto;
-    padding:10px;
+@media (max-width:768px){
+  .recruiters-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      overflow-x:hidden;
+  }
+
+  .recruiter-card{
+      min-width:unset;
+  }
 }
 
 .recruiter-card{
@@ -792,3 +809,29 @@ body.dark-mode .feature-card i{
     color: #c4b5fd;
 }
 }   }
+/* MOBILE RESPONSIVE FIXES — Issue #526 */
+@media (max-width: 768px) {
+  .resume-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .resume-left h2 {
+    font-size: 28px;
+  }
+  .resume-features {
+    grid-template-columns: 1fr;
+  }
+  img, video, iframe {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .resume-builder-section {
+    padding: 60px 0;
+  }
+  .resume-preview {
+    padding: 20px;
+  }
+}
