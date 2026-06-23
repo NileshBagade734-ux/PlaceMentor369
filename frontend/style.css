@@ -787,8 +787,10 @@ body.dark-mode .recruiter-card{
 
 body.dark-mode .recruiter-card:hover{
     box-shadow:0 20px 40px rgba(124,58,237,0.35);
+}
 body.dark-mode .feature-card i{
     background: #312e81;
     color: #c4b5fd;
 }
-}   }
+  }
+
