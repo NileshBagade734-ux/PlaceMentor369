@@ -185,6 +185,56 @@ resumeInput?.addEventListener("change", (e) => {
     };
 
     reader.readAsDataURL(file);
+});const resumeDropArea = document.getElementById("resumeDropArea");
+
+["dragenter", "dragover"].forEach(eventName => {
+    resumeDropArea?.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        resumeDropArea.classList.add(
+            "border-blue-500",
+            "bg-blue-50"
+        );
+    });
+});
+
+["dragleave", "drop"].forEach(eventName => {
+    resumeDropArea?.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        resumeDropArea.classList.remove(
+            "border-blue-500",
+            "bg-blue-50"
+        );
+    });
+});
+
+resumeDropArea?.addEventListener("drop", (e) => {
+    e.preventDefault();
+
+    const file = e.dataTransfer.files[0];
+
+    if (!file) return;
+
+    if (file.type !== "application/pdf") {
+        showResumeError("Only PDF resumes are allowed.");
+        return;
+    }
+
+    const MAX_SIZE = 2 * 1024 * 1024;
+
+    if (file.size > MAX_SIZE) {
+        showResumeError("Resume size must be under 2MB.");
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+        resumeBase64 = reader.result;
+        showResumeUI(file.name);
+        updateCompletion();
+    };
+
+    reader.readAsDataURL(file);
 });
 
 function showResumeUI(name) {
