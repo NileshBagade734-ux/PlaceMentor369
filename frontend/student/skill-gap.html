@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill Gap Analysis | PlacementorAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="../css/skill-gap.css" />
+</head>
+<body class="bg-slate-50 min-h-screen flex">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white border-r border-slate-200 hidden lg:flex flex-col fixed h-full z-10">
+    <div class="p-6">
+      <h1 class="text-xl font-bold text-indigo-600">PlacementorAI</h1>
+    </div>
+    <nav class="flex-1 px-4 space-y-1">
+      <a href="student-dashboard.html" class="sidebar-item">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+      </a>
+      <a href="student-profile.html" class="sidebar-item">
+        <i data-lucide="user" class="w-4 h-4"></i> Profile
+      </a>
+      <a href="student-joblist.html" class="sidebar-item active">
+        <i data-lucide="briefcase" class="w-4 h-4"></i> Jobs
+      </a>
+      <a href="student-application.html" class="sidebar-item">
+        <i data-lucide="file-text" class="w-4 h-4"></i> My Applications
+      </a>
+    </nav>
+    <div class="p-4 border-t border-slate-100">
+      <button id="logoutBtn"
+        class="flex items-center gap-2 w-full px-4 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-red-50 hover:text-red-600 transition">
+        <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 lg:ml-64 p-6 md:p-10 overflow-y-auto">
+
+    <!-- Header -->
+    <header class="flex items-center gap-4 mb-8">
+      <a href="student-joblist.html"
+        class="flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-indigo-600 transition">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Jobs
+      </a>
+      <div class="h-5 w-px bg-slate-200"></div>
+      <div>
+        <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+          <i data-lucide="bar-chart-2" class="w-6 h-6 text-indigo-500"></i>
+          Skill Gap Analysis
+        </h2>
+        <p class="text-slate-500 text-sm mt-0.5">AI-powered comparison of your skills vs. job requirements</p>
+      </div>
+    </header>
+
+    <!-- Loading State -->
+    <div id="loading-state" class="space-y-6">
+      <div class="skeleton h-36 w-full"></div>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="skeleton h-24"></div>
+        <div class="skeleton h-24"></div>
+        <div class="skeleton h-24"></div>
+      </div>
+      <div class="skeleton h-64 w-full"></div>
+      <div class="skeleton h-48 w-full"></div>
+    </div>
+
+    <!-- Error State -->
+    <div id="error-state" class="hidden">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm">
+        <div class="state-box">
+          <span class="icon">⚠️</span>
+          <p class="font-semibold text-slate-700" id="error-msg">Failed to load analysis.</p>
+          <a href="student-joblist.html"
+            class="mt-2 px-5 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition">
+            Go Back to Jobs
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analysis Content -->
+    <div id="analysis-content" class="hidden fade-in space-y-6">
+
+      <!-- Job Info Banner -->
+      <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="flex flex-col sm:flex-row justify-between gap-4">
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Analysing for</p>
+            <h3 id="job-title" class="text-2xl font-black text-slate-900">—</h3>
+            <p id="job-company" class="text-indigo-600 font-semibold mt-0.5">—</p>
+          </div>
+          <div class="flex flex-col gap-1.5 sm:text-right">
+            <span id="readiness-badge" class="readiness-badge self-start sm:self-end">—</span>
+            <p id="readiness-advice" class="text-sm text-slate-500 max-w-xs sm:text-right">—</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Match Score + Quick Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Score Ring -->
+        <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col items-center justify-center">
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Overall Match Score</p>
+          <div class="score-ring-container">
+            <svg class="score-ring-svg" width="140" height="140" viewBox="0 0 140 140">
+              <circle class="score-ring-bg" cx="70" cy="70" r="60" />
+              <circle id="score-ring-fill" class="score-ring-fill" cx="70" cy="70" r="60"
+                stroke="#4f46e5"
+                stroke-dasharray="376.99"
+                stroke-dashoffset="376.99" />
+            </svg>
+            <div class="score-text">
+              <span id="score-number" class="text-4xl font-black text-slate-900">0%</span>
+              <span class="text-xs text-slate-400 mt-0.5">match</span>
+            </div>
+          </div>
+          <!-- Score bar (mobile-friendly alternative) -->
+          <div class="w-full mt-5">
+            <div class="flex justify-between text-xs text-slate-400 mb-1">
+              <span>0%</span><span>100%</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div id="score-bar" class="score-bar-fill bg-indigo-600" style="width: 0%"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="md:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Quick Stats</p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="stat-mini">
+              <div id="stat-matched" class="value text-emerald-600">—</div>
+              <div class="label">Skills Matched</div>
+            </div>
+            <div class="stat-mini">
+              <div id="stat-missing" class="value text-rose-600">—</div>
+              <div class="label">Skills Missing</div>
+            </div>
+            <div class="stat-mini" id="cgpa-stat">
+              <div id="stat-cgpa" class="value">—</div>
+              <div class="label">CGPA Status</div>
+            </div>
+            <div class="stat-mini" id="branch-stat">
+              <div id="stat-branch" class="value">—</div>
+              <div class="label">Branch Status</div>
+            </div>
+          </div>
+
+          <!-- Student skill summary -->
+          <div class="mt-5 pt-4 border-t border-slate-100">
+            <p class="text-xs font-semibold text-slate-500 mb-2">Your Skills</p>
+            <div id="student-skills-list" class="flex flex-wrap gap-2 text-xs text-slate-500 italic">
+              No skills added yet
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Matched & Missing Skills -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+            <span class="w-5 h-5 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs">✓</span>
+            Matched Skills
+          </h4>
+          <div id="matched-skills" class="flex flex-wrap gap-2">
+            <span class="text-sm text-slate-400 italic">None matched</span>
+          </div>
+        </section>
+
+        <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+            <span class="w-5 h-5 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center text-xs">✕</span>
+            Missing Skills
+          </h4>
+          <div id="missing-skills" class="flex flex-wrap gap-2">
+            <span class="text-sm text-slate-400 italic">No skills missing 🎉</span>
+          </div>
+        </section>
+      </div>
+
+      <!-- Learning Recommendations -->
+      <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="flex justify-between items-center mb-5">
+          <div>
+            <h4 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+              <i data-lucide="graduation-cap" class="w-5 h-5 text-indigo-500"></i>
+              Learning Recommendations
+            </h4>
+            <p class="text-sm text-slate-500 mt-0.5">Curated resources to close your skill gaps</p>
+          </div>
+          <span id="rec-count"
+            class="text-xs font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full">0 resources</span>
+        </div>
+        <div id="recommendations-list">
+          <div class="state-box">
+            <span class="icon">🎉</span>
+            <p class="font-semibold text-slate-600">No missing skills — you're all set!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Eligibility Breakdown -->
+      <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <h4 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+          <i data-lucide="clipboard-check" class="w-5 h-5 text-indigo-500"></i>
+          Full Eligibility Breakdown
+        </h4>
+        <div id="eligibility-breakdown" class="space-y-3"></div>
+      </section>
+
+      <!-- CTA -->
+      <div class="flex flex-wrap gap-3 justify-end pb-4">
+        <a href="student-profile.html"
+          class="px-6 py-3 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition flex items-center gap-2 text-sm">
+          <i data-lucide="user-cog" class="w-4 h-4"></i> Update Profile & Skills
+        </a>
+        <button id="apply-btn"
+          class="px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition flex items-center gap-2 text-sm">
+          <i data-lucide="send" class="w-4 h-4"></i> Apply for This Job
+        </button>
+      </div>
+
+    </div><!-- /analysis-content -->
+  </main>
+
+  <script src="../js/skill-gap.js"></script>
+</body>
+</html>
