@@ -1,37 +1,124 @@
-body { font-family: 'Inter', sans-serif; }
+/* =========================
+   Base Styles
+========================= */
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: #daa7a7;
+}
+
+.dark body {
+  color: #f9fafb;
+}
+
+/* =========================
+   Form Inputs
+========================= */
 
 .input-field {
-  margin-top: 0.25rem; width: 100%; padding: 0.75rem 1rem;
-  border-radius: 0.75rem; border: 1px solid #d1d5db;
-  background-color: #ffffff; outline: none; transition: all 0.2s ease;
+  margin-top: 0.25rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  outline: none;
+  transition: all 0.2s ease;
 }
-.input-field:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99,102,241,0.2); }
-.dark .input-field  { background-color: #374151; color: #ffffff; border-color: #4b5563; }
+
+.input-field:focus {
+  border-color: #f8f8f8;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.dark .input-field {
+  background-color: #374151;
+  color: #ffffff;
+  border-color: #4b5563;
+}
+
+/* =========================
+   Buttons
+========================= */
 
 .primary-btn {
-  width: 100%; background-color: #4f46e5; color: #ffffff; font-weight: 600;
-  padding: 1rem; border-radius: 0.75rem; display: flex; align-items: center;
-  justify-content: center; gap: 0.5rem; transition: all 0.2s ease; border: none; cursor: pointer;
+  width: 100%;
+  background-color: #4f46e5;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
 }
-.primary-btn:hover    { background-color: #4338ca; }
-.primary-btn:active   { transform: scale(0.97); }
-.primary-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.primary-btn:hover {
+  background-color: #f3f3f3;
+}
+
+.primary-btn:active {
+  transform: scale(0.97);
+}
+
+.primary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 .social-btn {
-  flex: 1; display: flex; align-items: center; justify-content: center;
-  gap: 0.5rem; padding: 0.75rem; border-radius: 0.75rem;
-  border: 1px solid #d1d5db; background-color: transparent;
-  transition: background 0.2s ease; cursor: pointer;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid #d1d5db;
+  background-color: transparent;
+  transition: background 0.2s ease;
+  cursor: pointer;
 }
-.social-btn:hover        { background-color: #f3f4f6; }
-.dark .social-btn        { border-color: #4b5563; color: #ffffff; }
-.dark .social-btn:hover  { background-color: #374151; }
 
-#togglePassword { background: none; border: none; cursor: pointer; }
+.social-btn:hover {
+  background-color: #f3f4f6;
+}
 
-#login-card { opacity: 0; transform: translateY(1.5rem); }
+.dark .social-btn {
+  border-color: #4b5563;
+  color: #ffffff;
+}
 
-/* ── Inline Validation ─────────────────────────────────────────────────────── */
+.dark .social-btn:hover {
+  background-color: #374151;
+}
+
+/* =========================
+   Password Toggle
+========================= */
+
+#togglePassword {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* =========================
+   Login Card Animation
+========================= */
+
+#login-card {
+  opacity: 0;
+  transform: translateY(1.5rem);
+}
+
+/* =========================
+   Inline Validation
+========================= */
 
 .invalid-feedback,
 .valid-feedback {
@@ -41,45 +128,81 @@ body { font-family: 'Inter', sans-serif; }
   animation: feedbackSlideIn 0.2s ease-out;
 }
 
-.invalid-feedback { color: #ef4444; }
-.valid-feedback   { color: #22c55e; }
+.invalid-feedback {
+  color: #ef4444;
+}
+
+.valid-feedback {
+  color: #22c55e;
+}
 
 @keyframes feedbackSlideIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .form-control.is-invalid,
 .form-select.is-invalid {
   border-color: #ef4444 !important;
-  box-shadow: 0 0 0 2px rgba(239,68,68,0.2) !important;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
 }
 
-main
 .form-control.is-valid,
 .form-select.is-valid {
   border-color: #22c55e !important;
-  box-shadow: 0 0 0 2px rgba(34,197,94,0.2) !important;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2) !important;
+}
 
 .was-validated .form-control:valid ~ .valid-feedback,
 .was-validated .form-select:valid ~ .valid-feedback {
   display: block;
 }
 
+.was-validated .form-control:invalid ~ .invalid-feedback,
+.was-validated .form-select:invalid ~ .invalid-feedback {
+  display: block;
+}
+
 /* =========================
    Loading Spinner
 ========================= */
+
 .spinner {
   display: inline-block;
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
-main
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================
+   Dark Mode Text Fixes
+========================= */
+
+.dark label,
+.dark p,
+.dark span,
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6,
+.dark a {
+  color: #f9fafb;
 }
