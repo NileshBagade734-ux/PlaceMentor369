@@ -17,6 +17,7 @@ async function initDashboard() {
   showWelcome();
   await loadApplications();
   await loadProfileCompletion();
+  renderReadinessScoreCard("readiness-score-card");
   attachLogout();
 }
 

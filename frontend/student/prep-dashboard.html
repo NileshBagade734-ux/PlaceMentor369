@@ -111,42 +111,11 @@
       </main>
     </div>
 
+    <script src="../js/readiness-score.js"></script>
     <script>
-      // Module Data Matrix matching instructions
-      const preparationModules = [
-        {
-          id: "aptitude",
-          name: "Aptitude & Logical Reasoning",
-          total: 40,
-          completed: 28,
-          color: "bg-amber-500",
-          icon: "brain",
-        },
-        {
-          id: "dsa",
-          name: "Data Structures & Algorithms",
-          total: 150,
-          completed: 95,
-          color: "bg-indigo-500",
-          icon: "code-2",
-        },
-        {
-          id: "core",
-          name: "Core CS Subjects (OS, DBMS, CN)",
-          total: 30,
-          completed: 12,
-          color: "bg-blue-500",
-          icon: "database",
-        },
-        {
-          id: "mock",
-          name: "Mock Interviews & Soft Skills",
-          total: 10,
-          completed: 6,
-          color: "bg-emerald-500",
-          icon: "video",
-        },
-      ];
+      // Module progress now lives in localStorage (see readiness-score.js) so that
+      // it can also power the Interview Readiness Score card on the main dashboard.
+      const preparationModules = getPrepModules();
 
       function renderDashboard() {
         const container = document.getElementById("prep-modules-container");

@@ -159,6 +159,7 @@ export const getJobApplications = async (req, res) => {
 
 /* ============================
    GET SKILL GAP ANALYSIS FOR SPECIFIC JOB
+   ============================*/
 export const getSkillGapForJob = async (req, res) => {
   try {
     const { jobId } = req.params;
@@ -228,6 +229,7 @@ export const getSkillGapForJob = async (req, res) => {
 
 /* ============================
    GET PERSONALIZED LEARNING PATHS (ALL APPROVED JOBS)
+============================ */
 export const getLearningPaths = async (req, res) => {
   try {
     // Get student profile
@@ -296,7 +298,8 @@ export const getLearningPaths = async (req, res) => {
   } catch (err) {
     console.error("GET LEARNING PATHS ERROR:", err);
     res.status(500).json({ message: "Failed to generate learning paths" });
-   UPLOAD RESUME & AI PARSE (Phase 1 & 2)
+  }
+};
 export const uploadResume = async (req, res) => {
   try {
     if (!req.file) {
