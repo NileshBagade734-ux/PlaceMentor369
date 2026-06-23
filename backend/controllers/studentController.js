@@ -224,7 +224,8 @@ export const getSkillGapForJob = async (req, res) => {
     console.error("GET SKILL GAP ERROR:", err);
     res.status(500).json({ message: "Failed to analyze skill gap" });
   }
-};
+}; 
+*/
 
 /* ============================
    GET PERSONALIZED LEARNING PATHS (ALL APPROVED JOBS)
@@ -296,7 +297,10 @@ export const getLearningPaths = async (req, res) => {
   } catch (err) {
     console.error("GET LEARNING PATHS ERROR:", err);
     res.status(500).json({ message: "Failed to generate learning paths" });
-   UPLOAD RESUME & AI PARSE (Phase 1 & 2)
+   //UPLOAD RESUME & AI PARSE (Phase 1 & 2)
+  }
+};
+*/
 export const uploadResume = async (req, res) => {
   try {
     if (!req.file) {
