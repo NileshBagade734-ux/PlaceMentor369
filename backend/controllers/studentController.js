@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import mongoose from "mongoose";
 import Student from "../models/student.js";
 import Job from "../models/job.js";
@@ -13,8 +12,6 @@ import { getResourcesForSkills } from "../utils/learningResources.js";
 import { analyzeResume } from "../utils/gemini.js";
 import { PDFParse } from "pdf-parse";
 
-=======
->>>>>>> 819041916b458ef9db032563e7e11c4a0fbc1f34
 /* ============================
    SKILL GAP ANALYSIS
 ============================ */
@@ -133,7 +130,6 @@ export const getSkillGapAnalysis = async (req, res) => {
 };
 
 /* ============================
-<<<<<<< HEAD
    GET STUDENT APPLICATIONS
 ============================ */
 export const getApplications = async (req, res) => {
@@ -240,6 +236,7 @@ export const getSkillGapForJob = async (req, res) => {
     res.status(500).json({ message: "Failed to analyze skill gap" });
   }
 };
+*/
 
 /* ============================
    GET PERSONALIZED LEARNING PATHS (ALL APPROVED JOBS)
@@ -312,10 +309,8 @@ export const getLearningPaths = async (req, res) => {
     console.error("GET LEARNING PATHS ERROR:", err);
     res.status(500).json({ message: "Failed to generate learning paths" });
    UPLOAD RESUME & AI PARSE (Phase 1 & 2)
-=======
    UPLOAD RESUME & AI PARSE
 ============================ */
->>>>>>> 819041916b458ef9db032563e7e11c4a0fbc1f34
 export const uploadResume = async (req, res) => {
   try {
     if (!req.file) {
