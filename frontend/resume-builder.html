@@ -103,6 +103,69 @@ body.dark-mode h3{
 body.dark-mode hr{
     border-color:#475569;
 }
+.template-selector{
+    margin-bottom:20px;
+}
+
+.template-cards{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.template-card{
+    background:white;
+    border:2px solid #ddd;
+    border-radius:15px;
+    padding:15px;
+    cursor:pointer;
+    transition:.3s;
+    width:150px;
+}
+
+.template-card:hover{
+    transform:translateY(-5px);
+}
+
+.template-card.active{
+    border-color:#4f46e5;
+}
+.template1{
+    border-top:6px solid #4f46e5;
+}
+
+.template1 h2{
+    color:#4f46e5;
+}
+.template2{
+    background:#f8fafc;
+    border-left:8px solid #06b6d4;
+}
+
+.template2 h2{
+    color:#06b6d4;
+}
+
+.template2 h3{
+    border-bottom:2px solid #06b6d4;
+    padding-bottom:5px;
+}
+.template3{
+    background:#fff;
+    border:3px solid #111827;
+}
+
+.template3 h2{
+    color:#111827;
+    text-transform:uppercase;
+    letter-spacing:2px;
+}
+
+.template3 h3{
+    background:#111827;
+    color:white;
+    padding:5px 10px;
+}
     </style>
 </head>
 <body>
@@ -156,27 +219,65 @@ body.dark-mode hr{
         </button>
 
     </div>
+    <div class="template-selector">
 
-    <div class="resume-preview">
+    <h3>Select Template</h3>
 
-        <h2 id="preview-name">Your Name</h2>
+    <div class="template-cards">
 
-        <p id="preview-email">Email</p>
+        <div class="template-card active"
+             onclick="changeTemplate('template1', this)">
+            <h4>Classic</h4>
+            <p>Professional & ATS Friendly</p>
+        </div>
 
-        <p id="preview-phone">Phone</p>
+        <div class="template-card"
+             onclick="changeTemplate('template2', this)">
+            <h4>Modern</h4>
+            <p>Creative Layout</p>
+        </div>
 
-        <hr>
-
-        <h3>Skills</h3>
-        <p id="preview-skills"></p>
-
-        <h3>Education</h3>
-        <p id="preview-education"></p>
-
-        <h3>Projects</h3>
-        <p id="preview-projects"></p>
+        <div class="template-card"
+             onclick="changeTemplate('template3', this)">
+            <h4>Executive</h4>
+            <p>Senior Professionals</p>
+        </div>
 
     </div>
+
+</div>
+    <textarea id="experience"
+placeholder="Experience"></textarea>
+
+<textarea id="certifications"
+placeholder="Certifications"></textarea>
+
+    <div class="resume-preview template1" id="resumePreview">
+
+    <h2 id="preview-name">Your Name</h2>
+
+    <p id="preview-email">Email</p>
+
+    <p id="preview-phone">Phone</p>
+
+    <hr>
+
+    <h3>Skills</h3>
+    <p id="preview-skills"></p>
+
+    <h3>Education</h3>
+    <p id="preview-education"></p>
+
+    <h3>Projects</h3>
+    <p id="preview-projects"></p>
+
+    <h3>Experience</h3>
+    <p id="preview-experience"></p>
+
+    <h3>Certifications</h3>
+    <p id="preview-certifications"></p>
+
+</div>
 
 </div>
 <footer>
@@ -232,52 +333,64 @@ body.dark-mode hr{
 function generateResume(){
 
     document.getElementById("preview-name").innerText =
-        document.getElementById("name").value;
+    document.getElementById("name").value;
 
     document.getElementById("preview-email").innerText =
-        document.getElementById("email").value;
+    document.getElementById("email").value;
 
     document.getElementById("preview-phone").innerText =
-        document.getElementById("phone").value;
+    document.getElementById("phone").value;
 
     document.getElementById("preview-skills").innerText =
-        document.getElementById("skills").value;
+    document.getElementById("skills").value;
 
     document.getElementById("preview-education").innerText =
-        document.getElementById("education").value;
+    document.getElementById("education").value;
 
     document.getElementById("preview-projects").innerText =
-        document.getElementById("projects").value;
+    document.getElementById("projects").value;
+
+    document.getElementById("preview-experience").innerText =
+    document.getElementById("experience").value;
+
+    document.getElementById("preview-certifications").innerText =
+    document.getElementById("certifications").value;
+}
+function changeTemplate(template, element){
+
+    const preview =
+    document.getElementById("resumePreview");
+
+    preview.classList.remove(
+        "template1",
+        "template2",
+        "template3"
+    );
+
+    preview.classList.add(template);
+
+    document
+        .querySelectorAll(".template-card")
+        .forEach(card =>
+            card.classList.remove("active")
+        );
+
+    element.classList.add("active");
 }
 </script>
-<script>
-const themeToggle = document.getElementById("theme-toggle");
-const themeIcon = themeToggle.querySelector("i");
+<button class="generate-btn"
+onclick="downloadPDF()">
+Download PDF
+</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+function downloadPDF(){
 
-/* Load saved theme */
-if(localStorage.getItem("theme") === "dark"){
-    document.body.classList.add("dark-mode");
-    themeIcon.classList.remove("fa-moon");
-    themeIcon.classList.add("fa-sun");
+    const element =
+    document.getElementById("resumePreview");
+
+    html2pdf()
+    .from(element)
+    .save("Resume.pdf");
 }
-
-themeToggle.addEventListener("click", () => {
-
-    document.body.classList.toggle("dark-mode");
-
-    if(document.body.classList.contains("dark-mode")){
-        localStorage.setItem("theme", "dark");
-
-        themeIcon.classList.remove("fa-moon");
-        themeIcon.classList.add("fa-sun");
-    }
-    else{
-        localStorage.setItem("theme", "light");
-
-        themeIcon.classList.remove("fa-sun");
-        themeIcon.classList.add("fa-moon");
-    }
-});
-</script>
 </body>
 </html>

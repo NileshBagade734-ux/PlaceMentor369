@@ -26,7 +26,7 @@ jobs:
       - run: npm ci
 
       - name: Check for .editorconfig compliance
-        uses: editorconfig-checker/editorconfig-checker.action@v1
+        run: npm install -g editorconfig-checker && ec
 
       - name: Run lint (if available)
         run: npx eslint . --ext .js --no-error-on-unmatched-pattern || true

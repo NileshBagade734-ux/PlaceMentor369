@@ -1,129 +1,65 @@
-/* Global Font */
-body {
-  font-family: 'Inter', sans-serif;
-}
+body { font-family: 'Inter', sans-serif; }
 
-/* =========================
-   Input Fields
-========================= */
 .input-field {
-  margin-top: 0.25rem;
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
-  border: 1px solid #d1d5db;
-  background-color: #ffffff;
-  outline: none;
-  transition: all 0.2s ease;
+  margin-top: 0.25rem; width: 100%; padding: 0.75rem 1rem;
+  border-radius: 0.75rem; border: 1px solid #d1d5db;
+  background-color: #ffffff; outline: none; transition: all 0.2s ease;
 }
+.input-field:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99,102,241,0.2); }
+.dark .input-field  { background-color: #374151; color: #ffffff; border-color: #4b5563; }
 
-.input-field:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
-}
-
-/* Dark mode input */
-.dark .input-field {
-  background-color: #374151;
-  color: #ffffff;
-  border-color: #4b5563;
-}
-
-/* =========================
-   Primary Button
-========================= */
 .primary-btn {
-  width: 100%;
-  background-color: #4f46e5;
-  color: #ffffff;
-  font-weight: 600;
-  padding: 1rem;
-  border-radius: 0.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  transition: all 0.2s ease;
-  border: none;
-  cursor: pointer;
+  width: 100%; background-color: #4f46e5; color: #ffffff; font-weight: 600;
+  padding: 1rem; border-radius: 0.75rem; display: flex; align-items: center;
+  justify-content: center; gap: 0.5rem; transition: all 0.2s ease; border: none; cursor: pointer;
 }
+.primary-btn:hover    { background-color: #4338ca; }
+.primary-btn:active   { transform: scale(0.97); }
+.primary-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.primary-btn:hover {
-  background-color: #4338ca;
-}
-
-.primary-btn:active {
-  transform: scale(0.97);
-}
-
-.primary-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* =========================
-   Social Login Buttons
-========================= */
 .social-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  border-radius: 0.75rem;
-  border: 1px solid #d1d5db;
-  background-color: transparent;
-  transition: background 0.2s ease;
-  cursor: pointer;
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  gap: 0.5rem; padding: 0.75rem; border-radius: 0.75rem;
+  border: 1px solid #d1d5db; background-color: transparent;
+  transition: background 0.2s ease; cursor: pointer;
 }
+.social-btn:hover        { background-color: #f3f4f6; }
+.dark .social-btn        { border-color: #4b5563; color: #ffffff; }
+.dark .social-btn:hover  { background-color: #374151; }
 
-.social-btn:hover {
-  background-color: #f3f4f6;
-}
+#togglePassword { background: none; border: none; cursor: pointer; }
 
-/* Dark mode social buttons */
-.dark .social-btn {
-  border-color: #4b5563;
-  color: #ffffff;
-}
+#login-card { opacity: 0; transform: translateY(1.5rem); }
 
-.dark .social-btn:hover {
-  background-color: #374151;
-}
-
-/* =========================
-   Password Toggle Icon
-========================= */
-#togglePassword {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-/* =========================
-   Login Card Animation Base
-========================= */
-#login-card {
-  opacity: 0;
-  transform: translateY(1.5rem);
-}
-
-
-/* =========================
-   Bootsrap Validation
-========================= */
-
+/* ── Inline Validation ─────────────────────────────────────────────────────── */
 
 .invalid-feedback,
 .valid-feedback {
   display: none;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  animation: feedbackSlideIn 0.2s ease-out;
 }
 
-.was-validated .form-control:invalid ~ .invalid-feedback,
-.was-validated .form-select:invalid ~ .invalid-feedback {
-  display: block;
+.invalid-feedback { color: #ef4444; }
+.valid-feedback   { color: #22c55e; }
+
+@keyframes feedbackSlideIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 2px rgba(239,68,68,0.2) !important;
+}
+
+main
+.form-control.is-valid,
+.form-select.is-valid {
+  border-color: #22c55e !important;
+  box-shadow: 0 0 0 2px rgba(34,197,94,0.2) !important;
 
 .was-validated .form-control:valid ~ .valid-feedback,
 .was-validated .form-select:valid ~ .valid-feedback {
@@ -145,4 +81,5 @@ body {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+main
 }
