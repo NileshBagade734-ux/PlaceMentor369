@@ -184,8 +184,8 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
 
         <!-- Email -->
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-200 ">Email Address</label>
-          <input id="email" type="email" required placeholder="you@example.com" aria-label="Email address" autocomplete="email"
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Email Address</label>
+          <input id="email" type="email" required placeholder="you@example.com" aria-label="Email address" aria-required="true" autocomplete="email"
             class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
           <div class="invalid-feedback">
             Please enter a valid email address.
@@ -198,7 +198,7 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
         <!-- Password -->
         <div class="relative">
           <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
-          <input id="password" type="password" required placeholder="••••••••" aria-label="Password" autocomplete="current-password"
+          <input id="password" type="password" required placeholder="••••••••" aria-label="Password" aria-required="true" autocomplete="current-password"
             class="mt-1 w-full px-4 py-3 pr-12 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
           <div class="invalid-feedback">
             Password is required.
@@ -207,14 +207,14 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
             Looks good.
           </div>
           <button type="button" id="togglePassword" aria-label="Toggle password visibility" class="absolute right-4 top-[38px] text-gray-400 hover:text-indigo-600">
-            <i data-lucide="eye" id="eyeIcon"></i>
+            <i data-lucide="eye" id="eyeIcon" aria-hidden="true"></i>
           </button>
         </div>
 
         <!-- Submit -->
         <button type="submit" id="loginBtn" aria-label="Sign in to your account"
           class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 rounded-xl flex justify-center items-center gap-2 transition active:scale-95 disabled:opacity-50">
-          <i data-lucide="log-in"></i>
+          <i data-lucide="log-in" aria-hidden="true"></i>
           <span id="btnText">Sign In</span>
         </button>
 
