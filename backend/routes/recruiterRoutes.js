@@ -9,6 +9,7 @@ import {
   deleteJob,
   updateApplicantStatus,
   getRecruiterDashboardStats,
+  getRecruiterAnalytics,
   exportJobApplicantsToCSV
 } from "../controllers/recruiterController.js";
 
@@ -16,6 +17,7 @@ const router = express.Router();
 
 // ---------------- DASHBOARD ----------------
 router.get("/dashboard", verifyToken, recruiterOnly, getRecruiterDashboardStats);
+router.get("/analytics", verifyToken, recruiterOnly, getRecruiterAnalytics);
 
 // ---------------- JOBS ----------------
 router.post("/jobs", verifyToken, recruiterOnly, createJob);

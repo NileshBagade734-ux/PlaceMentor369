@@ -3,6 +3,7 @@
  *********************************/
 
 // ---------------- CONFIG ----------------
+const ANALYTICS_API = "http://localhost:5000/api/recruiter/analytics";
 const JOBS_API = "http://localhost:5000/api/recruiter/jobs";
 const APPS_API = "http://localhost:5000/api/recruiter/applications";
 
@@ -32,6 +33,10 @@ async function initDashboard() {
     });
     if (!appsRes.ok) throw new Error("Failed to fetch applications");
     const applications = await appsRes.json();
+    const analyticsRes = await fetch(ANALYTICS_API, {
+    headers: { Authorization: `Bearer ${token}` }});
+    const analytics = await analyticsRes.json();
+
 
     // -------- STATS --------
     const jobsCount = jobs.length;
@@ -44,6 +49,9 @@ async function initDashboard() {
     document.getElementById("count-jobs").textContent = jobsCount;
     document.getElementById("count-apps").textContent = appsCount;
     document.getElementById("count-shortlisted").textContent = shortlistedCount;
+    document.getElementById("rejection-ratio").textContent =`${analytics.rejectionRatio}%`;
+    renderJobChart(analytics.applicationsPerJob);
+    renderBranchChart(analytics.activeBranches);
 
     // -------- RENDER JOBS --------
     renderJobs(jobs, applications);
@@ -134,4 +142,37 @@ window.deleteJob = async function(jobId) {
 window.viewApplicants = function(jobId) {
   localStorage.setItem("filter_job_id", jobId);
   location.href = "manage-applicant.html";
+}
+
+function renderJobChart(data) {
+  const ctx = document.getElementById("jobChart");
+
+  if (!ctx) return;
+
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: data.map(item => item.job),
+      datasets: [{
+        label: "Applications",
+        data: data.map(item => item.count)
+      }]
+    }
+  });
+}
+
+function renderBranchChart(data) {
+  const ctx = document.getElementById("branchChart");
+
+  if (!ctx) return;
+
+  new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels: data.map(item => item.branch),
+      datasets: [{
+        data: data.map(item => item.count)
+      }]
+    }
+  });
 }
