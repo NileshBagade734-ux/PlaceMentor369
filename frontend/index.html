@@ -9,6 +9,7 @@
   <style>
     /* BASE */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Inter, sans-serif; }
+    html, body { overflow-x: hidden; max-width: 100%; }
     body { background: linear-gradient(to bottom right, #eef2ff, #ffffff, #eff6ff); color: #1f2937; }
     .container { max-width: 1200px; margin: auto; padding: 0 20px; }
 
@@ -138,10 +139,10 @@
       .overlay.active { display: block; }
       .hero { grid-template-columns: 1fr; gap: 30px; text-align: center; }
       .hero-left { order: 2; }
-      .hero-right { order: 1; }
+.hero-right { order: 1; position: static; }
       .features { grid-template-columns: 1fr; }
       .cta { flex-direction: column; }
-      .stats-card { left: 50%; transform: translateX(-50%); bottom: -24px; }
+.stats-card { position: static; transform: none; margin: 16px auto 0; }
       .footer-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
     }
     @media (max-width: 480px) {
@@ -177,10 +178,7 @@ footer h4 {
 }
 
 
-.feature-wide--big {
-  width: calc(100% + 300px);
-  margin-left: -1px;
-}
+
 
 /* Make last wide box text same as normal feature boxes */
 .feature-wide h4 {
@@ -679,7 +677,7 @@ body.dark-mode .feature-card p{
       <div class="feature"><i class="fa-solid fa-user-check"></i><div><h4>Applicant Tracking</h4><p>Recruiters track and shortlist candidates easily</p></div></div>
       <div class="feature"><i class="fa-solid fa-circle-check"></i><div><h4>Status Updates</h4><p>Track application progress in real-time</p></div></div>
 <a href="recommendations.html" style="text-decoration:none; color:inherit;">
-  <div class="feature-wide feature-wide--big">
+<div class="feature-wide">
 <i class="fa-solid fa-brain ai-icon"></i>
     <div>
       <h4>AI-Recommended Learning Path</h4>
@@ -695,7 +693,9 @@ body.dark-mode .feature-card p{
     
   </div>
   
+
 </section>
+
 <div class="success">
     <a href="success-metrics.html">
         <h3>Success Metrics</h3>
@@ -1113,3 +1113,6 @@ body.dark-mode .feature-card p{
 
 </body>
 </html>
+
+
+
