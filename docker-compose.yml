@@ -1,0 +1,23 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      MONGO_URI: mongodb://mongo:27017/placementor
+      JWT_SECRET: ${JWT_SECRET:-changeme_in_production}
+      PORT: 5000
+    volumes:
+      - ./backend/uploads:/app/uploads
+    depends_on:
+      - mongo
+
+volumes:
+  mongo_data:
