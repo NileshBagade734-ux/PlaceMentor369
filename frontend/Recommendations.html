@@ -1,254 +1,859 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta name="description" content="Explore personalized job and career recommendations on PlaceMentor369 to boost your placement success.">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Recommendations – PlacementorAI</title>
+  <title>AI Recommendations | PlacementorAI</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
+
   <style>
+    :root {
+      --bg: #080b18;
+      --bg-soft: rgba(255, 255, 255, 0.075);
+      --card: rgba(255, 255, 255, 0.09);
+      --card-strong: rgba(255, 255, 255, 0.13);
+      --text: #f8fafc;
+      --muted: #b8c2d8;
+      --border: rgba(255, 255, 255, 0.15);
+      --primary: #7c3aed;
+      --secondary: #06b6d4;
+      --success: #22c55e;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: Inter, sans-serif;
+      font-family: "Inter", sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
-      background: linear-gradient(to bottom right, #eef2ff, #ffffff);
-      color: #1f2937;
+      min-height: 100vh;
+      color: var(--text);
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(124, 58, 237, 0.35), transparent 34%),
+        radial-gradient(circle at 85% 18%, rgba(6, 182, 212, 0.24), transparent 32%),
+        linear-gradient(135deg, #070a16 0%, #10182d 45%, #070a16 100%);
     }
-    body,
-.container,
-select,
-button,
-h1,
-h2,
-p,
-label,
-iframe {
-  transition:
-    background-color 0.35s ease,
-    color 0.35s ease,
-    border-color 0.35s ease,
-    box-shadow 0.35s ease;
-}
+
+    body.light {
+      --bg: #f7f8ff;
+      --bg-soft: rgba(255, 255, 255, 0.75);
+      --card: rgba(255, 255, 255, 0.78);
+      --card-strong: rgba(255, 255, 255, 0.95);
+      --text: #0f172a;
+      --muted: #475569;
+      --border: rgba(15, 23, 42, 0.12);
+      --shadow: 0 24px 70px rgba(15, 23, 42, 0.12);
+      background:
+        radial-gradient(circle at top left, rgba(124, 58, 237, 0.18), transparent 32%),
+        radial-gradient(circle at 90% 10%, rgba(6, 182, 212, 0.18), transparent 32%),
+        linear-gradient(135deg, #eef2ff 0%, #f8fafc 50%, #ecfeff 100%);
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, black, transparent 85%);
+      z-index: -1;
+    }
+
+    .orb {
+      position: fixed;
+      width: 430px;
+      height: 430px;
+      border-radius: 999px;
+      filter: blur(95px);
+      opacity: .25;
+      z-index: -2;
+      animation: float 8s ease-in-out infinite alternate;
+    }
+
+    .orb.one {
+      top: -120px;
+      left: -130px;
+      background: var(--primary);
+    }
+
+    .orb.two {
+      right: -140px;
+      bottom: -130px;
+      background: var(--secondary);
+      animation-delay: 1.5s;
+    }
 
     .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 50px 20px;
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 28px 0 60px;
     }
 
-    h1 {
-      font-size: 36px;
-      margin-bottom: 10px;
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 14px 16px;
+      margin-bottom: 56px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(22px);
+      box-shadow: 0 12px 35px rgba(0,0,0,.14);
+      position: sticky;
+      top: 16px;
+      z-index: 20;
     }
 
-    .subtitle {
-      color: #6b7280;
-      margin-bottom: 30px;
-      font-size: 16px;
-    }
-
-    /* Course Selection */
-    .course-select {
-  margin-bottom: 40px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-    .course-select label {
-      font-weight: 600;
-    }
-
-    .course-select select {
-      padding: 10px 14px;
-      border-radius: 10px;
-      border: 1px solid #d1d5db;
-      font-size: 14px;
-      outline: none;
-    }
-
-    /* Video Sections */
-    .section-title {
-      font-size: 22px;
-      margin-bottom: 16px;
+    .brand {
       display: flex;
       align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+
+    .brand i {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      box-shadow: 0 12px 28px rgba(124,58,237,.35);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-link, .back-btn, .start-btn {
+      border: 1px solid var(--border);
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 16px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      background: var(--bg-soft);
+      transition: .3s ease;
+    }
+
+    .nav-link:hover, .back-btn:hover, .start-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.12fr .88fr;
+      gap: 34px;
+      align-items: center;
+      margin-bottom: 34px;
+      animation: fadeUp .75s ease both;
+    }
+
+    .hero-card, .visual-card, .stat-card, .video-card, .step, .path-header {
+      border: 1px solid var(--border);
+      background: var(--card);
+      backdrop-filter: blur(24px);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 42px;
+      border-radius: 34px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      right: -70px;
+      top: -70px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      filter: blur(10px);
+      opacity: .34;
+      border-radius: 999px;
+    }
+
+    .badge {
+      display: inline-flex;
       gap: 8px;
+      align-items: center;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(124, 58, 237, .16);
+      color: #d8b4fe;
+      border: 1px solid rgba(216, 180, 254, .25);
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.45rem, 6vw, 4.9rem);
+      line-height: .98;
+      letter-spacing: -3px;
+      margin-bottom: 20px;
+      max-width: 780px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #fff, #a5b4fc, #67e8f9);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    body.light .gradient-text {
+      background: linear-gradient(90deg, #312e81, #7c3aed, #0891b2);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.8;
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .select-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .select-wrap i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--secondary);
+      pointer-events: none;
+    }
+
+    select {
+      width: 100%;
+      appearance: none;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--card-strong);
+      color: var(--text);
+      padding: 16px 46px 16px 46px;
+      font-size: 15px;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .theme-btn, .start-btn {
+      border: 0;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      box-shadow: 0 18px 35px rgba(124, 58, 237, .25);
+    }
+
+    .theme-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      font-size: 20px;
+      transition: .3s ease;
+    }
+
+    .theme-btn:hover {
+      transform: translateY(-4px) rotate(8deg);
+    }
+
+    .visual-card {
+      min-height: 430px;
+      border-radius: 34px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .visual-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(130deg, rgba(124,58,237,.35), transparent 40%),
+        radial-gradient(circle at 80% 20%, rgba(6,182,212,.35), transparent 30%);
+      opacity: .75;
+    }
+
+    .floating-panel {
+      position: relative;
+      padding: 20px;
+      border-radius: 24px;
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.14);
+      margin-bottom: 16px;
+      animation: float 4s ease-in-out infinite alternate;
+    }
+
+    body.light .floating-panel {
+      background: rgba(255,255,255,.66);
+    }
+
+    .panel-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      font-weight: 800;
+    }
+
+    .progress {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 76%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+
+    .mini-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .mini-card {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.14);
+    }
+
+    .mini-card i {
+      color: #67e8f9;
+      font-size: 23px;
+      margin-bottom: 12px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 38px;
+    }
+
+    .stat-card {
+      padding: 24px;
+      border-radius: 26px;
+      transition: .3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card:hover, .video-card:hover, .step:hover {
+      transform: translateY(-8px);
+      border-color: rgba(103,232,249,.45);
+    }
+
+    .stat-card i {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: rgba(96, 165, 250, .14);
+      color: #67e8f9;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card h3, .video-content h3, .step h3 {
+      font-size: 20px;
+      margin-bottom: 9px;
+    }
+
+    .stat-card p, .video-content p, .step p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14.5px;
+    }
+
+    .path-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-radius: 26px;
+      padding: 24px;
+      margin: 20px 0 22px;
+    }
+
+    .path-header h2, .roadmap h2 {
+      font-size: clamp(1.75rem, 4vw, 2.35rem);
+      letter-spacing: -1.2px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      padding: 11px 16px;
+      border-radius: 999px;
+      color: #bbf7d0;
+      background: rgba(34, 197, 94, .16);
+      border: 1px solid rgba(34, 197, 94, .28);
+      font-size: 13px;
+      font-weight: 900;
     }
 
     .videos {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 22px;
-      margin-bottom: 50px;
+      margin-bottom: 48px;
     }
 
-    iframe {
+    .video-card {
+      border-radius: 30px;
+      padding: 14px;
+      transition: .3s ease;
+      overflow: hidden;
+    }
+
+    .video-frame {
+      position: relative;
+      overflow: hidden;
+      border-radius: 22px;
+      background: #020617;
+    }
+
+    .video-card iframe {
       width: 100%;
-      height: 200px;
-      border-radius: 14px;
+      height: 260px;
       border: none;
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+      display: block;
     }
 
-    /* Back Button */
-    .theme-btn {
-  padding: 10px 18px;
-  background: #4f46e5;
-  color: white;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s ease;
-}
+    .video-content {
+      padding: 18px 8px 8px;
+    }
 
-.theme-btn:hover {
-  transform: scale(1.05);
-}
+    .video-meta {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #67e8f9;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
 
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 28px;
+    .roadmap {
+      margin: 10px 0 44px;
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 10px 0 24px;
+      max-width: 700px;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .step {
+      border-radius: 28px;
+      padding: 25px;
+      transition: .3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step span {
+      display: grid;
+      place-items: center;
+      width: 56px;
+      height: 56px;
+      margin-bottom: 18px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      font-weight: 900;
+      box-shadow: 0 14px 30px rgba(6,182,212,.18);
+    }
+
+    .bottom-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: var(--card);
+      backdrop-filter: blur(24px);
+    }
+
+    .bottom-actions p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(26px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      from { transform: translateY(0); }
+      to { transform: translateY(16px); }
+    }
+
+    @media (max-width: 980px) {
+      .hero, .stats, .videos, .timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .visual-card {
+        min-height: auto;
       }
     }
 
-    /* DARK MODE */
+    @media (max-width: 640px) {
+      .container {
+        width: min(100% - 24px, 1180px);
+        padding-top: 14px;
+      }
 
-    /* DARK MODE */
+      .navbar {
+        position: static;
+        flex-direction: column;
+        align-items: stretch;
+      }
 
-.dark body {
-  background: #0f172a !important;
-  color: #f8fafc !important;
-}
+      .nav-actions {
+        justify-content: space-between;
+      }
 
-.dark .container {
-  background: transparent !important;
-}
+      .hero-card, .visual-card {
+        padding: 26px;
+        border-radius: 26px;
+      }
 
-.dark select {
-  background: #1e293b !important;
-  color: white !important;
-  border: 1px solid #334155 !important;
-}
+      .hero h1 {
+        letter-spacing: -1.7px;
+      }
 
-.dark h1,
-.dark h2,
-.dark p,
-.dark label,
-.dark .subtitle {
-  color: #f8fafc !important;
-}
+      .path-header, .bottom-actions {
+        align-items: flex-start;
+        flex-direction: column;
+      }
 
-.dark iframe {
-  box-shadow: 0 10px 22px rgba(255,255,255,0.08);
-}
+      .video-card iframe {
+        height: 210px;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <div class="noise"></div>
+  <div class="orb one"></div>
+  <div class="orb two"></div>
 
-  <div class="container">
+  <main class="container">
+    <nav class="navbar">
+      <div class="brand">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>PlacementorAI</span>
+      </div>
 
-    <h1>AI-Recommended Learning Path</h1>
-    <p class="subtitle">
-      Personalized video recommendations based on your selected course and placement goals
-    </p>
+      <div class="nav-actions">
+        <a href="#video-section" class="nav-link">Learning Path</a>
+        <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      </div>
+    </nav>
 
-    <div class="course-select">
+    <section class="hero">
+      <div class="hero-card">
+        <div class="badge"><i class="fa-solid fa-sparkles"></i> AI Powered Recommendations</div>
+        <h1>Learn smarter with a <span class="gradient-text">personalized path</span></h1>
+        <p>
+          Explore curated tutorials, structured roadmaps, and placement-focused resources designed to help you learn faster and build confidence.
+        </p>
 
-  <label for="course">Choose Course:</label>
+        <div class="controls">
+          <div class="select-wrap">
+            <i class="fa-solid fa-layer-group"></i>
+            <select id="course" onchange="loadVideos()">
+              <option value="powerbi">Power BI</option>
+              <option value="dsa">DSA</option>
+              <option value="datascience">Data Science</option>
+              <option value="webdev">Web Development</option>
+            </select>
+          </div>
+          <a href="#video-section" class="start-btn"><i class="fa-solid fa-play"></i> Start Learning</a>
+        </div>
+      </div>
 
-  <select id="course" onchange="loadVideos()">
-    <option value="powerbi">Power BI</option>
-    <option value="dsa">Data Structures & Algorithms</option>
-    <option value="datascience">Data Science</option>
-    <option value="webdev">Web Development</option>
-  </select>
+      <div class="visual-card">
+        <div class="floating-panel">
+          <div class="panel-top">
+            <span>Placement Progress</span>
+            <span>76%</span>
+          </div>
+          <div class="progress"><span></span></div>
+        </div>
 
-  <button
-    id="theme-toggle"
-    class="theme-btn"
-    aria-label="Toggle dark mode"
-    style="border:none; cursor:pointer;"
-  >
-    🌙
-  </button>
+        <div class="floating-panel" style="animation-delay:.4s">
+          <div class="panel-top">
+            <span>Recommended Skill</span>
+            <span><i class="fa-solid fa-bolt"></i></span>
+          </div>
+          <p style="color:var(--muted);line-height:1.7">Pick a track and follow resources step-by-step with clean guidance.</p>
+        </div>
 
-</div>
+        <div class="mini-grid">
+          <div class="mini-card">
+            <i class="fa-solid fa-video"></i>
+            <h3>Videos</h3>
+            <p style="color:var(--muted)">Curated tutorials</p>
+          </div>
+          <div class="mini-card">
+            <i class="fa-solid fa-map"></i>
+            <h3>Roadmap</h3>
+            <p style="color:var(--muted)">Clear sequence</p>
+          </div>
+          <div class="mini-card">
+            <i class="fa-solid fa-code"></i>
+            <h3>Practice</h3>
+            <p style="color:var(--muted)">Project learning</p>
+          </div>
+          <div class="mini-card">
+            <i class="fa-solid fa-briefcase"></i>
+            <h3>Career</h3>
+            <p style="color:var(--muted)">Placement ready</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <!-- Videos Load Here -->
-    <div id="video-section"></div>
+    <section class="stats">
+      <div class="stat-card">
+        <i class="fa-solid fa-route"></i>
+        <h3>Structured Roadmap</h3>
+        <p>Follow a clear path from basics to advanced concepts without confusion.</p>
+      </div>
 
-    <a href="index.html" class="back-btn">
-      ← Back to Dashboard
-    </a>
+      <div class="stat-card">
+        <i class="fa-solid fa-video"></i>
+        <h3>Curated Videos</h3>
+        <p>Learn from selected beginner-friendly tutorials and practical resources.</p>
+      </div>
 
-  </div>
+      <div class="stat-card">
+        <i class="fa-solid fa-bolt"></i>
+        <h3>Fast Learning</h3>
+        <p>Switch between courses instantly and continue learning at your own pace.</p>
+      </div>
+    </section>
 
-  <!-- SCRIPT -->
+    <section id="video-section"></section>
+
+    <section class="roadmap">
+      <h2>How This Path Helps You</h2>
+      <p class="section-subtitle">A simple learning flow that turns random resources into a clear placement preparation journey.</p>
+
+      <div class="timeline">
+        <div class="step">
+          <span>1</span>
+          <h3>Choose Course</h3>
+          <p>Select your learning track based on your interest and placement goal.</p>
+        </div>
+
+        <div class="step">
+          <span>2</span>
+          <h3>Watch Videos</h3>
+          <p>Understand core concepts through curated video resources.</p>
+        </div>
+
+        <div class="step">
+          <span>3</span>
+          <h3>Practice Skills</h3>
+          <p>Apply your knowledge using mini projects and hands-on practice.</p>
+        </div>
+
+        <div class="step">
+          <span>4</span>
+          <h3>Prepare Placement</h3>
+          <p>Build strong confidence for interviews and career growth.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="bottom-actions">
+      <div>
+        <h3>Ready to continue?</h3>
+        <p>Go back to your dashboard and track your learning progress.</p>
+      </div>
+      <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    </div>
+  </main>
+
   <script>
     function loadVideos() {
       const course = document.getElementById("course").value;
       const section = document.getElementById("video-section");
 
-      let content = "";
+      const data = {
+        powerbi: {
+          title: "Power BI Learning Path",
+          icon: "fa-chart-simple",
+          videos: [
+            {
+              link: "https://www.youtube.com/embed/TmhQCQr_DCA",
+              title: "Power BI Beginner Tutorial",
+              desc: "Learn dashboards, reports, charts, and business intelligence basics."
+            },
+            {
+              link: "https://www.youtube.com/embed/AGrl-H87pRU",
+              title: "Power BI Beginner to Pro",
+              desc: "Build strong Power BI skills with real examples and projects."
+            }
+          ]
+        },
 
-      if (course === "powerbi") {
-        content = `
-          <h2 class="section-title"> Power BI Learning Path</h2>
-          <div class="videos">
-            <iframe src="https://www.youtube.com/embed/TmhQCQr_DCA" allowfullscreen></iframe>
-            <iframe src="https://www.youtube.com/embed/AGrl-H87pRU" allowfullscreen></iframe>
+        dsa: {
+          title: "DSA Learning Path",
+          icon: "fa-code",
+          videos: [
+            {
+              link: "https://www.youtube.com/embed/8hly31xKli0",
+              title: "Data Structures Basics",
+              desc: "Start learning arrays, linked lists, stacks, queues, and trees."
+            },
+            {
+              link: "https://www.youtube.com/embed/RBSGKlAvoiM",
+              title: "Complete DSA Course",
+              desc: "Prepare for coding interviews with structured DSA concepts."
+            }
+          ]
+        },
+
+        datascience: {
+          title: "Data Science Learning Path",
+          icon: "fa-brain",
+          videos: [
+            {
+              link: "https://www.youtube.com/embed/X3paOmcrTjQ",
+              title: "Data Science Full Course",
+              desc: "Learn data analysis, visualization, machine learning, and Python."
+            },
+            {
+              link: "https://www.youtube.com/embed/ua-CiDNNj30",
+              title: "Data Science Roadmap",
+              desc: "Understand the complete path to become a data science beginner."
+            }
+          ]
+        },
+
+        webdev: {
+          title: "Web Development Learning Path",
+          icon: "fa-globe",
+          videos: [
+            {
+              link: "https://www.youtube.com/embed/HGTJBPNC-Gw",
+              title: "HTML & CSS Full Course",
+              desc: "Learn how to build beautiful and responsive websites."
+            },
+            {
+              link: "https://www.youtube.com/embed/Q33KBiDriJY",
+              title: "JavaScript Tutorial",
+              desc: "Understand frontend interactivity using JavaScript."
+            }
+          ]
+        }
+      };
+
+      const selected = data[course];
+
+      section.innerHTML = `
+        <div class="path-header">
+          <div>
+            <h2><i class="fa-solid ${selected.icon}"></i> ${selected.title}</h2>
+            <p class="section-subtitle" style="margin-bottom:0">Start with these recommended videos and continue step-by-step.</p>
           </div>
-        `;
-      }
+          <span class="pill"><i class="fa-solid fa-circle-check"></i> Recommended Path</span>
+        </div>
 
-      if (course === "dsa") {
-        content = `
-          <h2 class="section-title"> DSA Learning Path</h2>
-          <div class="videos">
-            <iframe src="https://www.youtube.com/embed/8hly31xKli0" allowfullscreen></iframe>
-            <iframe src="https://www.youtube.com/embed/RBSGKlAvoiM" allowfullscreen></iframe>
-          </div>
-        `;
-      }
-
-      if (course === "datascience") {
-        content = `
-          <h2 class="section-title"> Data Science Learning Path</h2>
-          <div class="videos">
-            <iframe src="https://www.youtube.com/embed/X3paOmcrTjQ" allowfullscreen></iframe>
-            <iframe src="https://www.youtube.com/embed/ua-CiDNNj30" allowfullscreen></iframe>
-          </div>
-        `;
-      }
-
-      if (course === "webdev") {
-        content = `
-          <h2 class="section-title"> Web Development Learning Path</h2>
-          <div class="videos">
-            <iframe src="https://www.youtube.com/embed/HGTJBPNC-Gw" allowfullscreen></iframe>
-            <iframe src="https://www.youtube.com/embed/Q33KBiDriJY" allowfullscreen></iframe>
-          </div>
-        `;
-      }
-
-      section.innerHTML = content;
+        <div class="videos">
+          ${selected.videos.map((video, index) => `
+            <article class="video-card">
+              <div class="video-frame">
+                <iframe src="${video.link}" title="${video.title}" allowfullscreen></iframe>
+              </div>
+              <div class="video-content">
+                <div class="video-meta"><i class="fa-solid fa-play"></i> Lesson ${index + 1}</div>
+                <h3>${video.title}</h3>
+                <p>${video.desc}</p>
+              </div>
+            </article>
+          `).join("")}
+        </div>
+      `;
     }
 
-    // Load default videos
+    const themeToggle = document.getElementById("themeToggle");
+
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light");
+      themeToggle.textContent = document.body.classList.contains("light") ? "☀️" : "🌙";
+    });
+
     loadVideos();
   </script>
-  <script src="js/theme.js"></script>
 </body>
-
 </html>

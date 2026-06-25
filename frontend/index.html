@@ -575,6 +575,71 @@ body.dark-mode .journey-end {
     padding: 16px 18px;
   }
 }
+.feature-card{
+    max-width: 1200px;
+    margin: 80px auto;
+    padding: 60px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 15px 30px rgba(0,0,0,.08);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    transition: .3s;
+}
+
+.feature-card:hover{
+    transform: translateY(-5px);
+}
+
+.feature-card i{
+    font-size: 60px;
+    color: #7c3aed;
+    margin-bottom: 20px;
+}
+
+.feature-card h3{
+    font-size: 2rem;
+    color: #111827;
+    margin-bottom: 15px;
+}
+
+.feature-card p{
+    max-width: 700px;
+    color: #6b7280;
+    line-height: 1.8;
+    margin-bottom: 30px;
+    font-size: 1.05rem;
+}
+
+.feature-card .btn{
+    background: #7c3aed;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: .3s;
+}
+
+.feature-card .btn:hover{
+    background: #6d28d9;
+    transform: translateY(-3px);
+}
+body.dark-mode .feature-card{
+    background: #1e293b;
+}
+
+body.dark-mode .feature-card h3{
+    color: white;
+}
+
+body.dark-mode .feature-card p{
+    color: #cbd5e1;
+}
   </style>
 </head>
 <body>
@@ -886,6 +951,100 @@ body.dark-mode .journey-end {
       <span>Students Placed</span>
     </div>
   </div>
+</section> cd
+
+<section class="feature-card">
+    <i class="fa-solid fa-users"></i>
+
+    <span class="ai-badge">
+        <i class="fa-solid fa-graduation-cap"></i>
+        Alumni Network
+    </span>
+
+    <h3>Alumni Mentorship Hub</h3>
+
+    <p>
+        Connect with experienced alumni for career guidance,
+        interview preparation, resume reviews, placement strategies,
+        and industry insights from professionals working at top companies.
+    </p>
+
+    <a href="alumni-mentorship.html" class="btn">
+        Explore Mentorship
+        <i class="fa-solid fa-arrow-right"></i>
+    </a>
+</section>
+
+<section class="salary-section">
+  <div class="container">
+
+    <div class="salary-card">
+
+      <div class="salary-left">
+
+        <span class="salary-badge">
+          <i class="fa-solid fa-indian-rupee-sign"></i>
+          AI Salary Predictor
+        </span>
+
+        <h2>Predict Your Expected Salary Package</h2>
+
+        <p>
+          Estimate your placement package based on your branch,
+          technical skills, projects, internships, and target role.
+          Get AI-driven salary insights and industry benchmarks.
+        </p>
+
+        <div class="salary-features">
+
+          <div class="salary-feature">
+            <i class="fa-solid fa-chart-line"></i>
+            Salary Forecast
+          </div>
+
+          <div class="salary-feature">
+            <i class="fa-solid fa-building"></i>
+            Company-wise Analysis
+          </div>
+
+          <div class="salary-feature">
+            <i class="fa-solid fa-code"></i>
+            Skill-based Predictions
+          </div>
+
+          <div class="salary-feature">
+            <i class="fa-solid fa-graduation-cap"></i>
+            Branch-wise Insights
+          </div>
+
+        </div>
+
+        <a href="salary-predictor.html" class="salary-btn">
+          Predict Salary
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+      </div>
+
+      <div class="salary-right">
+
+        <div class="salary-preview">
+
+          <h3>Prediction Result</h3>
+
+          <div class="salary-amount">
+            ₹ 12.5 LPA
+          </div>
+
+          <p>Expected Package Range</p>
+
+          <div class="salary-range">
+            ₹8 LPA - ₹15 LPA
+          </div>
+
+        </div>
+
+      </div>
 </div>
 
 

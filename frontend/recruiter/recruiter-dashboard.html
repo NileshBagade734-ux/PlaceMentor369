@@ -88,7 +88,18 @@
     <script src="../js/recruiter-dashboard.js"></script>
     <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
-
+<!-- Mobile Navigation -->
+<script src="../js/mobile-nav.js"></script>
+<script>
+  injectMobileNav([
+    { href: './recruiter-dashboard.html', icon: 'layout-dashboard', label: 'Dashboard' },
+    { href: './postjob.html', icon: 'plus-circle', label: 'Post Job' },
+    { href: './manage-applicant.html', icon: 'users', label: 'Manage Applicants' },
+  ], 'recruiter-dashboard', 'md');
+  lucide.createIcons();
+</script>
+<!-- Botpress Chatbot Scripts -->
+</body>
 <!-- Botpress Chatbot Scripts -->
  <script>
   lucide.createIcons();

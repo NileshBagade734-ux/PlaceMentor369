@@ -79,26 +79,50 @@
         </div>
       </header>
 
+      <!-- ── Resume Completion Progress Tracker ── -->
       <section
         class="bg-white border border-slate-200 rounded-xl p-6 mb-8 shadow-sm"
+        id="completion-tracker"
       >
-        <div class="flex justify-between items-center mb-4">
+        <!-- Header row -->
+        <div class="flex justify-between items-start mb-4">
           <div>
-            <h3 class="font-semibold text-slate-900">Profile Completion</h3>
-            <p class="text-xs text-slate-500">
-              Keep your profile updated for better reach
+            <h3 class="font-semibold text-slate-900">Resume Completion</h3>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Complete your profile to increase recruiter visibility
             </p>
           </div>
-          <span id="completion-label" class="text-lg font-bold text-indigo-600"
-            >0%</span
-          >
+          <div class="text-right">
+            <span id="completion-label" class="text-2xl font-extrabold text-indigo-600">0%</span>
+            <p id="completion-status-text" class="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mt-0.5">Getting started</p>
+          </div>
         </div>
-        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+
+        <!-- Progress bar -->
+        <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden mb-5">
           <div
             id="progress-bar"
-            class="bg-indigo-600 h-full transition-all duration-1000"
+            class="h-full rounded-full transition-all duration-1000"
             style="width: 0%"
           ></div>
+        </div>
+
+        <!-- Checklist grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="completion-checklist">
+          <!-- items injected by JS -->
+        </div>
+
+        <!-- Footer CTA -->
+        <div class="mt-5 flex items-center justify-between">
+          <p id="completion-tip" class="text-xs text-slate-400 italic"></p>
+          <a
+            href="./student-profile.html"
+            class="btn-primary text-xs py-2 px-4"
+            id="completion-cta"
+          >
+            <i data-lucide="user-cog" class="w-3.5 h-3.5"></i>
+            Complete Profile
+          </a>
         </div>
       </section>
 
@@ -148,20 +172,26 @@
         <div class="divide-y divide-slate-100" id="applications-list"></div>
       </section>
 
-      <section>
-        <h3 class="font-semibold text-slate-900 mb-4">Quick Actions</h3>
-        <div class="flex flex-wrap gap-4">
-          <a href="../student/student-joblist.html" class="btn-primary"
-            ><i data-lucide="search" class="w-4 h-4"></i> Browse Jobs</a
-          >
-          <a href="../student/student-profile.html" class="btn-secondary"
-            ><i data-lucide="user-cog" class="w-4 h-4"></i> Update Profile</a
-          >
-          <a href="../student/student-application.html" class="btn-secondary"
-            ><i data-lucide="activity" class="w-4 h-4"></i> Track Apps</a
-          >
-        </div>
-      </section>
+<section>
+  <h3 class="font-semibold text-slate-900 mb-4">Quick Actions</h3>
+  <div class="flex flex-wrap gap-4">
+    <a href="../student/student-joblist.html" class="btn-primary">
+      <i data-lucide="search" class="w-4 h-4"></i> Browse Jobs
+    </a>
+
+    <a href="../student/student-profile.html" class="btn-secondary">
+      <i data-lucide="user-cog" class="w-4 h-4"></i> Update Profile
+    </a>
+
+    <a href="../student/student-application.html" class="btn-secondary">
+      <i data-lucide="activity" class="w-4 h-4"></i> Track Apps
+    </a>
+
+    <a href="../student/student-joblist.html" class="btn-secondary">
+      <i data-lucide="bar-chart-2" class="w-4 h-4"></i> Skill Gap Analysis
+    </a>
+  </div>
+</section>
     </main>
 
     <script src="../js/config.js"></script>
@@ -171,7 +201,18 @@
       src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js"
       defer
     ></script>
-
+    <!-- Mobile Navigation -->
+<script src="../js/mobile-nav.js"></script>
+<script>
+  injectMobileNav([
+    { href: './student-dashboard.html', icon: 'layout-dashboard', label: 'Dashboard' },
+    { href: './student-profile.html', icon: 'user', label: 'Profile' },
+    { href: './student-joblist.html', icon: 'briefcase', label: 'Jobs' },
+    { href: './student-application.html', icon: 'file-text', label: 'My Applications' },
+    { href: './prep-dashboard.html', icon: 'sliders', label: 'Prep Tracker' },
+  ], 'student-dashboard','md');
+</script>
     <!-- Botpress Chatbot Scripts -->
   </body>
+
 </html>

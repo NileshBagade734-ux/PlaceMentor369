@@ -2,6 +2,126 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+main
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - PlacementorAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body class="min-h-screen bg-slate-50 dark:bg-gray-900 transition-colors duration-300 flex flex-col">
+
+  <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html" class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+        PlacementorAI
+      </a>
+      <nav class="hidden md:flex items-center gap-6">
+        <a href="index.html" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium transition">Home</a>
+        <a href="contact.html" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium transition">Contact</a>
+        <a href="register.html" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition">Sign Up</a>
+      </nav>
+      <button id="theme-toggle" class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 dark:text-white" aria-label="Toggle dark mode">🌙</button>
+    </div>
+  </header>
+
+  <main class="flex-1 flex items-center justify-center px-6 py-12">
+    <div id="login-card" class="w-full max-w-md opacity-0 translate-y-6">
+
+      <div class="text-center mb-6">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">Welcome Back</h1>
+        <p class="text-gray-600 dark:text-gray-400">Log in to your account</p>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700">
+        <form id="loginForm" class="space-y-5" novalidate>
+
+          <!-- Role -->
+          <div>
+            <label for="role" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">I am a...</label>
+            <select id="role" name="role" required
+              class="form-select w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none">
+              <option value="">Select your role</option>
+              <option value="student">Student</option>
+              <option value="recruiter">Recruiter</option>
+              <option value="admin">Placement Officer (Admin)</option>
+            </select>
+            <p class="invalid-feedback text-red-500 text-xs mt-1">Please select your role.</p>
+            <p class="valid-feedback text-green-600 text-xs mt-1">Looks good!</p>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required
+              class="form-control w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"/>
+            <p class="invalid-feedback text-red-500 text-xs mt-1">Please enter a valid email address.</p>
+            <p class="valid-feedback text-green-600 text-xs mt-1">Looks good!</p>
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Password</label>
+            <div class="relative">
+              <input type="password" id="password" name="password" placeholder="••••••••" required minlength="6"
+                class="form-control w-full px-4 py-3 pr-12 rounded-xl border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"/>
+              <button type="button" id="togglePassword"
+                class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-600" aria-label="Toggle password visibility">
+                <i data-lucide="eye"></i>
+              </button>
+            </div>
+            <p class="invalid-feedback text-red-500 text-xs mt-1">Password must be at least 6 characters.</p>
+            <p class="valid-feedback text-green-600 text-xs mt-1">Looks good!</p>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" id="loginBtn"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 rounded-xl transition active:scale-95 flex items-center justify-center gap-2">
+            <i data-lucide="log-in"></i>
+            <span id="btnText">Sign In</span>
+          </button>
+
+          <!-- Divider -->
+          <div class="flex items-center my-4">
+            <hr class="flex-grow border-gray-300 dark:border-gray-600">
+            <span class="px-2 text-gray-400 text-sm">OR</span>
+            <hr class="flex-grow border-gray-300 dark:border-gray-600">
+          </div>
+
+          <!-- Social -->
+          <div class="flex gap-4">
+            <button type="button"
+              class="flex-1 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-600 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition dark:text-white text-sm">
+              <img src="https://img.icons8.com/color/20/google-logo.png" alt="Google"> Google
+            </button>
+            <button type="button"
+              class="flex-1 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-600 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition dark:text-white text-sm">
+              <img src="https://img.icons8.com/ios-glyphs/20/github.png" class="dark:invert" alt="GitHub"> GitHub
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      <p class="text-center text-sm mt-6 text-gray-600 dark:text-gray-400">
+        Don't have an account? <a href="register.html" class="text-indigo-600 font-semibold hover:underline">Register here</a>
+      </p>
+    </div>
+  </main>
+
+  <script src="js/theme.js"></script>
+  <script src="js/login.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.lucide) lucide.createIcons();
+      gsap.to("#login-card", { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" });
+    });
+  </script>
+
   <meta http-equiv="Content-Security-Policy"
 content="
 default-src 'self';
@@ -137,5 +257,6 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
 
 <!-- Botpress Chatbot Scripts -->
 
+ main
 </body>
 </html>
