@@ -1,0 +1,114 @@
+.job-details-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #333;
+  font-family: 'Inter', sans-serif;
+}
+
+.job-header {
+  border-bottom: 2px solid #eee;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+
+.job-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin: 0 0 10px 0;
+}
+
+.job-company {
+  font-size: 1.2rem;
+  color: #4a4e69;
+  font-weight: 500;
+  margin: 0;
+}
+
+.job-body {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.job-section h2 {
+  font-size: 1.5rem;
+  color: #16213e;
+  margin-bottom: 15px;
+}
+
+.job-section p, .job-section ul {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #444;
+}
+
+.job-section ul {
+  padding-left: 20px;
+}
+
+.job-section li {
+  margin-bottom: 8px;
+}
+
+.job-actions {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.practice-btn {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(37, 117, 252, 0.4);
+  transition: all 0.3s ease;
+}
+
+.practice-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(37, 117, 252, 0.6);
+}
+
+.practice-btn:active {
+  transform: translateY(1px);
+}
+
+.btn-icon {
+  font-size: 1.4rem;
+}
+
+/* Dark mode fallback if the app uses it */
+@media (prefers-color-scheme: dark) {
+  .job-details-container {
+    color: #f1f1f1;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .job-title {
+    color: #ffffff;
+  }
+  .job-company {
+    color: #c0c0c0;
+  }
+  .job-section h2 {
+    color: #e0e0e0;
+  }
+  .job-section p, .job-section ul {
+    color: #d0d0d0;
+  }
+}
