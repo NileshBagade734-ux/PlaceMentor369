@@ -537,18 +537,6 @@ body.dark-mode .salary-left h2{
 body.dark-mode .salary-range{
     background:#14532d;
     color:white;
-}
-
-/* === MOBILE FIXES ===*/
-@media (max-width: 768px) {
-    .resume-content {
-        grid-template-columns: 1fr;
-    }
-    .salary-card {
-        grid-template-columns: 1fr;
-    }
-}
-
 .feature-card{
     max-width: 900px;
     margin: 60px auto;
@@ -799,9 +787,8 @@ body.dark-mode .recruiter-card{
 
 body.dark-mode .recruiter-card:hover{
     box-shadow:0 20px 40px rgba(124,58,237,0.35);
-}
-
 body.dark-mode .feature-card i{
     background: #312e81;
     color: #c4b5fd;
 }
+}   }
