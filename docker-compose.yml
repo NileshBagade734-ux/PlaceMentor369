@@ -1,12 +1,21 @@
 services:
   mongo:
     image: mongo:7
+    container_name: placementor_db
     restart: unless-stopped
+    ports:
+      - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - placementor_network
 
   backend:
-    build: ./backend
+  
+    build:
+      context: .             
+      dockerfile: backend/Dockerfile 
+    container_name: placementor_backend
     restart: unless-stopped
     ports:
       - "5000:5000"
@@ -18,6 +27,25 @@ services:
       - ./backend/uploads:/app/uploads
     depends_on:
       - mongo
+    networks:
+      - placementor_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: placementor_frontend
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - placementor_network
 
 volumes:
   mongo_data:
+
+networks:
+  placementor_network:
+    driver: bridge

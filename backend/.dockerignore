@@ -1,5 +1,19 @@
+# Node & NPM
 node_modules
 npm-debug.log
+
+# Git & OS files
+.git
+.gitignore
+.gitattributes
+.DS_Store
+Thumbs.db
+
+# Environment variables (Crucial for security)
 .env
+.env.local
+.env.*
+
+# Uploads
 uploads/resumes/*
 !uploads/resumes/.gitkeep

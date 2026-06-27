@@ -106,10 +106,19 @@ app.use("/api/student", studentRoutes);
 app.use("/api/recruiter", recruiterRoutes);
 app.use("/api/admin", adminRoutes);
 
-// 404 Route
-app.use((req, res) => {
-  res.status(404).json({ status: "error", message: "Route not found" });
+app.use("/api/admin", adminRoutes);
+
+// Custom Global Error Handler
+import globalErrorHandler from "./middlewares/errorMiddleware.js";
+import AppError from "./utils/AppError.js";
+
+// Handle unhandled routes (Catch-all for any request not matched above)
+app.all(/.*$/, (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
+
+// Global error handling middleware
+app.use(globalErrorHandler);
 
 // Global Error Handler (must be last)
 app.use(errorHandler);
