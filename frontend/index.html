@@ -17,7 +17,19 @@
     .nav { display: flex; justify-content: space-between; align-items: center; }
     .logo { font-size: 22px; font-weight: 700; }
     .nav-links { display: flex; align-items: center; gap: 8px; }
-    nav a { margin: 0 12px; text-decoration: none; color: #374151; font-weight: 500; }
+    .nav-links a {
+        margin: 0 12px;
+        text-decoration: none;
+        color: #374151;
+        font-weight: 500;
+        transition: color 0.3s ease, text-decoration-color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+        color: #00bcd4;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
     .login { color: #4f46e5; }
     .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
     .hamburger i { font-size: 24px; color: #374151; }
