@@ -46,17 +46,11 @@ export const sendStatusUpdateEmail = (
     </div>
   `;
 
-  transporter
+  return transporter
     .sendMail({
       from: `"PlacementorAI" <${process.env.EMAIL_USER}>`,
       to: studentEmail,
       subject,
       html: htmlBody,
-    })
-    .then(() => {
-      console.log(`Email sent to ${studentEmail}`);
-    })
-    .catch((err) => {
-      console.error(`Email failed:`, err.message);
     });
 };

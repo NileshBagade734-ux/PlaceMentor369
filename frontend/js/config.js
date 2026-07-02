@@ -32,6 +32,13 @@ async function apiRequest(endpoint, method = "GET", body = null) {
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
 
+  if (response.status === 401) {
+    localStorage.removeItem("placementor_session");
+    alert("Your session has expired. Please log in again.");
+    window.location.href = "/login.html";
+    return;
+  }
+
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: "Request failed" }));
     throw new Error(error.message || `HTTP ${response.status}`);

@@ -1,7 +1,7 @@
 import Job from "../models/job.js";
 import Application from "../models/application.js";
 import mongoose from "mongoose";
-import { sendStatusUpdateEmail } from "../utils/emailService.js";
+import emailQueue from "../queues/emailQueue.js";
 
 /* ======================================================
    CREATE JOB
@@ -12,8 +12,6 @@ export const createJob = async (req, res) => {
     console.log("REQ.BODY:", req.body);
 
     const recruiterId = req.user.id;
-    const existingJob = await Job.findOne({ title, company, recruiter: recruiterId, createdAt: { $gte: new Date(Date.now() - 5 * 60000) } });
-    if (existingJob) return res.status(400).json({ message: "Duplicate job posting detected. Please wait 5 minutes before posting the same job again." });
 
     if (!recruiterId)
       return res.status(400).json({ message: "Recruiter ID missing" });
@@ -32,17 +30,9 @@ export const createJob = async (req, res) => {
     if (!title || !company || !description || !deadline) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-    const normalizedCompany = company.trim().toLowerCase();
 
-const existingCompany = await Job.findOne({
-  company: { $regex: new RegExp(`^${normalizedCompany}$`, "i") }
-});
-
-if (existingCompany) {
-  return res.status(400).json({
-    message: "Company already exists"
-  });
-}
+    const existingJob = await Job.findOne({ title: title.trim(), company: company.trim(), recruiter: recruiterId, createdAt: { $gte: new Date(Date.now() - 5 * 60000) } });
+    if (existingJob) return res.status(400).json({ message: "Duplicate job posting detected. Please wait 5 minutes before posting the same job again." });
 
     const job = await Job.create({
       title,
@@ -116,13 +106,13 @@ export const updateApplicantStatus = async (req, res) => {
     await application.save();
 
     if (status === "shortlisted" || status === "rejected") {
-       await sendStatusUpdateEmail(
-        application.student.email,
-        application.student.name,
-        application.job.title,
-        application.job.company,
-        status
-      );
+       await emailQueue.add("email-job", {
+         studentEmail: application.student.email,
+         studentName: application.student.name,
+         jobTitle: application.job.title,
+         companyName: application.job.company,
+         status
+       });
     }
 
     return res.status(200).json({
@@ -142,8 +132,6 @@ export const updateApplicantStatus = async (req, res) => {
 export const getRecruiterDashboardStats = async (req, res) => {
   try {
     const recruiterId = req.user.id;
-    const existingJob = await Job.findOne({ title, company, recruiter: recruiterId, createdAt: { $gte: new Date(Date.now() - 5 * 60000) } });
-    if (existingJob) return res.status(400).json({ message: "Duplicate job posting detected. Please wait 5 minutes before posting the same job again." });
 
     const jobs = await Job.find({ recruiter: recruiterId }).select("_id");
     const jobIds = jobs.map((j) => j._id);

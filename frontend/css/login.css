@@ -55,11 +55,11 @@ body { font-family: 'Inter', sans-serif; }
   box-shadow: 0 0 0 2px rgba(239,68,68,0.2) !important;
 }
 
-main
 .form-control.is-valid,
 .form-select.is-valid {
   border-color: #22c55e !important;
   box-shadow: 0 0 0 2px rgba(34,197,94,0.2) !important;
+}
 
 .was-validated .form-control:valid ~ .valid-feedback,
 .was-validated .form-select:valid ~ .valid-feedback {
@@ -81,5 +81,4 @@ main
 
 @keyframes spin {
   to { transform: rotate(360deg); }
-main
 }
