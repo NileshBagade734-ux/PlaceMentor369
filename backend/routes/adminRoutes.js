@@ -10,11 +10,13 @@ import {
   approveJob,
   deleteJob
 } from "../controllers/adminController.js";
+import { getAnalytics } from "../controllers/analyticsController.js";
 
 const router = express.Router();
 
 /* DASHBOARD */
 router.get("/dashboard", protect, adminOnly, getDashboardStats);
+router.get("/analytics", protect, adminOnly, getAnalytics);
 
 /* STUDENTS */
 router.get("/students", protect, adminOnly, getAllStudents);

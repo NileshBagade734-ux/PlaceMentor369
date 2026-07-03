@@ -65,3 +65,57 @@ if (themeToggle) {
     });
   });
 })();
+// Utility function to dynamically highlight matching text queries
+function highlightSearchKeywords(element, query) {
+  if (!element.getAttribute('data-original-text')) {
+    element.setAttribute('data-original-text', element.innerHTML);
+  }
+
+  const originalContent = element.getAttribute('data-original-text');
+
+  if (!query.trim()) {
+    element.innerHTML = originalContent; // 
+    return;
+  }
+
+  try {
+    const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const regex = new RegExp(`(${escapedQuery})`, 'gi');
+
+    element.innerHTML = originalContent.replace(regex, '<mark class="custom-highlight">$1</mark>');
+  } catch (error) {
+    console.error("Highlighting error:", error);
+  }
+}
+// Live Search Filtering for Success Metrics Layout
+document.addEventListener("DOMContentLoaded", () => {
+  const searchBar = document.getElementById("metricSearchInput");
+  if (!searchBar) return; 
+
+  // Select all target metric cards matching the actual repository structure
+  const cards = document.querySelectorAll(".metric-card");
+
+  searchBar.addEventListener("input", (e) => {
+    const query = e.target.value.trim();
+    const lowerQuery = query.toLowerCase();
+
+    cards.forEach((card) => {
+      // Look inside headings and descriptive sub-paragraphs inside the metric card
+      const heading = card.querySelector("h2");
+      const paragraph = card.querySelector("p");
+      if (!heading || !paragraph) return;
+
+      // Match queries inside both the numeric values and text descriptions
+      const targetText = `${heading.textContent} ${paragraph.textContent}`.toLowerCase();
+
+      if (targetText.includes(lowerQuery)) {
+        card.style.display = ""; // Show card
+        
+        // Highlight logic applied on descriptions for search context clarity
+        highlightSearchKeywords(paragraph, query);
+      } else {
+        card.style.display = "none"; // Hide card
+      }
+    });
+  });
+});

@@ -19,6 +19,7 @@ dotenv.config({ override: true });
 
 // Initialize Background Workers
 import "./workers/aiWorker.js";
+import "./workers/emailWorker.js";
 
 const app = express();
 const httpServer = createServer(app);

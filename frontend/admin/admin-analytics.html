@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Analytics Dashboard | PlacementorAI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive analytics dashboard for PlacementorAI administrators. View placement metrics, skill demand, application trends, and more." />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin-analytics.css">
+</head>
+<body>
+
+  <!-- ═══ Sidebar ═══ -->
+  <div class="sidebar">
+    <div class="logo">PlacementorAI</div>
+    <a href="../admin/admin-dashboard.html" class="nav-item">Dashboard</a>
+    <a href="../admin/admin-analytics.html" class="nav-item active">📊 Analytics</a>
+    <a href="../admin/admin-studentverify.html" class="nav-item">Verify Students</a>
+    <a href="../admin/admin-managejob.html" class="nav-item">Manage Jobs</a>
+  </div>
+
+  <!-- ═══ Main Content ═══ -->
+  <div class="main">
+
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="topbar-title">Analytics Dashboard</div>
+      <div class="topbar-actions">
+        <button class="btn-refresh" id="refreshBtn" onclick="refreshAnalytics()">
+          <i class="fa-solid fa-arrows-rotate"></i>
+          Refresh
+        </button>
+        <div class="logout" onclick="logout()">Logout</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1>Platform Analytics</h1>
+        <p class="subtitle">Deep insights from MongoDB aggregation pipelines — updated in real-time</p>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="summary-row">
+        <div class="summary-card">
+          <div class="label">Total Applications</div>
+          <div class="value accent-indigo" id="summaryTotalApps">—</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Acceptance Rate</div>
+          <div class="value accent-emerald" id="summaryAcceptRate">—</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Top Skill</div>
+          <div class="value accent-amber" id="summaryTopSkill">—</div>
+        </div>
+      </div>
+
+      <!-- Chart Grid -->
+      <div class="chart-grid">
+
+        <!-- 1. Applications Per Month -->
+        <div class="chart-card loading" id="card-appsByMonth">
+          <h3>
+            <span class="chart-icon icon-line"><i class="fa-solid fa-chart-line"></i></span>
+            Applications Per Month
+          </h3>
+          <div class="chart-wrapper">
+            <canvas id="chartAppsByMonth"></canvas>
+          </div>
+        </div>
+
+        <!-- 2. Application Status Breakdown -->
+        <div class="chart-card loading" id="card-statusBreakdown">
+          <h3>
+            <span class="chart-icon icon-doughnut"><i class="fa-solid fa-chart-pie"></i></span>
+            Application Status Breakdown
+          </h3>
+          <div class="chart-wrapper">
+            <canvas id="chartStatusBreakdown"></canvas>
+          </div>
+        </div>
+
+        <!-- 3. Most Demanded Skills -->
+        <div class="chart-card loading" id="card-skills">
+          <h3>
+            <span class="chart-icon icon-bar-h"><i class="fa-solid fa-ranking-star"></i></span>
+            Most Demanded Skills
+          </h3>
+          <div class="chart-wrapper">
+            <canvas id="chartSkills"></canvas>
+          </div>
+        </div>
+
+        <!-- 4. Applications Per Company -->
+        <div class="chart-card loading" id="card-companies">
+          <h3>
+            <span class="chart-icon icon-bar"><i class="fa-solid fa-building"></i></span>
+            Applications Per Company
+          </h3>
+          <div class="chart-wrapper">
+            <canvas id="chartCompanies"></canvas>
+          </div>
+        </div>
+
+        <!-- 5. Students Per Branch -->
+        <div class="chart-card loading" id="card-branches">
+          <h3>
+            <span class="chart-icon icon-pie"><i class="fa-solid fa-graduation-cap"></i></span>
+            Students Per Branch
+          </h3>
+          <div class="chart-wrapper">
+            <canvas id="chartBranches"></canvas>
+          </div>
+        </div>
+
+        <!-- 6. Job Postings Trend -->
+        <div class="chart-card loading" id="card-jobsTrend">
+          <h3>
+            <span class="chart-icon icon-area"><i class="fa-solid fa-arrow-trend-up"></i></span>
+            Job Postings Trend
+          </h3>
+          <div class="chart-wrapper">
+            <canvas id="chartJobsTrend"></canvas>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/admin-analytics.js"></script>
+
+</body>
+</html>
