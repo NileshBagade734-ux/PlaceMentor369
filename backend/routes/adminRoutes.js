@@ -10,13 +10,23 @@ import {
   approveJob,
   deleteJob
 } from "../controllers/adminController.js";
-import { getAnalytics } from "../controllers/analyticsController.js";
+import {
+  getAnalytics,
+  updateApplicationOutcome,
+  getPlacementMetrics,
+  getApplicationAuditTrail
+} from "../controllers/analyticsController.js";
 
 const router = express.Router();
 
 /* DASHBOARD */
 router.get("/dashboard", protect, adminOnly, getDashboardStats);
 router.get("/analytics", protect, adminOnly, getAnalytics);
+
+/* PLACEMENT TRACKING (Issue #354) */
+router.get("/analytics/placement-metrics", protect, adminOnly, getPlacementMetrics);
+router.patch("/applications/:id/status", protect, adminOnly, updateApplicationOutcome);
+router.get("/applications/:id/audit-trail", protect, adminOnly, getApplicationAuditTrail);
 
 /* STUDENTS */
 router.get("/students", protect, adminOnly, getAllStudents);
