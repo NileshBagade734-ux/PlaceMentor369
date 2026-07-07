@@ -106,13 +106,17 @@ export const updateApplicantStatus = async (req, res) => {
     await application.save();
 
     if (status === "shortlisted" || status === "rejected") {
-       await emailQueue.add("email-job", {
-         studentEmail: application.student.email,
-         studentName: application.student.name,
-         jobTitle: application.job.title,
-         companyName: application.job.company,
-         status
-       });
+      if (emailQueue) {
+        await emailQueue.add("email-job", {
+          studentEmail: application.student.email,
+          studentName: application.student.name,
+          jobTitle: application.job.title,
+          companyName: application.job.company,
+          status
+        });
+      } else {
+        console.warn("⚠️ Email queue unavailable. Skipping status notification email.");
+      }
     }
 
     return res.status(200).json({
