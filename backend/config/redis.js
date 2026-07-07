@@ -1,7 +1,8 @@
 import Redis from 'ioredis';
 import dotenv from 'dotenv';
+import { fileURLToPath } from "url";
 
-dotenv.config({ override: true });
+dotenv.config({ path: fileURLToPath(new URL("../.env", import.meta.url)), override: true });
 
 // Check if REDIS_URI exists
 const redisUri = process.env.REDIS_URI;

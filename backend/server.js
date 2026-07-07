@@ -8,14 +8,17 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import { fileURLToPath } from "url";
 
 // Routes
 import studentRoutes from "./routes/studentRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import recruiterRoutes from "./routes/recruiterRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import calendarRoutes from "./routes/calendarRoutes.js";
+const placementEventRoutes = require("./routes/placementEventRoutes");
 
-dotenv.config({ override: true });
+dotenv.config({ path: fileURLToPath(new URL("./.env", import.meta.url)), override: true });
 
 // Initialize Background Workers
 import "./workers/aiWorker.js";
@@ -79,6 +82,7 @@ if (redisConnection) {
 /* ============================
    GLOBAL MIDDLEWARE
 ============================ */
+app.use("/api/placement-events", placementEventRoutes);
 
 // ✅ CORS (allow frontend URLs)
 app.use(
@@ -106,6 +110,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/recruiter", recruiterRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/calendar", calendarRoutes);
 
 // 404 Route
 app.use((req, res) => {

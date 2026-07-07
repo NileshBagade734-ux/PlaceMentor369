@@ -1,0 +1,295 @@
+/*
+  Placement Calendar Styles
+  -------------------------------------------------------
+  Location in repo: frontend/css/calendar.css
+
+  Notes:
+  - Uses CSS custom properties so it's easy to align with whatever
+    theme variables the rest of PlaceMentor369 already defines in
+    frontend/css/style.css. If style.css already declares variables
+    like --primary-color, feel free to remove the fallbacks below
+    and reuse those directly instead.
+  - No Bootstrap / external UI framework used, per project constraints.
+*/
+
+:root {
+  --pc-primary: #2f6fed;
+  --pc-primary-dark: #1f4fbf;
+  --pc-bg: #f7f9fc;
+  --pc-card-bg: #ffffff;
+  --pc-border: #e2e6ed;
+  --pc-text: #1f2430;
+  --pc-text-muted: #6b7280;
+  --pc-danger: #e5484d;
+  --pc-radius: 10px;
+
+  /* Default color-coding per event type (used by calendar.js as fallback) */
+  --pc-color-test: #2f6fed;
+  --pc-color-interview: #e08e0b;
+  --pc-color-ppt: #17a673;
+  --pc-color-workshop: #9d5cf0;
+  --pc-color-other: #6b7280;
+}
+
+.calendar-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+  color: var(--pc-text);
+  font-family: inherit; /* inherit whatever base font style.css defines */
+}
+
+.calendar-page__header h1 {
+  margin: 0 0 4px;
+  font-size: 1.75rem;
+}
+
+.calendar-page__subtitle {
+  margin: 0 0 20px;
+  color: var(--pc-text-muted);
+}
+
+/* ---------- Toolbar ---------- */
+
+.calendar-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  background: var(--pc-card-bg);
+  border: 1px solid var(--pc-border);
+  border-radius: var(--pc-radius);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.calendar-toolbar__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 200px;
+}
+
+.calendar-toolbar__field label {
+  font-size: 0.85rem;
+  color: var(--pc-text-muted);
+}
+
+.calendar-toolbar__field input,
+.calendar-toolbar__field select {
+  padding: 8px 10px;
+  border: 1px solid var(--pc-border);
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.btn {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.btn-primary {
+  background-color: var(--pc-primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: var(--pc-primary-dark);
+}
+
+.btn-danger {
+  background-color: transparent;
+  color: var(--pc-danger);
+  border: 1px solid var(--pc-danger);
+}
+
+.btn-danger:hover {
+  background-color: var(--pc-danger);
+  color: #fff;
+}
+
+/* ---------- Layout: calendar + sidebar ---------- */
+
+.calendar-layout {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.calendar-layout__main {
+  background: var(--pc-card-bg);
+  border: 1px solid var(--pc-border);
+  border-radius: var(--pc-radius);
+  padding: 16px;
+}
+
+.calendar-layout__sidebar {
+  background: var(--pc-card-bg);
+  border: 1px solid var(--pc-border);
+  border-radius: var(--pc-radius);
+  padding: 16px;
+  position: sticky;
+  top: 16px;
+}
+
+.calendar-layout__sidebar h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.upcoming-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.upcoming-list__empty {
+  color: var(--pc-text-muted);
+  font-size: 0.9rem;
+}
+
+.upcoming-list__item {
+  border-left: 4px solid var(--pc-primary);
+  background: var(--pc-bg);
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.upcoming-list__item.completed {
+  opacity: 0.55;
+  text-decoration: line-through;
+}
+
+.upcoming-list__item-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.upcoming-list__item-meta {
+  font-size: 0.78rem;
+  color: var(--pc-text-muted);
+}
+
+/* ---------- FullCalendar event color-coding ---------- */
+/* calendar.js sets these classNames per eventType on each event */
+
+.fc-event.event-test { background-color: var(--pc-color-test); border-color: var(--pc-color-test); }
+.fc-event.event-interview { background-color: var(--pc-color-interview); border-color: var(--pc-color-interview); }
+.fc-event.event-ppt { background-color: var(--pc-color-ppt); border-color: var(--pc-color-ppt); }
+.fc-event.event-workshop { background-color: var(--pc-color-workshop); border-color: var(--pc-color-workshop); }
+.fc-event.event-other { background-color: var(--pc-color-other); border-color: var(--pc-color-other); }
+
+.fc-event.event-completed {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+/* ---------- Modal ---------- */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal[hidden] {
+  display: none;
+}
+
+.modal__content {
+  background: var(--pc-card-bg);
+  border-radius: var(--pc-radius);
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal__close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: var(--pc-text-muted);
+}
+
+#eventForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#eventForm label {
+  font-size: 0.85rem;
+  color: var(--pc-text-muted);
+  margin-bottom: 2px;
+}
+
+#eventForm input,
+#eventForm select,
+#eventForm textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--pc-border);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row > div {
+  flex: 1;
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+/* ---------- Responsive design ---------- */
+
+@media (max-width: 900px) {
+  .calendar-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-layout__sidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 520px) {
+  .calendar-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #addEventBtn {
+    width: 100%;
+  }
+}

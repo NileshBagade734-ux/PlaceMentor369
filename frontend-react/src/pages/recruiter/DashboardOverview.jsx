@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Briefcase, Users, UserCheck, PlusCircle } from 'lucide-react';
+import { Briefcase, Users, UserCheck, PlusCircle, CalendarDays } from 'lucide-react';
+import CalendarDashboardWidget from '../../components/calendar/CalendarDashboardWidget.jsx';
 
 const DashboardOverview = () => {
   const navigate = useNavigate();
@@ -71,6 +72,19 @@ const DashboardOverview = () => {
           className="flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 py-3 px-6 rounded-xl font-semibold shadow-sm transition-colors"
         >
           <Users className="w-5 h-5" /> View All Applicants
+        </button>
+      </div>
+
+      <div className="mb-8">
+        <CalendarDashboardWidget onOpenCalendar={() => navigate('/recruiter/calendar')} />
+      </div>
+
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={() => navigate('/recruiter/calendar')}
+          className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+        >
+          <CalendarDays className="w-4 h-4" /> Open Calendar
         </button>
       </div>
 

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--
+  Placement Calendar Page
+  -------------------------------------------------------
+  Location in repo: frontend/student/calendar.html
+
+  Depends on:
+    - frontend/css/calendar.css
+    - frontend/js/calendar.js
+    - FullCalendar (loaded via CDN below)
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Placement Calendar | PlaceMentor369</title>
+
+  <!-- Existing site-wide styling (kept consistent with other student pages) -->
+  <link rel="stylesheet" href="../css/style.css" />
+  <!-- Feature-specific styling for the calendar -->
+  <link rel="stylesheet" href="../css/calendar.css" />
+
+  <!-- FullCalendar core + daygrid/timegrid views (CDN, no build step required) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+</head>
+<body>
+
+  <main class="calendar-page">
+
+    <!-- Page header -->
+    <header class="calendar-page__header">
+      <h1>Placement Calendar</h1>
+      <p class="calendar-page__subtitle">Track tests, interviews, PPTs and workshops in one place.</p>
+    </header>
+
+    <!-- Toolbar: search by company + filter by event type -->
+    <section class="calendar-toolbar" aria-label="Calendar filters">
+      <div class="calendar-toolbar__field">
+        <label for="companySearch">Search by company</label>
+        <input
+          type="text"
+          id="companySearch"
+          placeholder="e.g. Google, TCS..."
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="calendar-toolbar__field">
+        <label for="eventTypeFilter">Filter by type</label>
+        <select id="eventTypeFilter">
+          <option value="">All types</option>
+          <option value="Test">Test</option>
+          <option value="Interview">Interview</option>
+          <option value="PPT">PPT</option>
+          <option value="Workshop">Workshop</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <button id="addEventBtn" class="btn btn-primary" type="button">+ Add Event</button>
+    </section>
+
+    <!-- Main layout: calendar + upcoming events sidebar -->
+    <section class="calendar-layout">
+
+      <div class="calendar-layout__main">
+        <div id="placementCalendar"></div>
+      </div>
+
+      <aside class="calendar-layout__sidebar" aria-label="Upcoming events">
+        <h2>Upcoming Events</h2>
+        <ul id="upcomingEventsList" class="upcoming-list">
+          <!-- Populated dynamically by calendar.js -->
+          <li class="upcoming-list__empty">Loading upcoming events...</li>
+        </ul>
+      </aside>
+
+    </section>
+
+  </main>
+
+  <!-- Add / Edit event modal -->
+  <div id="eventModal" class="modal" hidden>
+    <div class="modal__content">
+      <button class="modal__close" id="closeModalBtn" type="button" aria-label="Close">&times;</button>
+      <h2 id="modalTitle">Add Event</h2>
+
+      <form id="eventForm">
+        <input type="hidden" id="eventId" />
+
+        <label for="eventCompany">Company</label>
+        <input type="text" id="eventCompany" required />
+
+        <label for="eventTitle">Title</label>
+        <input type="text" id="eventTitle" required />
+
+        <label for="eventType">Event Type</label>
+        <select id="eventType" required>
+          <option value="Test">Test</option>
+          <option value="Interview">Interview</option>
+          <option value="PPT">PPT</option>
+          <option value="Workshop">Workshop</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <label for="eventDate">Date</label>
+        <input type="date" id="eventDate" required />
+
+        <div class="form-row">
+          <div>
+            <label for="eventStartTime">Start Time</label>
+            <input type="time" id="eventStartTime" />
+          </div>
+          <div>
+            <label for="eventEndTime">End Time</label>
+            <input type="time" id="eventEndTime" />
+          </div>
+        </div>
+
+        <label for="eventDescription">Description</label>
+        <textarea id="eventDescription" rows="3"></textarea>
+
+        <div class="modal__actions">
+          <button type="button" id="deleteEventBtn" class="btn btn-danger" hidden>Delete</button>
+          <button type="submit" class="btn btn-primary">Save Event</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Feature logic -->
+  <script src="../js/calendar.js"></script>
+</body>
+</html>

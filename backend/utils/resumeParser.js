@@ -1,6 +1,8 @@
-import pdfParse from "pdf-parse";
+import * as pdfParseModule from "pdf-parse";
 import mammoth from "mammoth"; // for .docx
 import { Buffer } from "buffer";
+
+const pdfParse = pdfParseModule.default ?? pdfParseModule;
 
 // ─── constants ───────────────────────────────────────────────────────────────
 
