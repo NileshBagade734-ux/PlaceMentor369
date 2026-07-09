@@ -3,6 +3,7 @@
 ========================================================== */
 const USER_KEY = "current_user";
 const APPLICATION_KEY = "student_applications";
+const RECENT_JOBS_KEY = "recently_viewed_jobs";
 
 function getToken() {
   const session = JSON.parse(localStorage.getItem("placementor_session"));
@@ -106,6 +107,7 @@ async function init() {
   }
 
   renderJobList();
+  renderRecentlyViewedJobs();
   if (window.lucide) lucide.createIcons();
 }
 
@@ -195,7 +197,29 @@ function renderJobList() {
     })
     .join("");
 }
+function renderRecentlyViewedJobs() {
+  const container = document.getElementById("recently-viewed-jobs");
+  if (!container) return;
 
+  const jobs = JSON.parse(localStorage.getItem(RECENT_JOBS_KEY)) || [];
+
+  if (!jobs.length) {
+     container.parentElement.style.display = "none";
+    return;
+  }
+  container.parentElement.style.display = "block";
+
+  container.innerHTML = jobs
+    .map(job => `
+      <div
+        class="border rounded-lg p-3 mb-2 cursor-pointer hover:bg-slate-50"
+        onclick="selectJob('${job.id}')">
+        <p class="font-semibold">${job.title}</p>
+        <p class="text-sm text-slate-500">${job.company}</p>
+      </div>
+    `)
+    .join("");
+}
 /* ==========================================================
    SELECT JOB DETAIL
 ========================================================== */
@@ -204,6 +228,25 @@ window.selectJob = function(id) {
   const detailPane = document.getElementById("job-details");
   const emptyState = document.getElementById("empty-state");
   if (!detailPane || !job) return;
+  // Save recently viewed jobs
+let recentJobs = JSON.parse(localStorage.getItem(RECENT_JOBS_KEY)) || [];
+
+// Remove duplicate if already exists
+recentJobs = recentJobs.filter(item => item.id !== job.id);
+
+// Add current job to the beginning
+recentJobs.unshift({
+  id: job.id,
+  title: job.title,
+  company: job.company,
+  deadline: job.deadline
+});
+
+// Keep only last 5 jobs
+recentJobs = recentJobs.slice(0, 5);
+
+localStorage.setItem(RECENT_JOBS_KEY, JSON.stringify(recentJobs));
+renderRecentlyViewedJobs();
 
   document.querySelectorAll(".job-card").forEach(c =>
     c.classList.remove("border-indigo-500", "bg-indigo-50", "ring-1", "ring-indigo-500")
