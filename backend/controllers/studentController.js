@@ -62,6 +62,10 @@ export const getProfile = async (req, res) => {
 export const saveProfile = async (req, res) => {
   try {
     const { name, roll, branch, cgpa, college, skills, resume } = req.body;
+      // ✅ Validate CGPA range
+    if (cgpa !== undefined && (isNaN(cgpa) || cgpa < 0 || cgpa > 10)) {
+      return res.status(400).json({ message: "CGPA must be between 0 and 10" });
+    }
 
     let student = await Student.findOne({ user: req.user.id });
 
