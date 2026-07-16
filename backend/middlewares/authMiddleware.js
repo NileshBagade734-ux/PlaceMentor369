@@ -4,15 +4,14 @@ import User from "../models/user.js";
 // Unified JWT middleware (merges protect + verifyToken)
 export const protect = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    // Read token from httpOnly cookie or Authorization header (for backward compatibility)
+    const token = req.cookies.token || (req.headers.authorization?.startsWith("Bearer ") ? req.headers.authorization.split(" ")[1] : null);
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!token) {
       return res.status(401).json({
-        message: "Authorization token missing or malformed",
+        message: "Authorization token missing",
       });
     }
-
-    const token = authHeader.split(" ")[1];
 
     if (!process.env.JWT_SECRET) {
       return res.status(500).json({
