@@ -14,6 +14,8 @@ import studentRoutes from "./routes/studentRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import recruiterRoutes from "./routes/recruiterRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import interviewRoutes from "./routes/interviewRoutes.js";
+import placementRoutes from "./routes/placementRoutes.js";
 
 dotenv.config({ override: true });
 
@@ -106,6 +108,12 @@ app.use("/api/auth", authRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/recruiter", recruiterRoutes);
 app.use("/api/admin", adminRoutes);
+
+// Interview preparation routes
+app.use("/api/interview", interviewRoutes);
+
+// Placement tracking routes
+app.use("/api/placement", placementRoutes);
 
 // 404 Route
 app.use((req, res) => {
