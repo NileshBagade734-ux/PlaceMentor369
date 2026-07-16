@@ -4,6 +4,7 @@ import Job from "../models/job.js";
 import Application from "../models/application.js";
 import { analyzeResume } from "../utils/gemini.js";
 import { parseResume } from "../utils/resumeParser.js";
+import { getActiveJobs } from "../utils/jobUtils.js";
 
 // Determine readiness tier based on match score
 function getReadinessTier(score) {
@@ -94,7 +95,7 @@ export const saveProfile = async (req, res) => {
 ============================ */
 export const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ status: "approved" });
+    const jobs = await getActiveJobs();
     res.json(jobs);
   } catch (err) {
     console.error("GET JOBS ERROR:", err);
