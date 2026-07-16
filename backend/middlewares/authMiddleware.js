@@ -48,3 +48,20 @@ export const protect = async (req, res, next) => {
 
 // Alias so verifyToken imports still work
 export const verifyToken = protect;
+
+// Middleware to ensure user can only access their own data
+// Users can access their own resources, admins can access anyone's resources
+export const requireSelf = (req, res, next) => {
+  const requestedId = req.params.id;
+  const userId = req.user._id.toString();
+  const isAdmin = req.user.role === "admin";
+
+  if (!isAdmin && requestedId !== userId) {
+    return res.status(403).json({
+      error: "Access denied",
+      message: "You do not have permission to access this resource"
+    });
+  }
+
+  next();
+};
