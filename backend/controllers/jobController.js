@@ -12,18 +12,32 @@ export const createJob = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
+    const deadlineDate = new Date(deadline);
+    const now = new Date();
+
+    if (deadlineDate <= now) {
+      return res.status(400).json({ message: "Application deadline must be in the future" });
+    }
+
+    const salaryMin = salary?.min || 0;
+    const salaryMax = salary?.max || 0;
+
+    if (salaryMin < 0 || salaryMax < 0 || (salaryMax > 0 && salaryMin > salaryMax)) {
+      return res.status(400).json({ message: "Invalid salary range. Salary must be non-negative and max >= min" });
+    }
+
     const job = await Job.create({
       title,
       company,
       description,
       cgpa,
-      branches: branch, // ✅ fixed typo
+      branch,
       skillsRequired,
-      deadline,
+      deadline: deadlineDate,
       location,
-      salary,
+      salary: { min: salaryMin, max: salaryMax },
       recruiter: recruiterId,
-      status: "approved" // auto-approve
+      status: "approved"
     });
 
     res.status(201).json({ success: true, message: "Job posted successfully", job });

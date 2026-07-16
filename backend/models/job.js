@@ -49,6 +49,24 @@ const jobSchema = new mongoose.Schema(
       required: true
     },
 
+    // Salary range (min-max)
+    salary: {
+      min: {
+        type: Number,
+        default: 0
+      },
+      max: {
+        type: Number,
+        default: 0
+      }
+    },
+
+    // Location
+    location: {
+      type: String,
+      trim: true
+    },
+
     // Recruiter reference
     recruiter: {
       type: mongoose.Schema.Types.ObjectId,
@@ -59,8 +77,16 @@ const jobSchema = new mongoose.Schema(
     // Job approval status
     status: {
       type: String,
-      enum: ["pending", "approved", "rejected"],
+      enum: ["pending", "approved", "rejected", "expired"],
       default: "pending"
+    },
+
+    // Job posting accuracy score
+    accuracyScore: {
+      type: Number,
+      default: 100,
+      min: 0,
+      max: 100
     },
 
     // Linked applications
