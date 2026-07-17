@@ -14,7 +14,7 @@ export const analyzeResume = async (resumeText) => {
       I will provide you with the raw text extracted from a student's resume.
       Your task is to analyze it and extract the following information in strict JSON format.
       Do not include any markdown formatting like \`\`\`json or \`\`\`. Just return the raw JSON string.
-      
+
       Extract the following fields:
       - "firstName": The student's First Name. If not found, return an empty string.
       - "lastName": The student's Last Name or Surname. If not found, return an empty string.
@@ -25,6 +25,21 @@ export const analyzeResume = async (resumeText) => {
       - "skills": An array of technical skills mentioned (e.g., ["JavaScript", "React", "Python"]).
       - "aiReadinessScore": A number from 0 to 100 indicating how "placement-ready" the resume looks based on standard industry expectations for entry-level tech roles.
       - "aiRoadmap": An array of 3 to 5 actionable steps the student can take to improve their skills and resume (e.g., ["Build a full-stack project using React and Node.js", "Contribute to open-source projects"]).
+
+      - "atsScore": A number from 0 to 100 representing the ATS score of the resume based on standard recruiter parsing success rates, keyword match, and layout format.
+      - "resumeAnalysis": A brief 2-3 sentence overall summary of the resume's strength and layout.
+      - "missingSkills": An array of important skills that are missing from the resume but highly expected for the student's field/branch.
+      - "improvementSuggestions": An array of 3 to 5 specific suggestions to improve the resume format, details, or impact.
+      - "sectionAnalysis": An object analyzing the major resume sections. For every section, evaluate if it is "Present" (clearly defined and strong), "Weak" (needs detail or reformatting), or "Missing" (completely absent), along with a brief suggestion. Use this exact structure:
+        {
+          "contactInformation": { "status": "Present" | "Weak" | "Missing", "suggestions": "..." },
+          "education": { "status": "Present" | "Weak" | "Missing", "suggestions": "..." },
+          "skills": { "status": "Present" | "Weak" | "Missing", "suggestions": "..." },
+          "projects": { "status": "Present" | "Weak" | "Missing", "suggestions": "..." },
+          "experience": { "status": "Present" | "Weak" | "Missing", "suggestions": "..." },
+          "achievements": { "status": "Present" | "Weak" | "Missing", "suggestions": "..." },
+          "certifications": { "status": "Present" | "Weak" | "Missing", "suggestions": "..." }
+        }
 
       Resume Text:
       """
@@ -49,16 +64,16 @@ export const analyzeResume = async (resumeText) => {
       } catch (err) {
         const errMsg = err.message || String(err);
         console.warn(`⚠️ Gemini API Attempt ${i + 1} failed: ${errMsg}`);
-        
+
         let sleepDuration = delay * Math.pow(2, i);
-        
+
         // Intelligent Quota Recovery: parse Google's exact retryDelay if provided
         try {
           const jsonStart = errMsg.indexOf("{");
           if (jsonStart !== -1) {
             const errorDetails = JSON.parse(errMsg.slice(jsonStart));
             if (errorDetails?.error?.details) {
-              const retryInfo = errorDetails.error.details.find(d => 
+              const retryInfo = errorDetails.error.details.find(d =>
                 d["@type"] && d["@type"].includes("RetryInfo")
               );
               if (retryInfo?.retryDelay) {
@@ -81,19 +96,19 @@ export const analyzeResume = async (resumeText) => {
         await new Promise(resolve => setTimeout(resolve, sleepDuration));
       }
     }
-    
+
     let textOutput = response.text;
-    
+
     // Clean up any potential markdown formatting
     textOutput = textOutput.replace(/```json/gi, '').replace(/```/g, '').trim();
-    
+
     // Robust extraction of JSON block to prevent SyntaxError
     const firstBrace = textOutput.indexOf('{');
     const lastBrace = textOutput.lastIndexOf('}');
     if (firstBrace !== -1 && lastBrace !== -1) {
         textOutput = textOutput.substring(firstBrace, lastBrace + 1);
     }
-    
+
     const parsedData = JSON.parse(textOutput);
     return parsedData;
 
@@ -102,7 +117,7 @@ export const analyzeResume = async (resumeText) => {
     const errMsg = error.message || String(error);
     const isOverloaded = errMsg.includes("503") || errMsg.toLowerCase().includes("overloaded");
     const isRateLimited = errMsg.includes("429") || errMsg.toLowerCase().includes("rate");
-    
+
     if (isOverloaded) {
       throw new Error("Google Gemini AI is temporarily overloaded due to high traffic. Please wait 5-10 seconds and try again!");
     } else if (isRateLimited) {

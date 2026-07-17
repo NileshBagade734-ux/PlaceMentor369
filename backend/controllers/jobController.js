@@ -1,5 +1,6 @@
 import Job from "../models/job.js";
 import Application from "../models/application.js";
+import { APPLICATION_STATUS } from "../constants/applicationStatus.js";
 
 /* CREATE JOB */
 export const createJob = async (req, res) => {
@@ -63,13 +64,14 @@ export const getJobApplicants = async (req, res) => {
 export const updateApplicantStatus = async (req, res) => {
   try {
     const { applicationId, status } = req.body;
-    if (!["Shortlisted", "Rejected"].includes(status))
+    const normalizedStatus = status.toLowerCase();
+    if (![APPLICATION_STATUS.SHORTLISTED, APPLICATION_STATUS.REJECTED].includes(normalizedStatus))
       return res.status(400).json({ message: "Invalid status" });
 
     const application = await Application.findById(applicationId);
     if (!application) return res.status(404).json({ message: "Application not found" });
 
-    application.status = status;
+    application.status = normalizedStatus;
     await application.save();
 
     res.status(200).json({ success: true, message: `Application ${status}`, application });

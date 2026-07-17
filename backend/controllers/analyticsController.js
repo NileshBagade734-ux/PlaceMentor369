@@ -1,7 +1,7 @@
-// backend/controllers/analyticsController.js
 import Application from "../models/application.js";
 import Job from "../models/job.js";
 import Student from "../models/student.js";
+import { APPLICATION_STATUS } from "../constants/applicationStatus.js";
 import { transitionApplicationStatus, computePlacementMetrics } from "../utils/placementTracker.js";
 
 /**
@@ -139,9 +139,9 @@ export const getAnalytics = async (req, res) => {
 
     // 2. Status Breakdown
     const statusLabels = {
-      applied: "Applied",
-      shortlisted: "Shortlisted",
-      rejected: "Rejected"
+      [APPLICATION_STATUS.APPLIED]: "Applied",
+      [APPLICATION_STATUS.SHORTLISTED]: "Shortlisted",
+      [APPLICATION_STATUS.REJECTED]: "Rejected",
     };
     const statusData = {
       labels: statusBreakdown.map(
@@ -179,7 +179,7 @@ export const getAnalytics = async (req, res) => {
     // ─── Compute acceptance rate ───
     const totalApps = statusBreakdown.reduce((sum, r) => sum + r.count, 0);
     const shortlistedCount =
-      statusBreakdown.find((r) => r._id === "shortlisted")?.count || 0;
+      statusBreakdown.find((r) => r._id === APPLICATION_STATUS.SHORTLISTED)?.count || 0;
     const acceptanceRate =
       totalApps > 0 ? Math.round((shortlistedCount / totalApps) * 100) : 0;
 
@@ -198,112 +198,5 @@ export const getAnalytics = async (req, res) => {
       message: "Failed to load analytics",
       error: err.message
     });
-  }
-};
-
-/**
- * PATCH /api/admin/applications/:id/status
- *
- * Transitions an application to a new outcome status with full journey
- * tracking (offer, negotiation, rejection, placement, etc). Requires
- * employer confirmation before an application can be marked "placed",
- * ensuring placement statistics are always audit-backed. (Issue #354)
- */
-export const updateApplicationOutcome = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { status, note, offerDetails, outcomeType, employerConfirmed } = req.body;
-    const changedBy = req.user?._id;
-
-    const validStatuses = [
-      "applied", "shortlisted", "rejected", "offer-extended",
-      "offer-accepted", "offer-rejected", "offer-negotiating",
-      "rejected-by-company", "placed", "pursuing-further-studies"
-    ];
-
-    if (!validStatuses.includes(status)) {
-      return res.status(400).json({ message: "Invalid outcome status" });
-    }
-
-    const application = await Application.findById(id);
-    if (!application) {
-      return res.status(404).json({ message: "Application not found" });
-    }
-
-    try {
-      transitionApplicationStatus(application, status, changedBy, {
-        note,
-        offerDetails,
-        outcomeType,
-        employerConfirmed
-      });
-    } catch (transitionErr) {
-      return res.status(400).json({ message: transitionErr.message });
-    }
-
-    await application.save();
-
-    res.status(200).json({
-      success: true,
-      message: "Application outcome updated",
-      application
-    });
-  } catch (err) {
-    console.error("Update application outcome error:", err);
-    res.status(500).json({ message: "Failed to update application outcome" });
-  }
-};
-
-/**
- * GET /api/admin/analytics/placement-metrics
- *
- * Returns accurate, audit-backed placement metrics: true placement rate
- * (only counting employer-confirmed placements), offer rejection/negotiation
- * breakdown, internship vs permanent split, average salary, and average
- * time-to-placement. This replaces the old naive "shortlisted = placed"
- * assumption that misrepresented success rates. (Issue #354)
- */
-export const getPlacementMetrics = async (req, res) => {
-  try {
-    const applications = await Application.find({});
-    const metrics = computePlacementMetrics(applications);
-
-    res.status(200).json(metrics);
-  } catch (err) {
-    console.error("Placement metrics error:", err);
-    res.status(500).json({ message: "Failed to compute placement metrics" });
-  }
-};
-
-/**
- * GET /api/admin/applications/:id/audit-trail
- *
- * Returns the full status change history for a single application,
- * so admins can verify how a placement outcome was reached.
- */
-export const getApplicationAuditTrail = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const application = await Application.findById(id)
-      .populate("student", "name roll branch")
-      .populate("job", "title company");
-
-    if (!application) {
-      return res.status(404).json({ message: "Application not found" });
-    }
-
-    res.status(200).json({
-      applicationId: application._id,
-      student: application.student,
-      job: application.job,
-      currentStatus: application.status,
-      outcomeType: application.outcomeType,
-      offerDetails: application.offerDetails,
-      employerConfirmed: application.employerConfirmed,
-      statusHistory: application.statusHistory
-    });
-  } catch (err) {
-    console.error("Audit trail error:", err);
-    res.status(500).json({ message: "Failed to fetch audit trail" });
   }
 };

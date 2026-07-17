@@ -1,25 +1,25 @@
 const themeToggle = document.getElementById("theme-toggle");
 
 if (themeToggle) {
-    const themeIcon = themeToggle.querySelector("i");
+  const themeIcon = themeToggle.querySelector("i");
 
-    if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark-mode");
-        themeIcon.classList.replace("fa-moon", "fa-sun");
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark-mode");
+    themeIcon.classList.replace("fa-moon", "fa-sun");
+  }
+
+  themeToggle.addEventListener("click", () => {
+
+    document.body.classList.toggle("dark-mode");
+
+    if (document.body.classList.contains("dark-mode")) {
+      localStorage.setItem("theme", "dark");
+      themeIcon.classList.replace("fa-moon", "fa-sun");
+    } else {
+      localStorage.setItem("theme", "light");
+      themeIcon.classList.replace("fa-sun", "fa-moon");
     }
-
-    themeToggle.addEventListener("click", () => {
-
-        document.body.classList.toggle("dark-mode");
-
-        if (document.body.classList.contains("dark-mode")) {
-            localStorage.setItem("theme", "dark");
-            themeIcon.classList.replace("fa-moon", "fa-sun");
-        } else {
-            localStorage.setItem("theme", "light");
-            themeIcon.classList.replace("fa-sun", "fa-moon");
-        }
-    });
+  });
 }
 /* ============================================================
    PLACEMENT JOURNEY — Scroll Reveal
@@ -65,6 +65,24 @@ if (themeToggle) {
     });
   });
 })();
+
+
+// Function to update the reading progress bar position
+function updateReadingProgressBar() {
+  const progressBar = document.getElementById('readingProgressIndicator');
+  if (!progressBar) return; 
+
+  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  
+  const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+  
+  progressBar.style.width = `${scrolled}%`;
+}
+
+// Attach optimized passive scroll listener
+window.addEventListener('scroll', updateReadingProgressBar, { passive: true });
+
 // Utility function to dynamically highlight matching text queries
 function highlightSearchKeywords(element, query) {
   if (!element.getAttribute('data-original-text')) {
@@ -119,3 +137,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+

@@ -31,10 +31,10 @@ if (!connection) {
             if (aiResult.college) student.college = aiResult.college;
             if (aiResult.branch) student.branch = aiResult.branch;
             if (aiResult.cgpa !== undefined && aiResult.cgpa !== null) student.cgpa = aiResult.cgpa;
-            
+
             // Direct persistence of the uploaded PDF file as base64
             student.resume = base64Resume;
-            
+
             // Merge skills (unique)
             if (aiResult.skills && aiResult.skills.length > 0) {
                 const mergedSkills = new Set([...student.skills, ...aiResult.skills]);
