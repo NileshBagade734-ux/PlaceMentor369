@@ -171,45 +171,10 @@ body {
     .md\:ml-64 {
         margin-left: 0;
     }
-}body { font-family: 'Inter', sans-serif; }
-
-.sidebar-item {
-    display: flex; align-items: center; gap: 0.75rem;
-    padding: 0.75rem 1rem; border-radius: 0.5rem;
-    font-size: 0.875rem; font-weight: 500;
-    color: #64748b; transition: all 0.2s;
-}
-.sidebar-item:hover, .sidebar-item.active {
-    background-color: #f1f5f9; color: #4f46e5;
 }
 
-.stat-card {
-    background: white; border: 1px solid #e2e8f0;
-    padding: 1.5rem; border-radius: 1rem;
-    display: flex; align-items: center; justify-content: space-between;
-    transition: transform 0.2s;
-}
-.stat-card:hover { transform: translateY(-3px); }
-
-.stat-title { font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase; }
-.stat-value { font-size: 1.75rem; font-weight: 700; color: #0f172a; }
-
-.icon-box { width: 3rem; height: 3rem; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; }
-
-.btn-primary {
-    background: #4f46e5; color: white; padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;
-}
-.btn-secondary {
-    background: white; border: 1px solid #e2e8f0; padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;
-}
-
-.logout-btn {
-    width: 100%; text-align: left; padding: 0.75rem 1rem;
-    color: #94a3b8; font-size: 0.875rem; display: flex; align-items: center; gap: 0.75rem;
-}
-.logout-btn:hover { color: #ef4444; }.status-pending { background: #fffbeb; color: #92400e; border: 1px solid #fef3c7; }
+/* Status Badges */
+.status-pending { background: #fffbeb; color: #92400e; border: 1px solid #fef3c7; }
 .status-shortlisted { background: #ecfdf5; color: #065f46; border: 1px solid #d1fae5; }
 .status-rejected { background: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; }
 /* =====================================
@@ -266,4 +231,128 @@ body.dark-mode #applications-list > div {
 body.dark-mode #themeToggle {
     background-color: #334155;
     color: white;
+}
+/* Mobile responsiveness overrides */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .nav-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+/* ======================================================
+   Resume Completion Progress Tracker
+====================================================== */
+
+/* Animated glow on the progress bar fill */
+.progress-bar-glow {
+    box-shadow: 0 0 10px rgba(79, 70, 229, 0.35);
+}
+
+/* Individual checklist row */
+.checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.625rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+/* Done state — subtle green tint */
+.checklist-item--done {
+    background-color: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+/* Pending state — subtle red/amber tint */
+.checklist-item--pending {
+    background-color: #fef9f0;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+/* Icon bubble */
+.checklist-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+}
+
+.checklist-item--done .checklist-icon {
+    background-color: #dcfce7;
+    color: #16a34a;
+}
+
+.checklist-item--pending .checklist-icon {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+/* Label stretches to fill remaining space */
+.checklist-label {
+    flex: 1;
+    line-height: 1.3;
+}
+
+/* "Missing" badge on pending items */
+.checklist-badge {
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    background-color: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fde68a;
+    white-space: nowrap;
+}
+
+/* Dark mode overrides for tracker */
+body.dark-mode #completion-tracker {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+body.dark-mode .checklist-item--done {
+    background-color: #052e16;
+    color: #86efac;
+    border-color: #166534;
+}
+
+body.dark-mode .checklist-item--pending {
+    background-color: #1c1007;
+    color: #fcd34d;
+    border-color: #78350f;
+}
+
+body.dark-mode .checklist-item--done .checklist-icon {
+    background-color: #14532d;
+    color: #4ade80;
+}
+
+body.dark-mode .checklist-item--pending .checklist-icon {
+    background-color: #451a03;
+    color: #fbbf24;
+}
+
+body.dark-mode .checklist-badge {
+    background-color: #451a03;
+    color: #fcd34d;
+    border-color: #78350f;
+}
+
+body.dark-mode #completion-tip {
+    color: #64748b;
 }

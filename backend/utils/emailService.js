@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { APPLICATION_STATUS } from "../constants/applicationStatus.js";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -15,14 +16,14 @@ export const sendStatusUpdateEmail = (
   companyName,
   status
 ) => {
-  const isShortlisted = status === "shortlisted";
+  const isShortlisted = status === APPLICATION_STATUS.SHORTLISTED;
 
   const subject = `Update regarding your application for ${jobTitle} at ${companyName}`;
 
   const htmlBody = `
     <div style="font-family: Arial, sans-serif; max-width: 600px;
-         margin: auto; padding: 24px; border: 1px solid #e0e0e0;
-         border-radius: 8px;">
+          margin: auto; padding: 24px; border: 1px solid #e0e0e0;
+          border-radius: 8px;">
       <h2 style="color: ${isShortlisted ? "#16a34a" : "#dc2626"};">
         ${isShortlisted ? "Congratulations!" : "Application Update"}
       </h2>
@@ -32,9 +33,9 @@ export const sendStatusUpdateEmail = (
         at <strong>${companyName}</strong> has been updated.
       </p>
       <div style="padding: 16px;
-           background: ${isShortlisted ? "#f0fdf4" : "#fff1f2"};
-           border-left: 4px solid ${isShortlisted ? "#16a34a" : "#dc2626"};
-           margin: 20px 0;">
+            background: ${isShortlisted ? "#f0fdf4" : "#fff1f2"};
+            border-left: 4px solid ${isShortlisted ? "#16a34a" : "#dc2626"};
+            margin: 20px 0;">
         <p style="margin: 0; font-size: 16px;">
           Status:
           <strong style="color: ${isShortlisted ? "#16a34a" : "#dc2626"};">
@@ -46,17 +47,11 @@ export const sendStatusUpdateEmail = (
     </div>
   `;
 
-  transporter
+  return transporter
     .sendMail({
       from: `"PlacementorAI" <${process.env.EMAIL_USER}>`,
       to: studentEmail,
       subject,
       html: htmlBody,
-    })
-    .then(() => {
-      console.log(`Email sent to ${studentEmail}`);
-    })
-    .catch((err) => {
-      console.error(`Email failed:`, err.message);
     });
 };

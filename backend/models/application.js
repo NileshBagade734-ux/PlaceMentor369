@@ -1,5 +1,7 @@
-// backend/models/application.js
 import mongoose from "mongoose";
+import { APPLICATION_STATUS } from "../constants/applicationStatus.js";
+
+const VALID_STATUSES = [...Object.values(APPLICATION_STATUS), "verified"];
 
 const applicationSchema = new mongoose.Schema(
   {
@@ -15,8 +17,8 @@ const applicationSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["applied", "shortlisted", "rejected", "verified"],
-      default: "applied",
+      enum: VALID_STATUSES,
+      default: APPLICATION_STATUS.APPLIED,
     },
     appliedAt: {
       type: Date,
@@ -26,10 +28,12 @@ const applicationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// 🔹 Pre-save hook: automatically convert old "verified" status → "shortlisted"
 applicationSchema.pre("save", function () {
+  if (typeof this.status === "string") {
+    this.status = this.status.toLowerCase();
+  }
   if (this.status === "verified") {
-    this.status = "shortlisted";
+    this.status = APPLICATION_STATUS.SHORTLISTED;
   }
 });
 

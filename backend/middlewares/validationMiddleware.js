@@ -44,8 +44,8 @@ export const validateRegister = [
     .withMessage("Password must contain at least one letter"),
 
   body("role")
-    .isIn(["student", "recruiter", "admin"])
-    .withMessage("Role must be student, recruiter, or admin"),
+    .isIn(["student", "recruiter"])
+    .withMessage("Role must be student or recruiter"),
 
   handleValidationErrors,
 ];

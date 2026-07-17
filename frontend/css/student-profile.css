@@ -160,6 +160,16 @@ select:focus {
     background-color: rgba(37, 99, 235, 0.03);
 }
 
+#resumeDropArea.is-drag-over {
+    border-color: var(--primary);
+    background-color: rgba(37, 99, 235, 0.08);
+    transform: translateY(-2px);
+}
+
+#resumeDropArea.is-drag-over i {
+    color: var(--primary);
+}
+
 /* Hide default file input but keep accessible */
 #resumeInput {
     cursor: pointer;

@@ -1,10 +1,11 @@
 import Job from "../models/job.js";
 import Application from "../models/application.js";
 import mongoose from "mongoose";
-import { sendStatusUpdateEmail } from "../utils/emailService.js";
+import emailQueue from "../queues/emailQueue.js";
+import { APPLICATION_STATUS } from "../constants/applicationStatus.js";
 
 /* ======================================================
-   CREATE JOB
+    CREATE JOB
 ====================================================== */
 export const createJob = async (req, res) => {
   try {
@@ -31,9 +32,12 @@ export const createJob = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
+    const existingJob = await Job.findOne({ title: title.trim(), company: company.trim(), recruiter: recruiterId, createdAt: { $gte: new Date(Date.now() - 5 * 60000) } });
+    if (existingJob) return res.status(400).json({ message: "Duplicate job posting detected. Please wait 5 minutes before posting the same job again." });
+
     const job = await Job.create({
       title,
-      company,
+      company: company.trim(),
       description,
       cgpa,
       branch: branch || branches || [],
@@ -51,7 +55,7 @@ export const createJob = async (req, res) => {
 };
 
 /* ======================================================
-   GET RECRUITER JOBS
+    GET RECRUITER JOBS
 ====================================================== */
 export const getRecruiterJobs = async (req, res) => {
   try {
@@ -63,7 +67,7 @@ export const getRecruiterJobs = async (req, res) => {
 };
 
 /* ======================================================
-   GET ALL APPLICATIONS (ALL JOBS)
+    GET ALL APPLICATIONS (ALL JOBS)
 ====================================================== */
 export const getAllRecruiterApplications = async (req, res) => {
   try {
@@ -81,15 +85,14 @@ export const getAllRecruiterApplications = async (req, res) => {
 };
 
 /* ======================================================
-   UPDATE APPLICATION STATUS
+    UPDATE APPLICATION STATUS
 ====================================================== */
 export const updateApplicantStatus = async (req, res) => {
   try {
-    const applicationId = req.params.applicationId || req.body.applicationId;
-    const { status } = req.body;
+    const {applicationId, status} = req.body;
 
-    if (!applicationId) {
-      return res.status(400).json({ message: "Application ID is required" });
+    if (!applicationId || !status) {
+      return res.status(400).json({ message: "Application ID  and status are required" });
     }
 
     const application = await Application.findById(applicationId)
@@ -100,17 +103,18 @@ export const updateApplicantStatus = async (req, res) => {
       return res.status(404).json({ message: "Application not found" });
     }
 
-    application.status = status;
+    const normalizedStatus = status.toLowerCase();
+    application.status = normalizedStatus;
     await application.save();
 
-    if (status === "shortlisted" || status === "rejected") {
-      sendStatusUpdateEmail(
-        application.student.email,
-        application.student.name,
-        application.job.title,
-        application.job.company,
-        status
-      );
+    if (normalizedStatus === APPLICATION_STATUS.SHORTLISTED || normalizedStatus === APPLICATION_STATUS.REJECTED) {
+        await emailQueue.add("email-job", {
+          studentEmail: application.student.email,
+          studentName: application.student.name,
+          jobTitle: application.job.title,
+          companyName: application.job.company,
+          status
+        });
     }
 
     return res.status(200).json({
@@ -124,8 +128,8 @@ export const updateApplicantStatus = async (req, res) => {
 };
 
 /* ======================================================
-   DASHBOARD STATS
-   GET /api/recruiter/dashboard
+    DASHBOARD STATS
+    GET /api/recruiter/dashboard
 ====================================================== */
 export const getRecruiterDashboardStats = async (req, res) => {
   try {
@@ -140,7 +144,7 @@ export const getRecruiterDashboardStats = async (req, res) => {
 
     const shortlisted = await Application.countDocuments({
       job: { $in: jobIds },
-      status: "shortlisted",
+      status: APPLICATION_STATUS.SHORTLISTED,
     });
 
     res.status(200).json({
@@ -155,7 +159,7 @@ export const getRecruiterDashboardStats = async (req, res) => {
 };
 
 /* ======================================================
-   EXPORT APPLICANTS TO CSV
+    EXPORT APPLICANTS TO CSV
 ====================================================== */
 export const exportJobApplicantsToCSV = async (req, res) => {
   try {
@@ -232,7 +236,7 @@ export const exportJobApplicantsToCSV = async (req, res) => {
 };
 
 /* ======================================================
-   DELETE JOB
+    DELETE JOB
 ====================================================== */
 export const deleteJob = async (req, res) => {
   try {

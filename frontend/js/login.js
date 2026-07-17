@@ -2,8 +2,10 @@
 // -------------------------
 // Initialize Lucide & GSAP
 // -------------------------
-lucide.createIcons();
-gsap.to("#login-card", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" });
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.lucide) lucide.createIcons();
+  gsap.to("#login-card", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" });
+});
 
 // -------------------------
 // Elements
@@ -14,6 +16,8 @@ const btnText = document.getElementById("btnText");
 const passwordField = document.getElementById("password");
 const toggleBtn = document.getElementById("togglePassword");
 const eyeIcon = document.getElementById("eyeIcon");
+const emailField = document.getElementById("email");
+const roleField = document.getElementById("role");
 
 // -------------------------
 // Toast Notification Helper
@@ -46,28 +50,29 @@ function showToast(message, type = "error") {
 }
 
 // -------------------------
-// Password Toggle
+// Password Toggle (Your Accessibility Fix)
 // -------------------------
-toggleBtn.addEventListener("click", () => {
+toggleBtn?.addEventListener("click", () => {
   const isPassword = passwordField.type === "password";
   passwordField.type = isPassword ? "text" : "password";
-  eyeIcon.setAttribute("data-lucide", isPassword ? "eye-off" : "eye");
-  lucide.createIcons();
+  eyeIcon?.setAttribute("data-lucide", isPassword ? "eye-off" : "eye");
+  toggleBtn?.setAttribute("aria-label", isPassword ? "Hide password" : "Show password");
+  if (window.lucide) lucide.createIcons();
 });
 
 // -------------------------
 // Login Form Submit
 // -------------------------
-loginForm.addEventListener("submit", async (e) => {
+loginForm?.addEventListener("submit", async (e) => {
   if (!loginForm.checkValidity()) {
     return;
   }
 
   e.preventDefault();
 
-  const email = document.getElementById("email")?.value;
+  const email = emailField?.value?.trim();
   const password = passwordField?.value;
-  const role = document.getElementById("role")?.value;
+  const role = roleField?.value;
 
   if (!email || !password || !role) {
     showToast("Please fill all fields!");
@@ -81,11 +86,11 @@ loginForm.addEventListener("submit", async (e) => {
     const res = await fetch("http://localhost:5000/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, role })
+      body: JSON.stringify({ email, password, role }),
     });
 
     const data = await res.json();
-
+    
     if (!res.ok) {
       showToast(data.message || "Login failed. Please check your credentials.");
       return;
@@ -114,8 +119,8 @@ loginForm.addEventListener("submit", async (e) => {
   } finally {
     setTimeout(() => {
       loginBtn.disabled = false;
-      btnText.innerHTML = '<i data-lucide="log-in"></i> <span id="btnText">Sign In</span>';
-      lucide.createIcons();
+      btnText.innerHTML = '<i data-lucide="log-in"></i> <span>Sign In</span>';
+      if (window.lucide) lucide.createIcons();
     }, 800);
   }
 });

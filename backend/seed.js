@@ -15,10 +15,10 @@ if (!process.env.SEED_PASSWORD) {
   );
 }
 
-await mongoose.connect(process.env.MONGO_URI);
-
 async function seed() {
   try {
+    await mongoose.connect(process.env.MONGO_URI);
+
     let recruiter = await User.findOne({ role: "recruiter" });
 
     if (!recruiter) {
@@ -31,26 +31,42 @@ async function seed() {
       console.log("✅ Seed user created: recruiter@test.com");
     }
 
-    const job = await Job.create({
+    let job = await Job.findOne({
       title: "Software Engineer",
       company: "Google",
-      description: "Develop cloud applications.",
-      cgpa: 8.0,
-      branch: ["Computer Science", "Information Technology"],
-      skillsRequired: ["React", "Node.js", "JavaScript"],
-      deadline: new Date("2026-12-31"),
-      recruiter: recruiter._id,
-      status: "approved"
+      recruiter: recruiter._id
     });
 
-    console.log("✅ Job seeded successfully");
-    console.log("🆔 Job ID:", job._id.toString());
+    if (job) {
+      console.log("ℹ️ Job already exists, skipping creation.");
+    } else {
+      job = await Job.create({
+        title: "Software Engineer",
+        company: "Google",
+        description: "Develop cloud applications.",
+        cgpa: 8.0,
+        branch: ["Computer Science", "Information Technology"],
+        skillsRequired: ["React", "Node.js", "JavaScript"],
+        deadline: new Date("2026-12-31"),
+        recruiter: recruiter._id,
+        status: "approved"
+      });
+      console.log("✅ Job seeded successfully");
+    }
 
-    process.exit(0);
+    console.log("🆔 Job ID:", job._id.toString());
   } catch (err) {
     console.error("❌ Seeding failed:", err);
-    process.exit(1);
+    process.exitCode = 1;
+  } finally {
+    try {
+      await mongoose.connection.close();
+    } catch (closeErr) {
+      console.error("❌ Error closing MongoDB connection:", closeErr);
+    }
+    process.exit(process.exitCode ?? 1);
   }
 }
 
+process.exitCode = 0;
 seed();

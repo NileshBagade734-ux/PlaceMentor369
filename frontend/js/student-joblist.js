@@ -33,8 +33,10 @@ const defaultJobs = [
     company: "Google",
     cgpa: 8.5,
     branches: ["Computer Science", "Information Technology"],
-    deadlineRaw: (() => { const d = new Date(); d.setDate(d.getDate() + 3); return d; })(),
-    deadline: (() => { const d = new Date(); d.setDate(d.getDate() + 3); return d.toLocaleDateString(); })(),
+
+    deadline: "2/15/2026",
+    deadlineRaw: "2026-02-15",
+
     skills: ["React", "Node.js", "Go"],
     description: "Develop large-scale cloud applications and solve complex infrastructure problems."
   }
@@ -81,6 +83,7 @@ async function init() {
         branch: job.branch || [],
         deadlineRaw: job.deadline ? new Date(job.deadline) : null,
         deadline: job.deadline ? new Date(job.deadline).toLocaleDateString() : "Open",
+        deadlineRaw: job.deadline || null,
         skills: job.skillsRequired || [],
         description: job.description
       }));
@@ -109,55 +112,48 @@ async function init() {
   if (window.lucide) lucide.createIcons();
 }
 
-/* ==========================================================
-   CLOSING SOON BADGE HELPER
-========================================================== */
+
 /**
- * Returns an HTML badge string if the job deadline is within 7 days,
- * or an empty string if it's not closing soon / has already passed.
+ * Returns an HTML badge string based on how close the deadline is.
+ *  🔴 Closed       — deadline is today or in the past
+ *  🟠 Closing Soon — deadline is within the next 3 days
+ *  🟢 Active       — deadline is more than 3 days away
  *
- * @param {Date|null} deadlineRaw - The raw Date object for the deadline
- * @returns {string} HTML badge markup or empty string
+ * @param {string|null} deadlineRaw - ISO date string from the API, or null
+ * @param {string} deadlineDisplay  - Pre-formatted display string (e.g. "2/15/2026")
+ * @returns {string} HTML string for the badge/label
  */
-function getClosingSoonBadge(deadlineRaw) {
-  if (!deadlineRaw) return "";
-
-  const now = new Date();
-  // Normalize to start of current day for cleaner day-diff arithmetic
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const deadlineStart = new Date(
-    deadlineRaw.getFullYear(),
-    deadlineRaw.getMonth(),
-    deadlineRaw.getDate()
-  );
-
-  const msPerDay = 1000 * 60 * 60 * 24;
-  const daysLeft = Math.round((deadlineStart - todayStart) / msPerDay);
-
-  if (daysLeft < 0) return ""; // Already expired — no badge needed
-
-  if (daysLeft === 0) {
-    return `<span class="badge-closing-critical" title="Deadline is today">
-      <i data-lucide="alarm-clock" class="w-3 h-3"></i> Closes Today
-    </span>`;
+function getDeadlineBadge(deadlineRaw, deadlineDisplay) {
+  if (!deadlineRaw) {
+    return `<span class="text-[10px] text-slate-400 uppercase font-medium">Deadline: Open</span>`;
   }
-  if (daysLeft === 1) {
-    return `<span class="badge-closing-critical" title="Only 1 day left">
-      <i data-lucide="alarm-clock" class="w-3 h-3"></i> Last Day Tomorrow
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const deadline = new Date(deadlineRaw);
+  deadline.setHours(0, 0, 0, 0);
+
+  const diffMs = deadline - today;
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays <= 0) {
+    // Deadline is today or already passed
+    return `<span class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full bg-red-100 text-red-700">
+      🔴 Closed
     </span>`;
-  }
-  if (daysLeft <= 3) {
-    return `<span class="badge-closing-critical" title="${daysLeft} days left">
-      <i data-lucide="clock" class="w-3 h-3"></i> Closes in ${daysLeft} days
+  } else if (diffDays <= 3) {
+    // Closing within 3 days
+    return `<span class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full bg-orange-100 text-orange-700">
+      🟠 Closing Soon · ${deadlineDisplay}
     </span>`;
-  }
-  if (daysLeft <= 7) {
-    return `<span class="badge-closing-soon" title="${daysLeft} days left">
-      <i data-lucide="clock" class="w-3 h-3"></i> Closing Soon
+  } else {
+    // More than 3 days remaining
+    return `<span class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full bg-green-100 text-green-700">
+      🟢 Active · ${deadlineDisplay}
     </span>`;
   }
 
-  return "";
 }
 
 /* ==========================================================
@@ -195,7 +191,7 @@ function renderJobList() {
             </div>
             <p class="text-sm text-slate-500">${job.company}</p>
             <div class="flex justify-between items-center mt-3">
-                <p class="text-[10px] text-slate-400 uppercase font-medium">Deadline: ${job.deadline}</p>
+                ${getDeadlineBadge(job.deadlineRaw, job.deadline)}
                 <p class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">REQ: ${job.cgpa}</p>
             </div>
             ${closingSoonBadge ? `<div class="mt-2">${closingSoonBadge}</div>` : ""}
@@ -241,59 +237,56 @@ window.selectJob = function(id) {
           <p class="text-xl text-indigo-600 font-semibold">${job.company}</p>
           ${detailClosingSoonBadge ? `<div class="mt-3">${detailClosingSoonBadge}</div>` : ""}
         </div>
-        <button
-          onclick="handleApply('${job.id}')"
-          ${isApplied || !isEligible ? "disabled" : ""}
-          class="px-10 py-4 rounded-xl font-bold text-white shadow-lg transition-all ${
-            isApplied
-              ? "bg-slate-300 cursor-not-allowed"
-              : !isEligible
-              ? "bg-red-400 cursor-not-allowed"
-              : "bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-1 active:scale-95"
-          }">
-<div class="flex gap-3 items-start">
-  <button
-    onclick="handleApply('${job.id}')"
-    ${isApplied || !isEligible ? "disabled" : ""}
-    class="px-10 py-4 rounded-xl font-bold text-white shadow-lg transition-all ${
-      isApplied
-        ? "bg-slate-300 cursor-not-allowed"
-        : !isEligible
-        ? "bg-red-400 cursor-not-allowed"
-        : "bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-1 active:scale-95"
-    }">
-    ${
-      isApplied
-        ? "Application Sent"
-        : !isEligible
-        ? "Criteria Not Met"
-        : "Apply Now"
-    }
-  </button>
+        <div class="flex gap-3 items-start">
+          <button
+            onclick="handleApply('${job.id}')"
+            ${isApplied || !isEligible ? "disabled" : ""}
+            class="px-10 py-4 rounded-xl font-bold text-white shadow-lg transition-all ${
+              isApplied
+                ? "bg-slate-300 cursor-not-allowed"
+                : !isEligible
+                ? "bg-red-400 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-1 active:scale-95"
+            }">
+            ${
+              isApplied
+                ? "Application Sent"
+                : !isEligible
+                ? "Criteria Not Met"
+                : "Apply Now"
+            }
+          </button>
 
-  <a
-    href="../student/skill-gap.html?jobId=${job.id}"
-    class="flex items-center justify-center gap-2 px-10 py-3 rounded-xl font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition-all text-sm">
-    📊 Skill Gap Analysis
-  </a>
+          <a
+            href="../student/skill-gap.html?jobId=${job.id}"
+            class="flex items-center justify-center gap-2 px-10 py-3 rounded-xl font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition-all text-sm">
+            📊 Skill Gap Analysis
+          </a>
 
-  ${
-    !isEligible && !isApplied
-      ? `
-      <p class="text-sm text-rose-600 bg-rose-50 border border-rose-100 rounded-xl p-3 mt-2">
-        You may not meet all job requirements.
-      </p>
-      `
-      : ""
-  }
-</div>
+          ${
+            !isEligible && !isApplied
+              ? `
+              <p class="text-sm text-rose-600 bg-rose-50 border border-rose-100 rounded-xl p-3 mt-2">
+                You may not meet all job requirements.
+              </p>
+              `
+              : ""
+          }
+        </div>
+
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
           <p class="text-xs font-bold text-slate-400 uppercase mb-2">Requirement Check</p>
           <p class="text-xl font-bold ${isEligible ? "text-green-600" : "text-red-500"}">
             Target: ${job.cgpa}+ (Yours: ${studentSession.cgpa})
           </p>
+        </div>
+        <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+          <p class="text-xs font-bold text-slate-400 uppercase mb-2">Application Deadline</p>
+          <div class="mt-1 text-sm font-semibold">
+            ${getDeadlineBadge(job.deadlineRaw, job.deadline)}
+          </div>
         </div>
         <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
           <p class="text-xs font-bold text-slate-400 uppercase mb-2">Matching Skills</p>

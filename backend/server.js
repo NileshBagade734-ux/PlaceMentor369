@@ -19,6 +19,7 @@ dotenv.config({ override: true });
 
 // Initialize Background Workers
 import "./workers/aiWorker.js";
+import "./workers/emailWorker.js";
 
 const app = express();
 const httpServer = createServer(app);
@@ -76,7 +77,7 @@ if (redisConnection) {
 }
 
 /* ============================
-   GLOBAL MIDDLEWARE
+    GLOBAL MIDDLEWARE
 ============================ */
 
 // ✅ CORS (allow frontend URLs)
@@ -92,7 +93,7 @@ app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 
 /* ============================
-   ROUTES
+    ROUTES
 ============================ */
 
 // Health check
@@ -115,7 +116,7 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 /* ============================
-   MONGODB + SERVER START
+    MONGODB + SERVER START
 ============================ */
 const PORT = process.env.PORT || 5000;
 

@@ -1,9 +1,10 @@
 import Student from "../models/student.js";
 import Job from "../models/job.js";
-import Application from "../models/application.js"; // make sure case matches
+import Application from "../models/application.js";
+import { APPLICATION_STATUS } from "../constants/applicationStatus.js";
 
 /* ===========================
-   DASHBOARD STATS
+    DASHBOARD STATS
 =========================== */
 export const getDashboardStats = async (req, res) => {
   try {
@@ -21,8 +22,7 @@ export const getDashboardStats = async (req, res) => {
 
     const totalApplications = await Application.countDocuments();
 
-    // 🔹 Include old "verified" as "shortlisted"
-   const shortlisted = await Application.countDocuments({ status: { $regex: /^shortlisted$/i } });
+    const shortlisted = await Application.countDocuments({ status: APPLICATION_STATUS.SHORTLISTED });
 
     const successRate =
       totalStudents > 0 ? Math.round((shortlisted / totalStudents) * 100) : 0;
@@ -42,7 +42,7 @@ export const getDashboardStats = async (req, res) => {
 };
 
 /* ===========================
-   STUDENTS
+    STUDENTS
 =========================== */
 export const getAllStudents = async (req, res) => {
   try {
@@ -84,7 +84,7 @@ export const rejectStudent = async (req, res) => {
 };
 
 /* ===========================
-   JOBS
+    JOBS
 =========================== */
 export const getAllJobs = async (req, res) => {
   try {

@@ -2,33 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="Content-Security-Policy"
-content="
-default-src 'self';
-script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com;
-style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-font-src 'self' https://fonts.gstatic.com;
-img-src 'self' https://img.icons8.com data:;
-connect-src 'self' http://localhost:5000 https://unpkg.com;
-">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Login to PlacementorAI – your smart placement readiness platform.">
+  <title>Login - PlacementorAI</title>
 
-
-  <!-- Tailwind, icons, GSAP & fonts -->
+  <!-- Tailwind, Icons, Fonts, GSAP -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../frontend/css/login.css">
+  <link rel="stylesheet" href="css/login.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Content Security Policy -->
+  <meta http-equiv="Content-Security-Policy"
+  content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com https://cdn.botpress.cloud https://files.bpcontent.cloud;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net;
+  font-src 'self' https://fonts.gstatic.com;
+  img-src 'self' https://img.icons8.com data:;
+  connect-src 'self' http://localhost:5000 https://unpkg.com;
+  ">
+
+  <style>
+    body,
+    header, section, footer, button, input, textarea, select,
+    a, h1, h2, h3, h4, h5, h6, p, span, label, .bg-white {
+      transition: background-color 0.35s ease, color 0.35s ease,
+                  border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+  </style>
 </head>
 
 <body class="min-h-screen bg-slate-50 dark:bg-gray-900 flex flex-col transition-colors duration-300">
 
 <header class="bg-white dark:bg-gray-800 border-b border-slate-200 dark:border-gray-700" role="banner">
-  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-center">
-    <a href="/" class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent" aria-label="PlacementorAI Home">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <a href="index.html" class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent" aria-label="PlacementorAI Home">
       PlacementorAI
     </a>
+    <nav class="hidden md:flex items-center gap-6" aria-label="Main navigation">
+      <a href="index.html" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium transition">Home</a>
+      <a href="contact.html" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 font-medium transition">Contact</a>
+      <a href="register.html" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition">Sign Up</a>
+    </nav>
+    <button id="theme-toggle" class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 dark:text-white" aria-label="Toggle dark mode">🌙</button>
   </div>
 </header>
 
@@ -36,13 +56,13 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
   <div id="login-card" class="w-full max-w-md opacity-0 translate-y-6 transition-all duration-500">
 
     <div class="text-center mb-6">
-      <h2 class="text-3xl font-semibold text-gray-900 dark:text-white mb-2">Welcome Back</h2>
+      <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">Welcome Back</h1>
       <p class="text-gray-600 dark:text-gray-400">Log in to your account</p>
     </div>
 
     <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border border-slate-200 dark:border-gray-700">
       <form id="loginForm" class="space-y-4 needs-validation" novalidate>
-        
+
         <!-- Role -->
         <div>
           <label for="role" class="block text-sm font-medium text-gray-700 dark:text-gray-200">I am a...</label>
@@ -54,25 +74,17 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
             <option value="admin">Placement Officer (Admin)</option>
           </select>
           <div id="role-description" class="sr-only">Choose whether you are a student, recruiter, or admin</div>
-          <div class="invalid-feedback">
-            Please select a role.
-          </div>
-          <div class="valid-feedback">
-            Looks good.
-          </div>
+          <div class="invalid-feedback">Please select a role.</div>
+          <div class="valid-feedback">Looks good.</div>
         </div>
 
         <!-- Email -->
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-200 ">Email Address</label>
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Email Address</label>
           <input id="email" type="email" required placeholder="you@example.com" aria-label="Email address" autocomplete="email"
             class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
-          <div class="invalid-feedback">
-            Please enter a valid email address.
-          </div>
-          <div class="valid-feedback">
-            Valid email.
-          </div>
+          <div class="invalid-feedback">Please enter a valid email address.</div>
+          <div class="valid-feedback">Valid email.</div>
         </div>
 
         <!-- Password -->
@@ -80,13 +92,10 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
           <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
           <input id="password" type="password" required placeholder="••••••••" aria-label="Password" autocomplete="current-password"
             class="mt-1 w-full px-4 py-3 pr-12 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
-          <div class="invalid-feedback">
-            Password is required.
-          </div>
-          <div class="valid-feedback">
-            Looks good.
-          </div>
-          <button type="button" id="togglePassword" aria-label="Toggle password visibility" class="absolute right-4 top-[38px] text-gray-400 hover:text-indigo-600">
+          <div class="invalid-feedback">Password is required.</div>
+          <div class="valid-feedback">Looks good.</div>
+          <button type="button" id="togglePassword" aria-label="Toggle password visibility"
+            class="absolute right-4 top-[38px] text-gray-400 hover:text-indigo-600">
             <i data-lucide="eye" id="eyeIcon"></i>
           </button>
         </div>
@@ -107,10 +116,12 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
 
         <!-- Social Login -->
         <div class="flex gap-4">
-          <button type="button" aria-label="Sign in with Google" class="flex-1 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-600 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition dark:text-white text-sm">
+          <button type="button" aria-label="Sign in with Google"
+            class="flex-1 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-600 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition dark:text-white text-sm">
             <img src="https://img.icons8.com/color/20/google-logo.png" alt="Google logo" /> Google
           </button>
-          <button type="button" aria-label="Sign in with GitHub" class="flex-1 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-600 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition dark:text-white text-sm">
+          <button type="button" aria-label="Sign in with GitHub"
+            class="flex-1 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-600 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition dark:text-white text-sm">
             <img src="https://img.icons8.com/ios-glyphs/20/github.png" class="dark:invert" alt="GitHub logo" /> GitHub
           </button>
         </div>
@@ -118,24 +129,23 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
     </div>
 
     <p class="text-center text-sm mt-6 text-gray-600 dark:text-gray-400">
-      Don’t have an account?
+      Don't have an account?
       <a href="register.html" class="text-indigo-600 font-semibold hover:underline">Register here</a>
     </p>
   </div>
 </main>
 
-<script src="../frontend/js/validation.js"></script>
-<script src="../frontend//js/login.js"></script>
-<script> 
+<script src="js/theme.js"></script>
+<script src="js/validation.js"></script>
+<script src="js/login.js"></script>
+<script>
   document.addEventListener("DOMContentLoaded", () => {
-    if(window.lucide) lucide.createIcons();
+    if (window.lucide) lucide.createIcons();
     gsap.to("#login-card", { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" });
   });
 </script>
 <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
-
-<!-- Botpress Chatbot Scripts -->
 
 </body>
 </html>
