@@ -75,10 +75,7 @@ export const sendPasswordResetEmail = (toEmail, toName, resetUrl) => {
         <strong>1 hour</strong>.
       </p>
       <div style="text-align: center; margin: 32px 0;">
-        <a href="${resetUrl}"
-          style="background: #4f46e5; color: #ffffff; padding: 14px 28px;
-            border-radius: 8px; text-decoration: none; font-weight: bold;
-            display: inline-block;">
+        <a href="${resetUrl}" style="background: #4f46e5; color: #ffffff; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
           Reset Password
         </a>
       </div>
