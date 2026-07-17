@@ -33,7 +33,8 @@ const defaultJobs = [
     company: "Google",
     cgpa: 8.5,
     branches: ["Computer Science", "Information Technology"],
-    deadline: "2026-02-15",
+    deadlineRaw: (() => { const d = new Date(); d.setDate(d.getDate() + 3); return d; })(),
+    deadline: (() => { const d = new Date(); d.setDate(d.getDate() + 3); return d.toLocaleDateString(); })(),
     skills: ["React", "Node.js", "Go"],
     description: "Develop large-scale cloud applications and solve complex infrastructure problems."
   }
@@ -78,6 +79,7 @@ async function init() {
         company: job.company,
         cgpa: job.cgpa || 0,
         branch: job.branch || [],
+        deadlineRaw: job.deadline ? new Date(job.deadline) : null,
         deadline: job.deadline ? new Date(job.deadline).toLocaleDateString() : "Open",
         skills: job.skillsRequired || [],
         description: job.description
@@ -108,6 +110,57 @@ async function init() {
 }
 
 /* ==========================================================
+   CLOSING SOON BADGE HELPER
+========================================================== */
+/**
+ * Returns an HTML badge string if the job deadline is within 7 days,
+ * or an empty string if it's not closing soon / has already passed.
+ *
+ * @param {Date|null} deadlineRaw - The raw Date object for the deadline
+ * @returns {string} HTML badge markup or empty string
+ */
+function getClosingSoonBadge(deadlineRaw) {
+  if (!deadlineRaw) return "";
+
+  const now = new Date();
+  // Normalize to start of current day for cleaner day-diff arithmetic
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const deadlineStart = new Date(
+    deadlineRaw.getFullYear(),
+    deadlineRaw.getMonth(),
+    deadlineRaw.getDate()
+  );
+
+  const msPerDay = 1000 * 60 * 60 * 24;
+  const daysLeft = Math.round((deadlineStart - todayStart) / msPerDay);
+
+  if (daysLeft < 0) return ""; // Already expired — no badge needed
+
+  if (daysLeft === 0) {
+    return `<span class="badge-closing-critical" title="Deadline is today">
+      <i data-lucide="alarm-clock" class="w-3 h-3"></i> Closes Today
+    </span>`;
+  }
+  if (daysLeft === 1) {
+    return `<span class="badge-closing-critical" title="Only 1 day left">
+      <i data-lucide="alarm-clock" class="w-3 h-3"></i> Last Day Tomorrow
+    </span>`;
+  }
+  if (daysLeft <= 3) {
+    return `<span class="badge-closing-critical" title="${daysLeft} days left">
+      <i data-lucide="clock" class="w-3 h-3"></i> Closes in ${daysLeft} days
+    </span>`;
+  }
+  if (daysLeft <= 7) {
+    return `<span class="badge-closing-soon" title="${daysLeft} days left">
+      <i data-lucide="clock" class="w-3 h-3"></i> Closing Soon
+    </span>`;
+  }
+
+  return "";
+}
+
+/* ==========================================================
    RENDER JOB LIST
 ========================================================== */
 function renderJobList() {
@@ -126,6 +179,8 @@ function renderJobList() {
 
       const isApplied = appliedJobs.includes(job.id);
 
+      const closingSoonBadge = getClosingSoonBadge(job.deadlineRaw);
+
       return `
         <div onclick="selectJob('${job.id}')"
              id="card-${job.id}"
@@ -143,6 +198,7 @@ function renderJobList() {
                 <p class="text-[10px] text-slate-400 uppercase font-medium">Deadline: ${job.deadline}</p>
                 <p class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">REQ: ${job.cgpa}</p>
             </div>
+            ${closingSoonBadge ? `<div class="mt-2">${closingSoonBadge}</div>` : ""}
         </div>
       `;
     })
@@ -175,6 +231,7 @@ window.selectJob = function(id) {
     studentCGPA >= (job.cgpa || 0) &&
     (!job.branches || job.branches.length === 0 || job.branches.includes(studentBranch));
   const isApplied = appliedJobs.includes(job.id);
+  const detailClosingSoonBadge = getClosingSoonBadge(job.deadlineRaw);
 
   detailPane.innerHTML = `
     <div class="animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -182,6 +239,7 @@ window.selectJob = function(id) {
         <div>
           <h1 class="text-4xl font-black text-slate-900 mb-2">${job.title}</h1>
           <p class="text-xl text-indigo-600 font-semibold">${job.company}</p>
+          ${detailClosingSoonBadge ? `<div class="mt-3">${detailClosingSoonBadge}</div>` : ""}
         </div>
         <button
           onclick="handleApply('${job.id}')"
@@ -246,6 +304,11 @@ window.selectJob = function(id) {
                 : "bg-white border-slate-200 text-slate-400"
             }">${skill}</span>`).join("")}
           </div>
+        </div>
+        <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 ${detailClosingSoonBadge ? "border-orange-200 bg-orange-50" : ""}">
+          <p class="text-xs font-bold text-slate-400 uppercase mb-2">Application Deadline</p>
+          <p class="text-lg font-bold text-slate-700">${job.deadline}</p>
+          ${detailClosingSoonBadge ? `<div class="mt-2">${detailClosingSoonBadge}</div>` : ""}
         </div>
       </div>
       <div class="prose max-w-none">

@@ -53,3 +53,43 @@
 /* Hide scrollbar for clean UI */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+/* ===== Closing Soon Badges ===== */
+
+/* "Closing Soon" — orange, shown for jobs with 4–7 days left */
+.badge-closing-soon {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background-color: #fff7ed;
+  color: #c2410c;
+  border: 1px solid #fed7aa;
+}
+
+/* "Closing Critical" — red + pulse, shown for jobs with ≤3 days left */
+.badge-closing-critical {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  animation: badge-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
