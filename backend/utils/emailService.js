@@ -56,14 +56,10 @@ export const sendStatusUpdateEmail = (
     });
 };
 
-/**
- * Send a password reset email containing a one-time reset link.
- *
- * @param {string} toEmail    - Recipient's email address
- * @param {string} toName     - Recipient's display name
- * @param {string} resetUrl   - Full reset URL with raw token query param
- * @returns {Promise}
- */
+// Send a password reset email containing a one-time reset link.
+// @param {string} toEmail  - Recipient email address
+// @param {string} toName   - Recipient display name
+// @param {string} resetUrl - Full reset URL with raw token as query param
 export const sendPasswordResetEmail = (toEmail, toName, resetUrl) => {
   const subject = "Reset your PlacementorAI password";
 
@@ -80,9 +76,9 @@ export const sendPasswordResetEmail = (toEmail, toName, resetUrl) => {
       </p>
       <div style="text-align: center; margin: 32px 0;">
         <a href="${resetUrl}"
-           style="background: #4f46e5; color: #ffffff; padding: 14px 28px;
-                  border-radius: 8px; text-decoration: none; font-weight: bold;
-                  display: inline-block;">
+          style="background: #4f46e5; color: #ffffff; padding: 14px 28px;
+            border-radius: 8px; text-decoration: none; font-weight: bold;
+            display: inline-block;">
           Reset Password
         </a>
       </div>
