@@ -2,17 +2,17 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 
 // Unified JWT middleware (merges protect + verifyToken)
+// Reads token from httpOnly cookie (not Authorization header) to prevent XSS token theft
 export const protect = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    // Token is now in httpOnly cookie, not in Authorization header
+    const token = req.cookies.token;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!token) {
       return res.status(401).json({
         message: "Authorization token missing or malformed",
       });
     }
-
-    const token = authHeader.split(" ")[1];
 
     if (!process.env.JWT_SECRET) {
       return res.status(500).json({
