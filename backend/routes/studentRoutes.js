@@ -7,6 +7,8 @@ import {
   applyJob,
   getApplications,
   getSkillGapAnalysis,
+  getSkillGapForJob,
+  getLearningPaths,
   uploadResume,
   getAtsDashboard
 } from "../controllers/studentController.js";
@@ -33,6 +35,12 @@ router.get("/applications", verifyToken, getApplications);
 
 // AI-powered skill gap analysis for a specific job
 router.get("/skill-gap/:jobId", verifyToken, getSkillGapAnalysis);
+
+// Skill Gap Analysis: Detailed skill gap for specific job
+router.get("/skill-gap-detailed/:jobId", verifyToken, getSkillGapForJob);
+
+// Skill Gap Analysis: Get personalized learning paths based on all jobs
+router.get("/learning-paths", verifyToken, getLearningPaths);
 
 // GET ATS Resume Dashboard Data
 router.get("/ats-dashboard", verifyToken, getAtsDashboard);

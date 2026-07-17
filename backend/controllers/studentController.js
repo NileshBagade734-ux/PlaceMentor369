@@ -280,6 +280,151 @@ export const getSkillGapAnalysis = async (req, res) => {
 };
 
 /* ============================
+   GET SKILL GAP ANALYSIS FOR SPECIFIC JOB
+*/
+export const getSkillGapForJob = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+
+    // Validate job ID format
+    if (!mongoose.Types.ObjectId.isValid(jobId)) {
+      return res.status(400).json({ message: "Invalid Job ID format" });
+    }
+
+    // Get student profile
+    const student = await Student.findOne({ user: req.user.id });
+    if (!student) {
+      return res.status(400).json({ message: "Complete your profile first" });
+    }
+
+    // Check if student has any skills
+    if (!student.skills || student.skills.length === 0) {
+      return res.status(400).json({ message: "Please add skills to your profile first" });
+    }
+
+    // Get job details
+    const job = await Job.findById(jobId);
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    // Perform skill gap analysis
+    const gapAnalysis = getDetailedSkillGap(student, job);
+
+    // Get learning recommendations for missing skills
+    const recommendations = getResourcesForSkills(gapAnalysis.missingSkills);
+
+    // Build recommendations object organized by skill
+    const recommendationsMap = {};
+    recommendations.forEach(rec => {
+      recommendationsMap[rec.skill.toLowerCase()] = rec.resources;
+    });
+
+    // Format missing skills with their recommendations
+    const missingSkillsWithResources = gapAnalysis.missingSkills.map(skill => ({
+      skill,
+      resources: recommendationsMap[skill] || []
+    }));
+
+    res.status(200).json({
+      success: true,
+      jobId: job._id,
+      jobTitle: job.title,
+      company: job.company,
+      currentSkills: gapAnalysis.studentCurrentSkills,
+      requiredSkills: gapAnalysis.jobRequiredSkills,
+      matchedSkills: gapAnalysis.matchedSkills,
+      missingSkills: gapAnalysis.missingSkills,
+      skillGapMetrics: gapAnalysis.metrics,
+      matchPercentage: gapAnalysis.matchPercentage,
+      learningRecommendations: missingSkillsWithResources,
+      message:
+        gapAnalysis.missingSkills.length === 0
+          ? "You have all required skills!"
+          : `You are missing ${gapAnalysis.missingSkills.length} skill(s). Here are curated resources to help you learn them.`
+    });
+  } catch (err) {
+    console.error("GET SKILL GAP ERROR:", err);
+    res.status(500).json({ message: "Failed to analyze skill gap" });
+  }
+};
+
+/* ============================
+   GET PERSONALIZED LEARNING PATHS (ALL APPROVED JOBS)
+*/
+export const getLearningPaths = async (req, res) => {
+  try {
+    // Get student profile
+    const student = await Student.findOne({ user: req.user.id });
+    if (!student) {
+      return res.status(400).json({ message: "Complete your profile first" });
+    }
+
+    // Check if student has any skills
+    if (!student.skills || student.skills.length === 0) {
+      return res.status(400).json({ message: "Please add skills to your profile first" });
+    }
+
+    // Get all approved jobs
+    const approvedJobs = await Job.find({ status: "approved" });
+
+    if (approvedJobs.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "No jobs available currently",
+        totalJobsAnalyzed: 0,
+        topMissingSkills: [],
+        averageMatchPercentage: 0,
+        learningRecommendations: []
+      });
+    }
+
+    // Perform aggregate skill gap analysis
+    const aggregateAnalysis = getAggregateSkillGaps(student, approvedJobs);
+
+    // Get learning resources for top missing skills
+    const topMissingSkills = aggregateAnalysis.topMissingSkills.map(
+      item => item.skill
+    );
+    const recommendations = getResourcesForSkills(topMissingSkills);
+
+    // Format recommendations organized by skill
+    const recommendationsMap = {};
+    recommendations.forEach(rec => {
+      recommendationsMap[rec.skill.toLowerCase()] = rec.resources;
+    });
+
+    const learningRecommendations = topMissingSkills.map(skill => ({
+      skill,
+      frequencyInJobs: aggregateAnalysis.topMissingSkills.find(
+        item => item.skill === skill
+      ).frequencyInJobs,
+      resources: recommendationsMap[skill] || []
+    }));
+
+    res.status(200).json({
+      success: true,
+      currentSkills: student.skills,
+      totalJobsAnalyzed: aggregateAnalysis.totalJobsAnalyzed,
+      averageMatchPercentage: aggregateAnalysis.averageMatchPercentage,
+      topMissingSkills: learningRecommendations,
+      jobSkillGaps: aggregateAnalysis.jobGaps.map(gap => ({
+        jobId: gap.jobId,
+        jobTitle: gap.jobTitle,
+        company: gap.company,
+        missingSkillsCount: gap.missingSkills.length,
+        matchPercentage: gap.matchPercentage
+      })),
+      message: `Based on ${aggregateAnalysis.totalJobsAnalyzed} approved jobs, here are the top skills you should focus on to improve your placement opportunities.`
+    });
+  } catch (err) {
+    console.error("GET LEARNING PATHS ERROR:", err);
+    res.status(500).json({ message: "Failed to generate learning paths" });
+  }
+};
+
+
+/* ============================
     UPLOAD RESUME & AI PARSE
 ============================ */
 export const uploadResume = async (req, res) => {
