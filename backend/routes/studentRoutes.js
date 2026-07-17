@@ -7,10 +7,8 @@ import {
   applyJob,
   getApplications,
   getSkillGapAnalysis,
-
   uploadResume,
-  getAtsDashboard
-
+  getAtsDashboard,
 } from "../controllers/studentController.js";
 import multer from "multer";
 
@@ -36,10 +34,8 @@ router.get("/applications", verifyToken, getApplications);
 // AI-powered skill gap analysis for a specific job
 router.get("/skill-gap/:jobId", verifyToken, getSkillGapAnalysis);
 
-
 // GET ATS Resume Dashboard Data
 router.get("/ats-dashboard", verifyToken, getAtsDashboard);
-
 
 // Upload resume and parse via AI
 router.post(
