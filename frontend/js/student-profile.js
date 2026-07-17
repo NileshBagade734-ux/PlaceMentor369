@@ -66,6 +66,7 @@ const skillInput = document.getElementById("skillInput");
 const skillLevelSelect = document.getElementById("skillLevel");
 
 const resumeInput = document.getElementById("resumeInput");
+const resumeDropArea = document.getElementById("resumeDropArea");
 const resumeActions = document.getElementById("resumeActions");
 const resumeFileName = document.getElementById("resumeFileName");
 const viewPdfBtn = document.getElementById("viewPdfBtn");
@@ -155,17 +156,13 @@ function clearResumeError() {
 // ============================
 // RESUME LOGIC
 // ============================
-resumeInput?.addEventListener("change", (e) => {
-    clearResumeError();
-
-    const file = e.target.files[0];
-
-    if (!file) return;
+function validateResumeFile(file) {
+    if (!file) return false;
 
     if (file.type !== "application/pdf") {
         showResumeError("Only PDF resumes are allowed.");
         resumeInput.value = "";
-        return;
+        return false;
     }
 
     const MAX_SIZE = 2 * 1024 * 1024;
@@ -173,6 +170,16 @@ resumeInput?.addEventListener("change", (e) => {
     if (file.size > MAX_SIZE) {
         showResumeError("Resume size must be under 2MB.");
         resumeInput.value = "";
+        return false;
+    }
+
+    return true;
+}
+
+function readResumeFile(file) {
+    clearResumeError();
+
+    if (!validateResumeFile(file)) {
         return;
     }
 
@@ -185,6 +192,35 @@ resumeInput?.addEventListener("change", (e) => {
     };
 
     reader.readAsDataURL(file);
+}
+
+function setResumeDragActive(isActive) {
+    resumeDropArea?.classList.toggle("is-drag-over", isActive);
+}
+
+resumeInput?.addEventListener("change", (e) => {
+    readResumeFile(e.target.files[0]);
+});
+
+["dragenter", "dragover"].forEach((eventName) => {
+    resumeDropArea?.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setResumeDragActive(true);
+    });
+});
+
+["dragleave", "drop"].forEach((eventName) => {
+    resumeDropArea?.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setResumeDragActive(false);
+    });
+});
+
+resumeDropArea?.addEventListener("drop", (e) => {
+    const file = e.dataTransfer?.files?.[0];
+    readResumeFile(file);
 });
 
 function showResumeUI(name) {

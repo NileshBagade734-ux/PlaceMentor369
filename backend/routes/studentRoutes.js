@@ -6,13 +6,9 @@ import {
   getJobs,
   applyJob,
   getApplications,
-<<<<<<< HEAD
-  getSkillGapForJob,
-  getLearningPaths,
-=======
   getSkillGapAnalysis,
->>>>>>> 819041916b458ef9db032563e7e11c4a0fbc1f34
-  uploadResume
+  uploadResume,
+  getAtsDashboard
 } from "../controllers/studentController.js";
 import multer from "multer";
 
@@ -35,18 +31,11 @@ router.post("/apply/:jobId", verifyToken, applyJob);
 // Get all applications of this student
 router.get("/applications", verifyToken, getApplications);
 
-<<<<<<< HEAD
-// Skill Gap Analysis: Analyze gap for specific job
-router.get("/skill-gap/:jobId", verifyToken, getSkillGapForJob);
-
-// Skill Gap Analysis: Get personalized learning paths based on all jobs
-router.get("/learning-paths", verifyToken, getLearningPaths);
-// Upload resume and parse via AI
-router.post("/upload-resume", verifyToken, upload.single("resume"), uploadResume);
-=======
 // AI-powered skill gap analysis for a specific job
 router.get("/skill-gap/:jobId", verifyToken, getSkillGapAnalysis);
->>>>>>> 819041916b458ef9db032563e7e11c4a0fbc1f34
+
+// GET ATS Resume Dashboard Data
+router.get("/ats-dashboard", verifyToken, getAtsDashboard);
 
 // Upload resume and parse via AI
 router.post(

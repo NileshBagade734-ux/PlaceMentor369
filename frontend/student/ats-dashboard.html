@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ATS Resume Dashboard | PlacementorAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/student-dashboard.css" />
+    <style>
+      .score-circle {
+        transition: stroke-dashoffset 1s ease-in-out;
+      }
+      .glow-circle {
+        filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.4));
+      }
+      /* Hover effects */
+      .section-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .section-card:hover {
+        transform: translateY(-2px);
+      }
+    </style>
+  </head>
+  <body
+    id="dashboardBody"
+    class="bg-slate-50 min-h-screen flex transition-all duration-300"
+  >
+    <!-- Left Sidebar -->
+    <aside
+      class="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col fixed h-full z-30"
+    >
+      <div class="p-6">
+        <h1 class="text-xl font-bold text-indigo-600">PlacementorAI</h1>
+      </div>
+      <nav class="flex-1 px-4 space-y-1">
+        <a href="./student-dashboard.html" class="sidebar-item">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+        </a>
+        <a href="./student-profile.html" class="sidebar-item">
+          <i data-lucide="user" class="w-4 h-4"></i> Profile
+        </a>
+        <a href="./student-joblist.html" class="sidebar-item">
+          <i data-lucide="briefcase" class="w-4 h-4"></i> Jobs
+        </a>
+        <a href="./student-application.html" class="sidebar-item">
+          <i data-lucide="file-text" class="w-4 h-4"></i> My Applications
+        </a>
+        <a href="./ats-dashboard.html" class="sidebar-item active">
+          <i data-lucide="sparkles" class="w-4 h-4"></i> ATS Dashboard
+        </a>
+        <a href="./prep-dashboard.html" class="sidebar-item">
+          <i data-lucide="sliders" class="w-4 h-4"></i> Prep Tracker
+        </a>
+      </nav>
+      <div class="p-4 border-t border-slate-100">
+        <button id="logoutBtn" class="logout-btn">
+          <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Container -->
+    <main class="flex-1 md:ml-64 p-6 md:p-10 max-w-7xl mx-auto w-full">
+      <!-- Mobile Header -->
+      <header
+        class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center md:hidden mb-6 -mx-6 -mt-6"
+      >
+        <h1 class="text-lg font-bold text-indigo-600">PlacementorAI</h1>
+        <a
+          href="./student-dashboard.html"
+          class="text-xs font-semibold bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg flex items-center gap-1"
+        >
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Exit
+        </a>
+      </header>
+
+      <!-- Desktop Header -->
+      <header class="flex justify-between items-center mb-8">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-900">ATS Resume Analytics</h2>
+          <p class="text-slate-500 text-sm">
+            AI-powered feedback and scoring for your resume matching recruiter expectations
+          </p>
+        </div>
+        <div class="flex items-center gap-4">
+          <!-- Theme Toggle Button -->
+          <button
+            id="themeToggle"
+            class="px-4 py-2 rounded-lg bg-slate-200 text-slate-700 text-sm font-semibold transition hover:bg-slate-300"
+          >
+            🌙 Dark Mode
+          </button>
+
+          <span id="studentLabel" class="text-sm font-medium text-slate-600">
+            Student
+          </span>
+
+          <div
+            id="profileIcon"
+            class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center border-2 border-white shadow-sm"
+          >
+            <i data-lucide="user" class="w-5 h-5 text-indigo-600"></i>
+          </div>
+        </div>
+      </header>
+
+      <!-- Loading State -->
+      <div id="loadingState" class="flex flex-col items-center justify-center py-20 bg-white border border-slate-200 rounded-xl shadow-sm">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
+        <p class="text-slate-600 font-medium">Fetching ATS Resume Dashboard data...</p>
+      </div>
+
+      <!-- No Resume State -->
+      <div id="noResumeState" class="hidden flex-col items-center justify-center text-center p-12 bg-white border border-slate-200 rounded-xl shadow-sm max-w-2xl mx-auto my-10">
+        <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mb-6">
+          <i data-lucide="file-warning" class="w-8 h-8"></i>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900 mb-2">No Resume Found</h3>
+        <p class="text-slate-500 mb-6 max-w-md">
+          We couldn't find an analyzed resume for your profile. Upload your resume to calculate your ATS Score and unlock personalized skill analytics.
+        </p>
+        <a href="./student-profile.html" class="btn-primary">
+          <i data-lucide="upload" class="w-4 h-4"></i> Upload & Analyze Resume
+        </a>
+      </div>
+
+      <!-- Dashboard Grid Content -->
+      <div id="dashboardContent" class="hidden space-y-8">
+        
+        <!-- Score and Quick Overview Card -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Radial Gauge Card -->
+          <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col items-center justify-center text-center">
+            <h3 class="font-bold text-slate-800 mb-6 text-lg">Overall ATS Score</h3>
+            
+            <div class="relative w-48 h-48 mb-4">
+              <!-- SVG Gauge -->
+              <svg class="w-full h-full transform -rotate-95" viewBox="0 0 100 100">
+                <!-- Background track -->
+                <circle cx="50" cy="50" r="40" class="stroke-slate-100" stroke-width="8" fill="none" />
+                <!-- Active circle -->
+                <circle id="scoreProgressCircle" cx="50" cy="50" r="40" 
+                        class="score-circle stroke-indigo-600 glow-circle" stroke-width="8" 
+                        stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" fill="none" />
+              </svg>
+              <!-- Center Text -->
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span id="scoreText" class="text-4xl font-extrabold text-slate-950">0</span>
+                <span class="text-slate-400 text-xs font-bold uppercase tracking-wide">out of 100</span>
+              </div>
+            </div>
+
+            <div id="scoreBadge" class="px-3 py-1 rounded-full text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 mt-2 mb-4">
+              Analyzing...
+            </div>
+            
+            <p id="atsSummaryText" class="text-slate-500 text-sm mt-2 px-2 max-w-sm italic">
+              Calculating detailed recommendations...
+            </p>
+          </div>
+
+          <!-- General Section Checklist -->
+          <div class="lg:col-span-2 bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <h3 class="font-bold text-slate-800 text-lg mb-2">Resume Sections Evaluation</h3>
+              <p class="text-slate-400 text-xs mb-6">
+                Critical sections audited for placement compatibility and parsing formats
+              </p>
+              
+              <div id="sectionsChecklist" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+            
+            <!-- Quick Alert Advice -->
+            <div class="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-lg flex gap-3 items-start">
+              <i data-lucide="info" class="w-5 h-5 text-indigo-500 flex-shrink-0 mt-0.5"></i>
+              <p class="text-xs text-slate-500 leading-relaxed">
+                <strong>Tip:</strong> ATS parsing systems rank resumes based on section headers and layout structure. Make sure "Weak" or "Missing" sections are added with clear headings like "Experience" or "Projects".
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skills and Suggestions Breakdown -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Missing Skills Card -->
+          <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+              <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i> Missing Key Skills
+              </h3>
+              <span class="text-xs text-slate-400">Industry standards</span>
+            </div>
+            
+            <p class="text-slate-400 text-xs mb-4">
+              These technical skills are highly relevant for your branch but were not detected on your resume.
+            </p>
+
+            <div id="missingSkillsContainer" class="flex flex-wrap gap-2 py-2 flex-grow">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+
+          <!-- Actionable Recommendations Card -->
+          <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+              <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="wrench" class="w-5 h-5 text-indigo-600"></i> Improvement Suggestions
+              </h3>
+              <span class="text-xs text-slate-400">ATS formatting</span>
+            </div>
+
+            <p class="text-slate-400 text-xs mb-4">
+              Suggested updates to boost your resume's search visibility and readability.
+            </p>
+            
+            <ul id="improvementSuggestionsList" class="space-y-3 text-sm text-slate-600 flex-grow">
+              <!-- Injected via JS -->
+            </ul>
+          </div>
+        </div>
+
+        <!-- AI Placement Readiness Roadmap -->
+        <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <div class="border-b border-slate-100 pb-4 mb-6">
+            <h3 class="font-bold text-slate-900 text-lg flex items-center gap-2">
+              <i data-lucide="compass" class="w-5 h-5 text-emerald-500"></i> Personalized Preparation Roadmap
+            </h3>
+            <p class="text-slate-400 text-xs mt-1">
+              Step-by-step career path recommendations designed to bridge gaps and prepare for campus placement
+            </p>
+          </div>
+
+          <div id="aiRoadmapContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- Global configuration and dashboard script -->
+    <script src="../js/config.js"></script>
+    <script src="../js/mobile-nav.js"></script>
+    <script src="../js/ats-dashboard.js"></script>
+    <script>
+      // Load mobile nav integration
+      injectMobileNav([
+        { href: './student-dashboard.html', icon: 'layout-dashboard', label: 'Dashboard' },
+        { href: './student-profile.html', icon: 'user', label: 'Profile' },
+        { href: './student-joblist.html', icon: 'briefcase', label: 'Jobs' },
+        { href: './student-application.html', icon: 'file-text', label: 'My Applications' },
+        { href: './ats-dashboard.html', icon: 'sparkles', label: 'ATS Score' },
+        { href: './prep-dashboard.html', icon: 'sliders', label: 'Prep Tracker' },
+      ], 'ats-dashboard','md');
+    </script>
+  </body>
+</html>

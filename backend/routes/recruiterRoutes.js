@@ -27,4 +27,4 @@ router.get("/applications", verifyToken, recruiterOnly, getAllRecruiterApplicati
 router.get("/applications/export", verifyToken, recruiterOnly, exportJobApplicantsToCSV);
 router.patch("/applications/status", verifyToken, recruiterOnly, updateApplicantStatus);
 
-export default router; 
+export default router;

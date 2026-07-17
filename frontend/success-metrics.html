@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Success Metrics | PlacementorAI</title>
+
+  <link rel="stylesheet" href="css/success-metrics.css"/>
+
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Placement Success Metrics | PlacementorAI</title>
@@ -9,43 +17,78 @@
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
+</head>
 <body>
-    <header class="header">
-  <div class="container nav" style="position: relative;">
+
+<header class="header">
+  <div class="container nav">
+
     <div class="logo">
-      <i class="fa-solid fa-arrow-up-right-dots"></i> 
+      <i class="fa-solid fa-arrow-up-right-dots"></i>
       <span>PlacementorAI</span>
     </div>
-    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
-  <i class="fa-solid fa-moon"></i>
-</button>
-    <button class="menu-toggle" id="mobile-menu-btn" aria-label="Toggle Navigation Menu">
-      <i class="fa-solid fa-bars" id="menu-icon"></i>
-    </button>
 
-    <nav class="nav-menu" id="nav-links-target">
+    <nav class="nav-menu">
       <a href="index.html">Home</a>
+      <a href="About.html">About</a>
       <a href="contact.html">Contact</a>
-      <a href="register.html">Sign Up</a>
-      <a href="login.html" class="login">Login</a>
-      <a href="register.html" class="btn primary" style="color: #ffffff !important;">
+      <a href="success-metrics.html" class="active">Success Metrics</a>
+      <a href="login.html">Login</a>
+
+      <a href="register.html" class="btn primary">
         Get Started
-        <i class="fa-solid fa-arrow-up-right-from-square" style="color: #ffffff !important;"></i>
-      </a>    
+      </a>
     </nav>
+
   </div>
 </header>
 
-<main>
+<section class="hero">
 
-<section class="metrics-hero">
-    <div class="container">
-        <span class="analytics-badge">
-            <i class="fa-solid fa-chart-line"></i>
-            Live Placement Analytics
-        </span>
+  <div class="hero-content">
 
-        <h1>Placement Success Center</h1>
+    <span class="badge">
+      Live Placement Analytics
+    </span>
+
+    <h1>
+      Placement Success Center
+    </h1>
+
+    <p>
+      Real-time insights into placements, recruiters,
+      hiring trends and student success.
+    </p>
+
+  </div>
+
+</section>
+
+<section class="metrics-section container">
+
+  <div class="metric-card">
+    <i class="fa-solid fa-user-graduate"></i>
+    <h2 class="counter" data-target="3000">0</h2>
+    <p>Students Placed</p>
+  </div>
+
+  <div class="metric-card">
+    <i class="fa-solid fa-building"></i>
+    <h2 class="counter" data-target="250">0</h2>
+    <p>Partner Companies</p>
+  </div>
+
+  <div class="metric-card">
+    <i class="fa-solid fa-briefcase"></i>
+    <h2 class="counter" data-target="1200">0</h2>
+    <p>Jobs Posted</p>
+  </div>
+
+  <div class="metric-card">
+    <i class="fa-solid fa-chart-line"></i>
+    <h2>85%</h2>
+    <p>Placement Rate</p>
+  </div>
 
         <p>
             Real-time insights into placements, recruiters,
@@ -57,50 +100,64 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         </div>
     </div>
 </section>
+<section class="top-recruiters container">
 
-<section class="metrics-grid container">
+  <h2>Top Hiring Companies</h2>
 
-    <div class="metric-card">
-        <i class="fa-solid fa-user-graduate"></i>
-        <h2>3000+</h2>
-        <p>Students Placed</p>
+  <div class="recruiter-grid">
+
+    <div class="recruiter-card">
+      <i class="fa-brands fa-google"></i>
+      <h3>Google</h3>
+      <p>120 Offers</p>
     </div>
 
-    <div class="metric-card">
-        <i class="fa-solid fa-building"></i>
-        <h2>250+</h2>
-        <p>Partner Companies</p>
+    <div class="recruiter-card">
+      <i class="fa-brands fa-microsoft"></i>
+      <h3>Microsoft</h3>
+      <p>95 Offers</p>
     </div>
 
-    <div class="metric-card">
-        <i class="fa-solid fa-briefcase"></i>
-        <h2>1200+</h2>
-        <p>Jobs Posted</p>
+    <div class="recruiter-card">
+      <i class="fa-brands fa-amazon"></i>
+      <h3>Amazon</h3>
+      <p>110 Offers</p>
     </div>
 
-    <div class="metric-card">
-        <i class="fa-solid fa-chart-simple"></i>
-        <h2>85%</h2>
-        <p>Placement Rate</p>
+    <div class="recruiter-card">
+      <i class="fa-solid fa-code"></i>
+      <h3>TCS</h3>
+      <p>240 Offers</p>
     </div>
+
+  </div>
 
 </section>
+<section class="analytics-section container">
 
-<section class="ai-insights container">
+  <div class="analytics-left">
 
-    <h2>
-        <i class="fa-solid fa-brain"></i>
-        AI Placement Insights
-    </h2>
+    <h2>Branch-wise Placement Performance</h2>
 
-    <div class="insight-card">
-        CSE placements increased by 18% this semester.
-        React, Node.js and Python remain the most
-        in-demand skills among recruiters.
+    <div class="progress-box">
+      <div class="progress-title">
+        <span>CSE</span>
+        <span>92%</span>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill cse"></div>
+      </div>
     </div>
 
-</section>
+    <div class="progress-box">
+      <div class="progress-title">
+        <span>IT</span>
+        <span>88%</span>
+      </div>
 
+      <div class="progress-bar">
+        <div class="progress-fill it"></div>
 </main>
 <section class="journey-section">
 
@@ -324,34 +381,79 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
   </a>
 </div>
       </div>
-      <div>
-        <h4>Platform</h4>
-        <a href="index.html">Home</a>
-        <a href="About.html">About Us</a>
-        <a href="contact.html">Contact</a>
+    </div>
+
+    <div class="progress-box">
+      <div class="progress-title">
+        <span>AI/DS</span>
+        <span>84%</span>
       </div>
-      <div>
-        <h4>Resources</h4>
-        <a href="javascript:void(0)" onclick="openPortal('faq')">FAQ</a>
-        <a href="javascript:void(0)" onclick="openPortal('privacy')">Privacy Policy</a>
-        <a href="javascript:void(0)" onclick="openPortal('terms')">Terms of Service</a>
-      </div>
-      <div>
-        <h4>Account</h4>
-        <a href="login.html">Login</a>
-        <a href="register.html">Sign Up</a>
-        <a href="register.html">Recruiter Portal</a>
+
+      <div class="progress-bar">
+        <div class="progress-fill aids"></div>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p class="copyright">&copy; 2026 PlacementorAI. All rights reserved.</p>
-      <div style="display: flex; gap: 20px;">
-        <a href="javascript:void(0)" onclick="openPortal('privacy')">Privacy</a>
-        <a href="javascript:void(0)" onclick="openPortal('terms')">Terms</a>
+
+    <div class="progress-box">
+      <div class="progress-title">
+        <span>Mechanical</span>
+        <span>72%</span>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill mech"></div>
       </div>
     </div>
+
   </div>
-</footer>
-<script src="script.js"></script>
+
+  <div class="analytics-right">
+
+    <div class="insight-card">
+      <h3>
+        <i class="fa-solid fa-brain"></i>
+        AI Placement Insights
+      </h3>
+
+      <p>
+        CSE placements increased by 18% this semester.
+        React, Node.js and Python remain the most in-demand
+        skills among recruiters.
+      </p>
+    </div>
+
+    <div class="trend-card">
+
+      <h3>
+        <i class="fa-solid fa-chart-column"></i>
+        Hiring Trend
+      </h3>
+
+      <div class="bars">
+
+        <div class="bar jan"></div>
+        <div class="bar feb"></div>
+        <div class="bar mar"></div>
+        <div class="bar apr"></div>
+        <div class="bar may"></div>
+
+      </div>
+
+      <div class="months">
+        <span>Jan</span>
+        <span>Feb</span>
+        <span>Mar</span>
+        <span>Apr</span>
+        <span>May</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<script src="js/success-metrics.js"></script>
+
 </body>
 </html>

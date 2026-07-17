@@ -2,9 +2,10 @@ import Job from "../models/job.js";
 import Application from "../models/application.js";
 import mongoose from "mongoose";
 import emailQueue from "../queues/emailQueue.js";
+import { APPLICATION_STATUS } from "../constants/applicationStatus.js";
 
 /* ======================================================
-   CREATE JOB
+    CREATE JOB
 ====================================================== */
 export const createJob = async (req, res) => {
   try {
@@ -54,7 +55,7 @@ export const createJob = async (req, res) => {
 };
 
 /* ======================================================
-   GET RECRUITER JOBS
+    GET RECRUITER JOBS
 ====================================================== */
 export const getRecruiterJobs = async (req, res) => {
   try {
@@ -66,7 +67,7 @@ export const getRecruiterJobs = async (req, res) => {
 };
 
 /* ======================================================
-   GET ALL APPLICATIONS (ALL JOBS)
+    GET ALL APPLICATIONS (ALL JOBS)
 ====================================================== */
 export const getAllRecruiterApplications = async (req, res) => {
   try {
@@ -84,7 +85,7 @@ export const getAllRecruiterApplications = async (req, res) => {
 };
 
 /* ======================================================
-   UPDATE APPLICATION STATUS
+    UPDATE APPLICATION STATUS
 ====================================================== */
 export const updateApplicantStatus = async (req, res) => {
   try {
@@ -102,17 +103,18 @@ export const updateApplicantStatus = async (req, res) => {
       return res.status(404).json({ message: "Application not found" });
     }
 
-    application.status = status;
+    const normalizedStatus = status.toLowerCase();
+    application.status = normalizedStatus;
     await application.save();
 
-    if (status === "shortlisted" || status === "rejected") {
-       await emailQueue.add("email-job", {
-         studentEmail: application.student.email,
-         studentName: application.student.name,
-         jobTitle: application.job.title,
-         companyName: application.job.company,
-         status
-       });
+    if (normalizedStatus === APPLICATION_STATUS.SHORTLISTED || normalizedStatus === APPLICATION_STATUS.REJECTED) {
+        await emailQueue.add("email-job", {
+          studentEmail: application.student.email,
+          studentName: application.student.name,
+          jobTitle: application.job.title,
+          companyName: application.job.company,
+          status
+        });
     }
 
     return res.status(200).json({
@@ -126,8 +128,8 @@ export const updateApplicantStatus = async (req, res) => {
 };
 
 /* ======================================================
-   DASHBOARD STATS
-   GET /api/recruiter/dashboard
+    DASHBOARD STATS
+    GET /api/recruiter/dashboard
 ====================================================== */
 export const getRecruiterDashboardStats = async (req, res) => {
   try {
@@ -142,7 +144,7 @@ export const getRecruiterDashboardStats = async (req, res) => {
 
     const shortlisted = await Application.countDocuments({
       job: { $in: jobIds },
-      status: "shortlisted",
+      status: APPLICATION_STATUS.SHORTLISTED,
     });
 
     res.status(200).json({
@@ -157,7 +159,7 @@ export const getRecruiterDashboardStats = async (req, res) => {
 };
 
 /* ======================================================
-   EXPORT APPLICANTS TO CSV
+    EXPORT APPLICANTS TO CSV
 ====================================================== */
 export const exportJobApplicantsToCSV = async (req, res) => {
   try {
@@ -234,7 +236,7 @@ export const exportJobApplicantsToCSV = async (req, res) => {
 };
 
 /* ======================================================
-   DELETE JOB
+    DELETE JOB
 ====================================================== */
 export const deleteJob = async (req, res) => {
   try {

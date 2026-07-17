@@ -1,4 +1,6 @@
-import pdfParse from "pdf-parse";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const pdfParse = require("pdf-parse");
 import mammoth from "mammoth"; // for .docx
 import { Buffer } from "buffer";
 
@@ -10,13 +12,13 @@ const MIN_PARSEABLE_CHARS = 100;
 // ─── text normalisation ───────────────────────────────────────────────────────
 
 /**
- * Normalise Unicode so non-ASCII names (José, 张伟, Андрей, Søren …)
- * don't cause downstream encoding errors.
- *
- *  • NFC compose  – keeps é, ñ, 中 intact
- *  • strip C0/C1 control characters except \n, \r, \t
- *  • collapse excessive blank lines
- */
+  * Normalise Unicode so non-ASCII names (José, 张伟, Андрей, Søren …)
+  * don't cause downstream encoding errors.
+  *
+  *  • NFC compose  – keeps é, ñ, 中 intact
+  *  • strip C0/C1 control characters except \n, \r, \t
+  *  • collapse excessive blank lines
+  */
 export function normalizeText(text) {
   if (typeof text !== "string") return "";
 
@@ -35,12 +37,12 @@ export function normalizeText(text) {
 // ─── format-specific extractors ──────────────────────────────────────────────
 
 /**
- * Extract text from a PDF buffer.
- *
- * pdf-parse reads all pages and, with pagerender set to extract raw strings,
- * does a far better job on two-column and table-heavy PDFs than the default
- * single-pass regex approach that was here before.
- */
+  * Extract text from a PDF buffer.
+  *
+  * pdf-parse reads all pages and, with pagerender set to extract raw strings,
+  * does a far better job on two-column and table-heavy PDFs than the default
+  * single-pass regex approach that was here before.
+  */
 async function extractPDF(buffer) {
   // Custom page renderer – collects text from every page individually
   // so column order is respected within each page.
@@ -73,9 +75,9 @@ async function extractPDF(buffer) {
 }
 
 /**
- * Extract text from a DOCX buffer using mammoth.
- * mammoth preserves table content as plain text rows.
- */
+  * Extract text from a DOCX buffer using mammoth.
+  * mammoth preserves table content as plain text rows.
+  */
 async function extractDOCX(buffer) {
   const result = await mammoth.extractRawText({ buffer });
   if (result.messages?.length) {
@@ -85,9 +87,9 @@ async function extractDOCX(buffer) {
 }
 
 /**
- * Extract text from a plain-text buffer.
- * Tries UTF-8 first, falls back to latin-1 so we never throw on encoding issues.
- */
+  * Extract text from a plain-text buffer.
+  * Tries UTF-8 first, falls back to latin-1 so we never throw on encoding issues.
+  */
 function extractTXT(buffer) {
   try {
     return buffer.toString("utf-8");
@@ -99,9 +101,9 @@ function extractTXT(buffer) {
 // ─── review queue ─────────────────────────────────────────────────────────────
 
 /**
- * Returns a review-queue entry object.
- * The caller (studentController) is responsible for persisting this to the DB.
- */
+  * Returns a review-queue entry object.
+  * The caller (studentController) is responsible for persisting this to the DB.
+  */
 function buildReviewQueueEntry(originalName, mimeType, reason) {
   return {
     originalName,
@@ -114,15 +116,15 @@ function buildReviewQueueEntry(originalName, mimeType, reason) {
 // ─── public API ───────────────────────────────────────────────────────────────
 
 /**
- * Parse a resume file uploaded via multer (req.file).
- *
- * @param {object} file  – multer file object { buffer, mimetype, originalname }
- * @returns {object} { text, flagged, reviewEntry, error }
- *   - text        {string}  normalised extracted text (may be "" on failure)
- *   - flagged     {boolean} true when queued for manual review
- *   - reviewEntry {object|null} data to store in the review queue (if flagged)
- *   - error       {string|null} human-readable error message
- */
+  * Parse a resume file uploaded via multer (req.file).
+  *
+  * @param {object} file  – multer file object { buffer, mimetype, originalname }
+  * @returns {object} { text, flagged, reviewEntry, error }
+  *   - text        {string}  normalised extracted text (may be "" on failure)
+  *   - flagged     {boolean} true when queued for manual review
+  *   - reviewEntry {object|null} data to store in the review queue (if flagged)
+  *   - error       {string|null} human-readable error message
+  */
 export async function parseResume(file) {
   const { buffer, mimetype, originalname } = file;
 

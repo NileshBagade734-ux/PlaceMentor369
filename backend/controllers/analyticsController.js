@@ -1,7 +1,7 @@
-// backend/controllers/analyticsController.js
 import Application from "../models/application.js";
 import Job from "../models/job.js";
 import Student from "../models/student.js";
+import { APPLICATION_STATUS } from "../constants/applicationStatus.js";
 
 /**
  * Month name lookup for aggregation results.
@@ -138,9 +138,9 @@ export const getAnalytics = async (req, res) => {
 
     // 2. Status Breakdown
     const statusLabels = {
-      applied: "Applied",
-      shortlisted: "Shortlisted",
-      rejected: "Rejected"
+      [APPLICATION_STATUS.APPLIED]: "Applied",
+      [APPLICATION_STATUS.SHORTLISTED]: "Shortlisted",
+      [APPLICATION_STATUS.REJECTED]: "Rejected",
     };
     const statusData = {
       labels: statusBreakdown.map(
@@ -178,7 +178,7 @@ export const getAnalytics = async (req, res) => {
     // ─── Compute acceptance rate ───
     const totalApps = statusBreakdown.reduce((sum, r) => sum + r.count, 0);
     const shortlistedCount =
-      statusBreakdown.find((r) => r._id === "shortlisted")?.count || 0;
+      statusBreakdown.find((r) => r._id === APPLICATION_STATUS.SHORTLISTED)?.count || 0;
     const acceptanceRate =
       totalApps > 0 ? Math.round((shortlistedCount / totalApps) * 100) : 0;
 
