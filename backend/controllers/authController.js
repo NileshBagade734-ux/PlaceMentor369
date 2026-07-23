@@ -25,8 +25,17 @@ export const register = async (req, res) => {
       role
     });
 
+    const token = generateToken(user._id);
+
+    // Set httpOnly cookie (secure in production to prevent XSS token theft)
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+
     res.status(201).json({
-      token: generateToken(user._id),
       user: {
         id: user._id,
         name: user.name,
@@ -55,8 +64,17 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
+    const token = generateToken(user._id);
+
+    // Set httpOnly cookie (secure in production to prevent XSS token theft)
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+
     res.json({
-      token: generateToken(user._id),
       user: {
         id: user._id,
         name: user.name,
@@ -68,4 +86,18 @@ export const login = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
+};
+
+// LOGOUT
+export const logout = (req, res) => {
+  // Clear the httpOnly cookie server-side
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict"
+  });
+
+  res.json({
+    message: "Logged out successfully"
+  });
 };
