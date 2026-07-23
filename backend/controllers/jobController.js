@@ -1,15 +1,37 @@
 import Job from "../models/job.js";
 import Application from "../models/application.js";
+import { validateJobPosting, checkJobExpiry, addFeedback, logAuditEntry } from "../utils/jobValidator.js";
 import { APPLICATION_STATUS } from "../constants/applicationStatus.js";
 
 /* CREATE JOB */
 export const createJob = async (req, res) => {
   try {
     const recruiterId = req.user._id;
-    const { title, company, description, cgpa, branch, skillsRequired, deadline, location, salary } = req.body;
+    const { title, company, description, cgpa, branch, skillsRequired, deadline, location, salaryMin, salaryMax } = req.body;
 
     if (!title || !company || !description || !deadline) {
       return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    // Validate job posting
+    const validation = validateJobPosting({
+      title,
+      company,
+      description,
+      cgpa,
+      skillsRequired,
+      deadline,
+      salaryMin,
+      salaryMax
+    });
+
+    if (!validation.isValid) {
+      return res.status(400).json({
+        success: false,
+        message: "Job validation failed",
+        errors: validation.errors,
+        warnings: validation.warnings
+      });
     }
 
     const job = await Job.create({
@@ -17,16 +39,31 @@ export const createJob = async (req, res) => {
       company,
       description,
       cgpa,
-      branches: branch, // ✅ fixed typo
-      skillsRequired,
+      branch: branch || [],
+      skillsRequired: skillsRequired || [],
       deadline,
       location,
-      salary,
+      salaryMin,
+      salaryMax,
       recruiter: recruiterId,
-      status: "approved" // auto-approve
+      status: "approved",
+      validationStatus: validation.validationStatus,
+      isCompanyVerified: false,
+      skillsLastVerified: new Date(),
+      feedback: [],
+      auditLog: [{
+        action: "created",
+        changedBy: recruiterId,
+        timestamp: new Date()
+      }]
     });
 
-    res.status(201).json({ success: true, message: "Job posted successfully", job });
+    res.status(201).json({
+      success: true,
+      message: "Job posted successfully",
+      warnings: validation.warnings,
+      job
+    });
   } catch (err) {
     console.error("Create Job Error:", err);
     res.status(500).json({ message: "Server error while creating job" });
@@ -94,5 +131,96 @@ export const deleteJob = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to delete job" });
+  }
+};
+
+/* REPORT JOB POSTING ISSUE */
+export const reportJobIssue = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const { issue, message } = req.body;
+    const studentId = req.user._id;
+
+    if (!["outdated-skills", "salary-mismatch", "position-filled", "incorrect-deadline"].includes(issue)) {
+      return res.status(400).json({ message: "Invalid issue type" });
+    }
+
+    const job = await Job.findById(jobId);
+    if (!job) return res.status(404).json({ message: "Job not found" });
+
+    addFeedback(job, studentId, issue, message);
+    await job.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Issue reported successfully",
+      companyAccuracyScore: job.companyAccuracyScore,
+      feedbackCount: job.feedback.length
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to report issue" });
+  }
+};
+
+/* GET COMPANY ACCURACY REPORT */
+export const getCompanyAccuracy = async (req, res) => {
+  try {
+    const { companyName } = req.params;
+
+    const jobs = await Job.find({ company: companyName });
+    if (jobs.length === 0) {
+      return res.status(404).json({ message: "No jobs found for this company" });
+    }
+
+    const avgAccuracy = jobs.reduce((sum, job) => sum + job.companyAccuracyScore, 0) / jobs.length;
+    const totalFeedback = jobs.reduce((sum, job) => sum + job.feedback.length, 0);
+    const expiredJobs = jobs.filter(j => j.status === "expired").length;
+    const flaggedJobs = jobs.filter(j => j.validationStatus === "flagged").length;
+
+    res.status(200).json({
+      company: companyName,
+      totalJobPostings: jobs.length,
+      averageAccuracyScore: avgAccuracy.toFixed(2),
+      totalReports: totalFeedback,
+      expiredPostings: expiredJobs,
+      flaggedPostings: flaggedJobs,
+      jobs: jobs.map(j => ({
+        id: j._id,
+        title: j.title,
+        status: j.status,
+        validationStatus: j.validationStatus,
+        accuracyScore: j.companyAccuracyScore,
+        feedbackCount: j.feedback.length
+      }))
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch company accuracy report" });
+  }
+};
+
+/* CHECK AND EXPIRE OUTDATED JOBS */
+export const expireOutdatedJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find({ status: { $ne: "expired" }, deadline: { $lt: new Date() } });
+    let expiredCount = 0;
+
+    for (const job of jobs) {
+      if (await checkJobExpiry(job)) {
+        logAuditEntry(job, "auto-expired", req.user?._id, job.status, "expired");
+        await job.save();
+        expiredCount++;
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `${expiredCount} jobs expired successfully`,
+      expiredCount
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to expire jobs" });
   }
 };
