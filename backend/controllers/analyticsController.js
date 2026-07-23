@@ -2,6 +2,7 @@ import Application from "../models/application.js";
 import Job from "../models/job.js";
 import Student from "../models/student.js";
 import { APPLICATION_STATUS } from "../constants/applicationStatus.js";
+import { transitionApplicationStatus, computePlacementMetrics } from "../utils/placementTracker.js";
 
 /**
  * Month name lookup for aggregation results.
