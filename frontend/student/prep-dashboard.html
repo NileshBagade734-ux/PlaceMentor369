@@ -6,8 +6,8 @@
     <title>Interview Prep Tracker – PlacementorAI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-      /* Align styling with project dashboard standards */
       .sidebar-item {
         display: flex;
         align-items: center;
@@ -32,22 +32,15 @@
     </style>
   </head>
   <body class="bg-slate-50 min-h-screen text-slate-800">
-    <header
-      class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center md:hidden"
-    >
+    <header class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center md:hidden">
       <h1 class="text-lg font-bold text-indigo-600">PlacementorAI</h1>
-      <a
-        href="./student-dashboard.html"
-        class="text-xs font-semibold bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg flex items-center gap-1"
-      >
+      <a href="./student-dashboard.html" class="text-xs font-semibold bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg flex items-center gap-1">
         <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Exit Tracker
       </a>
     </header>
 
     <div class="flex">
-      <aside
-        class="w-64 bg-white border-r border-slate-200 min-h-screen p-6 hidden md:block"
-      >
+      <aside class="w-64 bg-white border-r border-slate-200 min-h-screen p-6 hidden md:block">
         <h1 class="text-xl font-bold text-indigo-600 mb-10">PlacementorAI</h1>
         <nav class="space-y-1">
           <a href="./student-dashboard.html" class="sidebar-item">
@@ -62,6 +55,9 @@
           <a href="./student-application.html" class="sidebar-item">
             <i data-lucide="file-text" class="w-4 h-4"></i> My Applications
           </a>
+          <a href="./ats-dashboard.html" class="sidebar-item">
+            <i data-lucide="sparkles" class="w-4 h-4"></i> ATS Dashboard
+          </a>
           <a href="./prep-dashboard.html" class="sidebar-item active">
             <i data-lucide="sliders" class="w-4 h-4"></i> Prep Tracker
           </a>
@@ -69,97 +65,117 @@
       </aside>
 
       <main class="flex-1 p-6 md:p-8 max-w-6xl mx-auto">
-        <header
-          class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
-        >
+        <header class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h2 class="text-2xl font-bold text-slate-800">
-              Interview Preparation
-            </h2>
-            <p class="text-slate-500 text-sm">
-              Monitor your module tracking status and analytics targets.
-            </p>
+            <h2 class="text-2xl font-bold text-slate-800">Interview Preparation Tracker</h2>
+            <p class="text-slate-500 text-sm">Track your technical preparation modules, update topics, and achieve interview readiness.</p>
           </div>
-          <div
-            class="bg-white border border-slate-200 rounded-xl px-5 py-3 flex items-center gap-4 shadow-sm w-full sm:w-auto"
-          >
-            <div>
-              <p
-                class="text-xs text-slate-400 font-bold uppercase tracking-wider"
-              >
-                Overall Completion
-              </p>
-              <h4
-                class="text-2xl font-black text-indigo-600"
-                id="overall-percentage"
-              >
-                0%
-              </h4>
-            </div>
-            <div
-              class="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 ml-auto"
-            >
-              <i data-lucide="award" class="w-6 h-6"></i>
+          <div class="flex items-center gap-3 w-full sm:w-auto">
+            <button onclick="resetTrackerData()" class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 text-xs font-bold px-4 py-3 rounded-xl transition">
+              Reset Progress
+            </button>
+            <div class="bg-white border border-slate-200 rounded-xl px-5 py-3 flex items-center gap-4 shadow-sm">
+              <div>
+                <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Overall Completion</p>
+                <h4 class="text-2xl font-black text-indigo-600" id="overall-percentage">0%</h4>
+              </div>
+              <div class="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 ml-auto">
+                <i data-lucide="award" class="w-6 h-6"></i>
+              </div>
             </div>
           </div>
         </header>
 
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 gap-6"
-          id="prep-modules-container"
-        ></div>
+        <!-- Stats Overview Banner -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div class="bg-white p-4 rounded-xl border border-slate-200">
+            <span class="text-xs text-slate-400 font-semibold uppercase">Total Topics</span>
+            <p class="text-xl font-bold text-slate-800 mt-1" id="stat-total">0</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200">
+            <span class="text-xs text-slate-400 font-semibold uppercase">Topics Completed</span>
+            <p class="text-xl font-bold text-emerald-600 mt-1" id="stat-completed">0</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200">
+            <span class="text-xs text-slate-400 font-semibold uppercase">Remaining</span>
+            <p class="text-xl font-bold text-amber-600 mt-1" id="stat-remaining">0</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200">
+            <span class="text-xs text-slate-400 font-semibold uppercase">Readiness Badge</span>
+            <p class="text-sm font-bold text-indigo-600 mt-1" id="stat-badge">Getting Started 🚀</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="prep-modules-container"></div>
       </main>
     </div>
 
+    <!-- Mobile Navigation -->
+    <script src="../js/mobile-nav.js"></script>
     <script>
-      // Module Data Matrix matching instructions
-      const preparationModules = [
-        {
-          id: "aptitude",
-          name: "Aptitude & Logical Reasoning",
-          total: 40,
-          completed: 28,
-          color: "bg-amber-500",
-          icon: "brain",
-        },
-        {
-          id: "dsa",
-          name: "Data Structures & Algorithms",
-          total: 150,
-          completed: 95,
-          color: "bg-indigo-500",
-          icon: "code-2",
-        },
-        {
-          id: "core",
-          name: "Core CS Subjects (OS, DBMS, CN)",
-          total: 30,
-          completed: 12,
-          color: "bg-blue-500",
-          icon: "database",
-        },
-        {
-          id: "mock",
-          name: "Mock Interviews & Soft Skills",
-          total: 10,
-          completed: 6,
-          color: "bg-emerald-500",
-          icon: "video",
-        },
+      if (typeof injectMobileNav === 'function') {
+        injectMobileNav([
+          { href: './student-dashboard.html', icon: 'layout-dashboard', label: 'Dashboard' },
+          { href: './student-profile.html', icon: 'user', label: 'Profile' },
+          { href: './student-joblist.html', icon: 'briefcase', label: 'Jobs' },
+          { href: './student-application.html', icon: 'file-text', label: 'My Applications' },
+          { href: './ats-dashboard.html', icon: 'sparkles', label: 'ATS Score' },
+          { href: './prep-dashboard.html', icon: 'sliders', label: 'Prep Tracker' },
+        ], 'prep-dashboard', 'md');
+      }
+    </script>
+
+    <script>
+      const STORAGE_KEY = "placementor_prep_tracker_v1";
+
+      const defaultModules = [
+        { id: "aptitude", name: "Aptitude & Logical Reasoning", total: 40, completed: 28, color: "bg-amber-500", icon: "brain" },
+        { id: "dsa", name: "Data Structures & Algorithms", total: 150, completed: 95, color: "bg-indigo-500", icon: "code-2" },
+        { id: "core", name: "Core CS Subjects (OS, DBMS, CN)", total: 30, completed: 12, color: "bg-blue-500", icon: "database" },
+        { id: "mock", name: "Mock Interviews & Soft Skills", total: 10, completed: 6, color: "bg-emerald-500", icon: "video" },
       ];
 
+      function getModules() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          try { return JSON.parse(saved); } catch(e) {}
+        }
+        return defaultModules;
+      }
+
+      function saveModules(modules) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(modules));
+      }
+
+      function updateModuleProgress(id, change) {
+        const modules = getModules();
+        const target = modules.find(m => m.id === id);
+        if (target) {
+          target.completed = Math.min(target.total, Math.max(0, target.completed + change));
+          saveModules(modules);
+          renderDashboard();
+        }
+      }
+
+      function resetTrackerData() {
+        if (confirm("Reset all interview preparation progress to defaults?")) {
+          localStorage.removeItem(STORAGE_KEY);
+          renderDashboard();
+        }
+      }
+
       function renderDashboard() {
+        const modules = getModules();
         const container = document.getElementById("prep-modules-container");
         let totalTasks = 0;
         let totalCompleted = 0;
 
-        const htmlContent = preparationModules
-          .map((mod) => {
-            const percentage = Math.round((mod.completed / mod.total) * 100);
-            totalTasks += mod.total;
-            totalCompleted += mod.completed;
+        const htmlContent = modules.map((mod) => {
+          const percentage = Math.round((mod.completed / mod.total) * 100);
+          totalTasks += mod.total;
+          totalCompleted += mod.completed;
 
-            return `
+          return `
             <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:border-indigo-200 hover:shadow-md transition-all duration-300">
                 <div class="flex justify-between items-start mb-4">
                     <div class="flex items-center gap-3">
@@ -174,22 +190,38 @@
                     <span class="text-sm font-bold px-2.5 py-1 rounded-md bg-slate-50 text-slate-700 border border-slate-100">${percentage}%</span>
                 </div>
                 
-                <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden mb-2">
+                <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden mb-4">
                     <div class="${mod.color} h-2.5 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
+                    <span class="text-slate-400 font-medium">Log Progress:</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="updateModuleProgress('${mod.id}', -1)" class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold flex items-center justify-center transition" title="Decrease completed count">-</button>
+                        <span class="font-bold text-slate-700 w-8 text-center">${mod.completed}</span>
+                        <button onclick="updateModuleProgress('${mod.id}', 1)" class="w-7 h-7 rounded-lg bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-bold flex items-center justify-center transition" title="Increase completed count">+</button>
+                    </div>
                 </div>
             </div>
           `;
-          })
-          .join("");
+        }).join("");
 
         container.innerHTML = htmlContent;
 
-        // Calculate Global Target Progress
-        const overallPercentage = Math.round(
-          (totalCompleted / totalTasks) * 100,
-        );
-        document.getElementById("overall-percentage").textContent =
-          `${overallPercentage}%`;
+        // Overall stats calculations
+        const overallPercentage = totalTasks > 0 ? Math.round((totalCompleted / totalTasks) * 100) : 0;
+        document.getElementById("overall-percentage").textContent = `${overallPercentage}%`;
+        document.getElementById("stat-total").textContent = totalTasks;
+        document.getElementById("stat-completed").textContent = totalCompleted;
+        document.getElementById("stat-remaining").textContent = totalTasks - totalCompleted;
+
+        // Determine Readiness Badge
+        let badgeText = "Getting Started 🚀";
+        if (overallPercentage >= 80) badgeText = "Placement Ready! 🏆";
+        else if (overallPercentage >= 50) badgeText = "Advanced Prep 🔥";
+        else if (overallPercentage >= 25) badgeText = "Making Progress 📈";
+
+        document.getElementById("stat-badge").textContent = badgeText;
 
         if (window.lucide) lucide.createIcons();
       }
