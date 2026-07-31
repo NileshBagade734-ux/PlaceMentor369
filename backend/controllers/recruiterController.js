@@ -254,3 +254,31 @@ export const deleteJob = async (req, res) => {
     res.status(500).json({ message: "Delete job failed" });
   }
 };
+
+/* ======================================================
+    BULK UPDATE APPLICANT STATUS
+====================================================== */
+export const bulkUpdateApplicantStatus = async (req, res) => {
+  try {
+    const { applicationIds, status } = req.body;
+
+    if (!Array.isArray(applicationIds) || applicationIds.length === 0 || !status) {
+      return res.status(400).json({ message: "Application IDs array and status are required" });
+    }
+
+    const updated = await Application.updateMany(
+      { _id: { $in: applicationIds } },
+      { $set: { status } }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: `Successfully updated ${updated.modifiedCount} applicants to status '${status}'`,
+      modifiedCount: updated.modifiedCount
+    });
+  } catch (err) {
+    console.error("BULK UPDATE ERROR:", err);
+    res.status(500).json({ message: "Bulk update status failed" });
+  }
+};
+
