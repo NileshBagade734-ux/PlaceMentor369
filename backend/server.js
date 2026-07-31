@@ -80,6 +80,9 @@ if (redisConnection) {
     GLOBAL MIDDLEWARE
 ============================ */
 
+import { setSecurityHeaders, sanitizeInput } from "./middlewares/securityMiddleware.js";
+import { apiLimiter } from "./middlewares/rateLimiter.js";
+
 // ✅ CORS (allow frontend URLs)
 app.use(
   cors({
@@ -87,6 +90,13 @@ app.use(
     credentials: true
   })
 );
+
+// ✅ Security Headers & Input Sanitization
+app.use(setSecurityHeaders);
+app.use(sanitizeInput);
+
+// ✅ Global API Rate Limiting
+app.use("/api", apiLimiter);
 
 // ✅ Body parsers
 app.use(express.json({ limit: "20mb" }));

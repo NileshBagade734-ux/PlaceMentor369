@@ -37,10 +37,13 @@ router.get("/skill-gap/:jobId", verifyToken, getSkillGapAnalysis);
 // GET ATS Resume Dashboard Data
 router.get("/ats-dashboard", verifyToken, getAtsDashboard);
 
-// Upload resume and parse via AI
+import { uploadLimiter } from "../middlewares/rateLimiter.js";
+
+// Upload resume and parse via AI (rate limited)
 router.post(
   "/upload-resume",
   verifyToken,
+  uploadLimiter,
   upload.single("resume"),
   uploadResume
 );
