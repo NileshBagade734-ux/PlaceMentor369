@@ -61,6 +61,27 @@
           </p>
         </div>
         <div class="flex items-center gap-4">
+          <!-- Notification Bell Dropdown -->
+          <div class="relative" id="notifContainer">
+            <button id="notifBellBtn" class="relative p-2.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition shadow-sm">
+              <i data-lucide="bell" class="w-5 h-5"></i>
+              <span id="notifBadge" class="hidden absolute -top-1 -right-1 w-5 h-5 bg-rose-500 text-white text-[10px] font-extrabold rounded-full flex items-center justify-center border-2 border-white animate-pulse">0</span>
+            </button>
+            
+            <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 overflow-hidden">
+              <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div class="flex items-center gap-2">
+                  <h4 class="font-bold text-sm text-slate-800">Notifications</h4>
+                  <span id="notifUnreadHeaderCount" class="text-[10px] font-extrabold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">0 new</span>
+                </div>
+                <button id="markAllReadBtn" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition">Mark all read</button>
+              </div>
+              <div id="notifList" class="max-h-80 overflow-y-auto divide-y divide-slate-100 p-2">
+                <div class="p-6 text-center text-xs text-slate-400">No new notifications</div>
+              </div>
+            </div>
+          </div>
+
           <!-- Theme Toggle Button -->
           <button
             id="themeToggle"
