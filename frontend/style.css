@@ -1283,3 +1283,13 @@ mark.custom-highlight {
   border-radius: 2px;
   font-weight: bold;
 }
+
+/* --- Job Recommendation Engine Styles --- */
+.job-recommendation-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.job-recommendation-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px -6px rgba(79, 70, 229, 0.15);
+}
