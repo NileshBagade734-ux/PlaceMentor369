@@ -7,7 +7,7 @@ import redisConnection from "./config/redis.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import { errorHandler } from "./middlewares/errorHandler.js";
+import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
 
 // Routes
 import studentRoutes from "./routes/studentRoutes.js";
@@ -107,10 +107,8 @@ app.use("/api/student", studentRoutes);
 app.use("/api/recruiter", recruiterRoutes);
 app.use("/api/admin", adminRoutes);
 
-// 404 Route
-app.use((req, res) => {
-  res.status(404).json({ status: "error", message: "Route not found" });
-});
+// 404 handler — catches any unmatched routes
+app.use(notFoundHandler);
 
 // Global Error Handler (must be last)
 app.use(errorHandler);
