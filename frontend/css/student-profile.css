@@ -217,3 +217,33 @@ select:focus {
 #saveBtn:active {
     transform: translateY(0);
 }
+
+/* =========================
+   Portfolio & Projects Builder
+========================= */
+
+#projectsContainer > div {
+    transition: box-shadow 0.2s ease;
+}
+
+#projectsContainer > div:hover {
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+}
+
+#projectsContainer input,
+#projectsContainer textarea {
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#projectsContainer input:focus,
+#projectsContainer textarea:focus {
+    border-color: #818cf8;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.1);
+}
+
+/* Social Link Input Row Icons */
+[id$="Url"] {
+    letter-spacing: 0.01em;
+    font-size: 0.875rem;
+}
+

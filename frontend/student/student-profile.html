@@ -108,6 +108,53 @@
                 </div>
             </section>
 
+            <!-- Portfolio Builder Section -->
+            <section class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="font-bold text-gray-800">Portfolio & Social Links</h3>
+                        <p class="text-xs text-gray-500 mt-0.5">Add your public profiles to stand out to recruiters</p>
+                    </div>
+                    <i class="fas fa-briefcase text-indigo-400 text-xl"></i>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 bg-gray-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fab fa-github text-white text-sm"></i>
+                        </div>
+                        <input type="url" id="githubUrl" placeholder="https://github.com/yourusername" class="flex-1 p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 bg-blue-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fab fa-linkedin-in text-white text-sm"></i>
+                        </div>
+                        <input type="url" id="linkedinUrl" placeholder="https://linkedin.com/in/yourprofile" class="flex-1 p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-globe text-white text-sm"></i>
+                        </div>
+                        <input type="url" id="portfolioUrl" placeholder="https://yourportfolio.com" class="flex-1 p-2.5 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="font-bold text-gray-800">Projects Portfolio</h3>
+                        <p class="text-xs text-gray-500 mt-0.5">Showcase your best technical projects to recruiters</p>
+                    </div>
+                    <button onclick="addProjectEntry()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-indigo-700 transition flex items-center gap-1">
+                        <i class="fas fa-plus"></i> Add Project
+                    </button>
+                </div>
+                <div id="projectsContainer" class="space-y-4">
+                    <!-- Injected by JS -->
+                </div>
+            </section>
+
             <div class="flex justify-end gap-3 pt-4">
                 <button id="resetProfileBtn" class="border border-rose-200 hover:bg-rose-50 text-rose-600 px-6 py-3 rounded-xl font-semibold transition transform active:scale-95">
                     Reset Profile Data
