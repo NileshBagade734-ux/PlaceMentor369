@@ -20,6 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Load ATS Dashboard statistics
   loadAtsDashboard();
+
+  // Attach live ATS checker listener
+  initLiveAtsEvaluator();
 });
 
 function initTheme() {
@@ -302,3 +305,63 @@ function renderRoadmap(roadmap) {
     </div>
   `).join("");
 }
+
+function initLiveAtsEvaluator() {
+  const btn = document.getElementById("runAtsCheckBtn");
+  const resumeInput = document.getElementById("liveResumeInput");
+  const skillsInput = document.getElementById("liveJobSkillsInput");
+  const status = document.getElementById("atsLiveResultStatus");
+
+  if (!btn) return;
+
+  btn.addEventListener("click", async () => {
+    const resumeText = resumeInput ? resumeInput.value.trim() : "";
+    const jobSkills = skillsInput ? skillsInput.value.trim() : "";
+
+    if (!resumeText) {
+      alert("Please paste your resume text to evaluate.");
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Analyzing...`;
+    if (status) {
+      status.classList.remove("hidden");
+      status.textContent = "Processing resume content via Gemini ATS engine...";
+    }
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/ats/evaluate`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${session.token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          resumeText,
+          jobSkills: jobSkills ? jobSkills.split(",").map(s => s.trim()) : []
+        })
+      });
+
+      const data = await res.json();
+      if (data.success && data.data) {
+        renderAtsScore(data.data.overallScore, `Live Analysis: ${data.data.matchedSkills.length} matching skills, ${data.data.missingSkills.length} missing keywords.`);
+        renderMissingSkills(data.data.missingSkills);
+        renderSuggestions(data.data.recommendations || data.data.formatIssues);
+        if (status) {
+          status.textContent = `✅ Analysis complete! Score: ${data.data.overallScore}/100`;
+        }
+      } else {
+        if (status) status.textContent = `❌ ${data.message || "Failed to analyze ATS score."}`;
+      }
+    } catch (err) {
+      console.error("Live ATS Error:", err);
+      if (status) status.textContent = "❌ Network error during live ATS evaluation.";
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4"></i> Run Live ATS Evaluation`;
+      if (window.lucide) lucide.createIcons();
+    }
+  });
+}
+

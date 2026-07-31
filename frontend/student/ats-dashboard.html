@@ -133,6 +133,31 @@
 
       <!-- Dashboard Grid Content -->
       <div id="dashboardContent" class="hidden space-y-8">
+
+        <!-- Interactive Live ATS Evaluator Tool -->
+        <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white rounded-2xl p-6 md:p-8 shadow-xl">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <div>
+              <span class="px-3 py-1 bg-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-wider rounded-full border border-indigo-400/30">Live AI Evaluator</span>
+              <h3 class="text-xl font-bold mt-2 text-white">Instant ATS Resume & Keyword Analyzer</h3>
+              <p class="text-slate-300 text-xs mt-1">Paste your resume content or job requirements below to trigger real-time ATS keyword matching and formatting checks.</p>
+            </div>
+            <button id="runAtsCheckBtn" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center gap-2">
+              <i data-lucide="sparkles" class="w-4 h-4"></i> Run Live ATS Evaluation
+            </button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Resume Text Snippet</label>
+              <textarea id="liveResumeInput" rows="3" class="w-full bg-slate-800/80 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 placeholder-slate-500" placeholder="Paste your resume text here (experience, skills, projects)..."></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Target Job Required Skills (Comma Separated)</label>
+              <input id="liveJobSkillsInput" type="text" class="w-full bg-slate-800/80 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 placeholder-slate-500" placeholder="e.g. React, Node.js, MongoDB, Express, Python, Data Structures..." />
+              <div id="atsLiveResultStatus" class="mt-2 text-xs text-indigo-300 hidden"></div>
+            </div>
+          </div>
+        </div>
         
         <!-- Score and Quick Overview Card -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
