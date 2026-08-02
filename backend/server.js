@@ -7,6 +7,7 @@ import redisConnection from "./config/redis.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
 // Routes
@@ -101,6 +102,9 @@ app.use("/api", apiLimiter);
 // ✅ Body parsers
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true, limit: "20mb" }));
+
+// ✅ Cookie parser for httpOnly JWT tokens
+app.use(cookieParser());
 
 /* ============================
     ROUTES
