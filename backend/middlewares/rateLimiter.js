@@ -2,22 +2,48 @@ import rateLimit from "express-rate-limit";
 
 /**
  * Rate limiter for authentication endpoints (/api/auth/login & /api/auth/register).
- *
- * - Window : 15 minutes
- * - Max requests per IP : 10   (per window)
- * - Temporary block     : After 10 attempts the IP receives 429 until the window resets.
- *
- * This mitigates brute-force, credential-stuffing, and mass-registration attacks
- * without affecting normal user behaviour.
+ * Window: 15 minutes, Max requests: 10 per IP
  */
 export const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15-minute window
-  max: 10,                   // limit each IP to 10 requests per window
-  standardHeaders: true,     // Return rate-limit info in `RateLimit-*` headers
-  legacyHeaders: false,      // Disable the `X-RateLimit-*` headers
-
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
   message: {
-    message:
-      "⚠️ Too many authentication attempts from this IP. Please try again after 15 minutes.",
-  },
+    status: "error",
+    message: "⚠️ Too many authentication attempts from this IP. Please try again after 15 minutes.",
+    errorCode: "TOO_MANY_REQUESTS"
+  }
+});
+
+/**
+ * General API rate limiter for standard routes.
+ * Window: 15 minutes, Max requests: 100 per IP
+ */
+export const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    status: "error",
+    message: "⚠️ Rate limit exceeded. You have made too many requests in a short period.",
+    errorCode: "TOO_MANY_REQUESTS"
+  }
+});
+
+/**
+ * Strict rate limiter for file upload routes (/api/student/upload-resume).
+ * Window: 1 hour, Max requests: 5 uploads per IP
+ */
+export const uploadLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    status: "error",
+    message: "⚠️ Upload limit reached. Maximum 5 resume uploads per hour allowed.",
+    errorCode: "UPLOAD_LIMIT_EXCEEDED"
+  }
 });
