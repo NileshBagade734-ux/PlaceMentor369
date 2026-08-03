@@ -1,6 +1,6 @@
 /**
  * Filters applicant list by multi-attribute parameters
- * @param {Array<Object>} applicants 
+ * @param {Array<Object>} applicants
  * @param {Object} filters { status, minCgpa, branch, search }
  */
 export const filterApplicants = (applicants = [], filters = {}) => {
