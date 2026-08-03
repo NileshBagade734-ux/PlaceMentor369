@@ -5,8 +5,8 @@
  * - CGPA Eligibility (25% weight)
  * - Branch Alignment (15% weight)
  *
- * @param {Object} student 
- * @param {Object} job 
+ * @param {Object} student
+ * @param {Object} job
  * @returns {Object} { score: number, matchLevel: string, matchingSkills: string[], missingSkills: string[] }
  */
 export const calculateJobMatch = (student = {}, job = {}) => {
