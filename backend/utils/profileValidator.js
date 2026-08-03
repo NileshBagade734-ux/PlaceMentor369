@@ -1,6 +1,6 @@
 /**
  * Validates student profile inputs for mandatory schema integrity
- * @param {Object} data 
+ * @param {Object} data
  * @returns {Object} { isValid: boolean, errors: Array<string> }
  */
 export const validateStudentProfile = (data = {}) => {
