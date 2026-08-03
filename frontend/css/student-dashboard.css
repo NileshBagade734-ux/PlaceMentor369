@@ -273,6 +273,41 @@ body.dark-mode #themeToggle {
 
 /* Pending state — subtle red/amber tint */
 .checklist-item--pending {
+    background-color: #fffbeb;
+    border-color: #fde68a;
+}
+
+/* --- Notification Center Styling --- */
+#notifDropdown {
+    transform-origin: top right;
+    animation: dropdownFade 0.2s ease-out forwards;
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.notif-item {
+    transition: background-color 0.15s ease;
+}
+
+.notif-item:hover {
+    background-color: #f8fafc;
+}
+
+.notif-item.unread {
+    background-color: #eef2ff;
+    border-left: 3px solid #6366f1;
+}
+
+.checklist-item--pending {
     background-color: #fef9f0;
     color: #92400e;
     border: 1px solid #fde68a;

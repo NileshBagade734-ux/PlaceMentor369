@@ -7,7 +7,7 @@ import redisConnection from "./config/redis.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import { errorHandler } from "./middlewares/errorHandler.js";
+import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
 
 // Routes
 import studentRoutes from "./routes/studentRoutes.js";
@@ -81,6 +81,9 @@ if (redisConnection) {
     GLOBAL MIDDLEWARE
 ============================ */
 
+import { setSecurityHeaders, sanitizeInput } from "./middlewares/securityMiddleware.js";
+import { apiLimiter } from "./middlewares/rateLimiter.js";
+
 // ✅ CORS (allow frontend URLs)
 app.use(
   cors({
@@ -88,6 +91,13 @@ app.use(
     credentials: true
   })
 );
+
+// ✅ Security Headers & Input Sanitization
+app.use(setSecurityHeaders);
+app.use(sanitizeInput);
+
+// ✅ Global API Rate Limiting
+app.use("/api", apiLimiter);
 
 // ✅ Body parsers
 app.use(express.json({ limit: "20mb" }));
@@ -109,10 +119,8 @@ app.use("/api/recruiter", recruiterRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/ats", atsRoutes);
 
-// 404 Route
-app.use((req, res) => {
-  res.status(404).json({ status: "error", message: "Route not found" });
-});
+// 404 handler — catches any unmatched routes
+app.use(notFoundHandler);
 
 // Global Error Handler (must be last)
 app.use(errorHandler);
