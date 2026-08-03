@@ -1,7 +1,7 @@
 /**
  * Converts array of placement objects into a sanitized CSV string format
- * @param {Array<Object>} data 
- * @param {Array<string>} fields 
+ * @param {Array<Object>} data
+ * @param {Array<string>} fields
  * @returns {string} CSV formatted text
  */
 export const convertToCSV = (data = [], fields = []) => {
@@ -31,7 +31,7 @@ export const convertToCSV = (data = [], fields = []) => {
 
 /**
  * Formats report payload for JSON/CSV download responses
- * @param {Object} reportPayload 
+ * @param {Object} reportPayload
  * @param {string} format 'csv' | 'json'
  */
 export const formatReportData = (reportPayload, format = 'json') => {
