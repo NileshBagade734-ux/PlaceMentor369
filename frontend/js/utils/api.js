@@ -60,3 +60,25 @@ export async function fetchAPI(endpoint, options = {}) {
     throw error;
   }
 }
+
+/**
+ * Fetch notifications for logged-in user
+ */
+export async function getNotifications() {
+  return fetchAPI("/notifications", { method: "GET" });
+}
+
+/**
+ * Mark notification as read
+ */
+export async function markNotificationRead(id) {
+  return fetchAPI(`/notifications/${id}/read`, { method: "PATCH" });
+}
+
+/**
+ * Mark all notifications as read
+ */
+export async function markAllNotificationsRead() {
+  return fetchAPI("/notifications/read-all", { method: "PATCH" });
+}
+
