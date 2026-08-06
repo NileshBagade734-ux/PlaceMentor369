@@ -4,6 +4,7 @@ import Job from "../models/job.js";
 import Application from "../models/application.js";
 import { analyzeResume } from "../utils/gemini.js";
 import { parseResume } from "../utils/resumeParser.js";
+import { rankJobsForStudent } from "../utils/recommendationEngine.js";
 
 // Determine readiness tier based on match score
 function getReadinessTier(score) {
@@ -411,3 +412,31 @@ export const getAtsDashboard = async (req, res) => {
     res.status(500).json({ message: "Server error while fetching ATS dashboard data." });
   }
 };
+
+/* ============================
+    GET RECOMMENDED JOBS FOR STUDENT
+============================ */
+export const getRecommendedJobs = async (req, res) => {
+  try {
+    const student = await Student.findOne({ user: req.user.id });
+    const approvedJobs = await Job.find({ status: "approved" }).lean();
+
+    if (!student) {
+      return res.status(200).json({
+        success: true,
+        jobs: approvedJobs.map(j => ({ ...j, matchScore: 50, matchLevel: "Moderate" }))
+      });
+    }
+
+    const rankedJobs = rankJobsForStudent(student.toObject(), approvedJobs);
+
+    res.status(200).json({
+      success: true,
+      jobs: rankedJobs
+    });
+  } catch (err) {
+    console.error("GET RECOMMENDED JOBS ERROR:", err);
+    res.status(500).json({ message: "Server error while fetching recommended jobs." });
+  }
+};
+

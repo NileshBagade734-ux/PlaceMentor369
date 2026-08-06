@@ -60,11 +60,63 @@ if (themeToggle) {
   revealItems.forEach(function (item) {
     item.addEventListener("keydown", function (e) {
       if (e.key === "Enter" || e.key === " ") {
-        item.classList.toggle("journey-focused");
+        item.focus();
       }
     });
   });
 })();
+
+/**
+ * Job Recommendation Engine Client Integration
+ */
+async function fetchJobRecommendations() {
+  const container = document.getElementById("recommendations-container");
+  if (!container) return;
+
+  try {
+    const session = JSON.parse(localStorage.getItem("placementor_session") || "{}");
+    const token = session.token;
+
+    const res = await fetch("http://localhost:5000/api/student/recommended-jobs", {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data.jobs || !data.jobs.length) return;
+
+    container.innerHTML = data.jobs.map(job => `
+      <div class="job-recommendation-card border p-4 rounded-xl shadow-sm hover:shadow-md transition bg-white dark:bg-slate-800 mb-4">
+        <div class="flex justify-between items-start">
+          <div>
+            <h4 class="font-bold text-lg text-indigo-600">${job.title}</h4>
+            <p class="text-xs text-slate-500">${job.company} • ${job.location || 'Remote'}</p>
+          </div>
+          <span class="px-3 py-1 text-xs font-extrabold rounded-full ${
+            job.matchScore >= 80 ? 'bg-emerald-100 text-emerald-700' :
+            job.matchScore >= 65 ? 'bg-blue-100 text-blue-700' :
+            'bg-amber-100 text-amber-700'
+          }">
+            ${job.matchScore}% Match
+          </span>
+        </div>
+        <p class="text-xs text-slate-600 mt-2">${job.description ? job.description.slice(0, 120) + '...' : ''}</p>
+        <div class="mt-3 flex flex-wrap gap-1">
+          ${(job.matchingSkills || []).map(s => `<span class="px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded text-[10px] font-semibold">✓ ${s}</span>`).join('')}
+        </div>
+      </div>
+    `).join("");
+  } catch (err) {
+    console.error("Failed to load recommendations:", err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  fetchJobRecommendations();
+});
+
 
 
 // Function to update the reading progress bar position

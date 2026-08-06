@@ -4,6 +4,7 @@ import {
   getProfile,
   saveProfile,
   getJobs,
+  getRecommendedJobs,
   applyJob,
   getApplications,
   getSkillGapAnalysis,
@@ -22,8 +23,9 @@ router.get("/profile", verifyToken, getProfile);
 // Save/update student profile
 router.patch("/profile", verifyToken, saveProfile);
 
-// Get all approved jobs
+// Get all approved jobs & recommendations
 router.get("/jobs", verifyToken, getJobs);
+router.get("/recommended-jobs", verifyToken, getRecommendedJobs);
 
 // Apply for a job
 router.post("/apply/:jobId", verifyToken, applyJob);
