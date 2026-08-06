@@ -8,6 +8,16 @@ const studentSchema = new mongoose.Schema({
   college: { type: String, default: "" },
   skills: [{ type: String }],
   resume: { type: String },
+  githubUrl: { type: String, default: "" },
+  linkedinUrl: { type: String, default: "" },
+  portfolioUrl: { type: String, default: "" },
+  projects: [
+    {
+      title: { type: String },
+      description: { type: String },
+      link: { type: String }
+    }
+  ],
   aiReadinessScore: { type: Number, default: 0 },
   aiRoadmap: [{ type: String }],
 

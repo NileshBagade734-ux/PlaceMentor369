@@ -428,3 +428,87 @@ function closeToast(toast) {
         toast.remove();
     }, 300);
 }
+
+// ============================
+// PORTFOLIO & PROJECTS BUILDER
+// ============================
+
+let portfolioProjects = [];
+
+function addProjectEntry(data = {}) {
+    const container = document.getElementById("projectsContainer");
+    if (!container) return;
+
+    const idx = portfolioProjects.length;
+    portfolioProjects.push({ title: data.title || "", description: data.description || "", link: data.link || "" });
+
+    const card = document.createElement("div");
+    card.className = "border border-slate-200 rounded-xl p-4 space-y-2 bg-slate-50";
+    card.dataset.idx = idx;
+
+    card.innerHTML = `
+        <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-indigo-600 uppercase tracking-wide">Project ${idx + 1}</span>
+            <button onclick="removeProjectEntry(this, ${idx})" class="text-rose-400 hover:text-rose-600 text-xs font-bold">
+                <i class="fas fa-trash-alt"></i> Remove
+            </button>
+        </div>
+        <input type="text" placeholder="Project Title" value="${data.title || ''}" 
+            class="w-full p-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-400 project-title">
+        <textarea placeholder="Brief project description (what problem it solves)" rows="2"
+            class="w-full p-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-400 project-desc">${data.description || ''}</textarea>
+        <input type="url" placeholder="Live Demo / GitHub Link" value="${data.link || ''}"
+            class="w-full p-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-400 project-link">
+    `;
+
+    container.appendChild(card);
+}
+
+function removeProjectEntry(btn, idx) {
+    const card = btn.closest("[data-idx]");
+    if (card) card.remove();
+    portfolioProjects.splice(idx, 1);
+}
+
+function collectProjectsData() {
+    const cards = document.querySelectorAll("#projectsContainer [data-idx]");
+    const results = [];
+    cards.forEach(card => {
+        results.push({
+            title: card.querySelector(".project-title")?.value?.trim() || "",
+            description: card.querySelector(".project-desc")?.value?.trim() || "",
+            link: card.querySelector(".project-link")?.value?.trim() || ""
+        });
+    });
+    return results.filter(p => p.title);
+}
+
+function loadPortfolioFields(profile) {
+    const githubInput = document.getElementById("githubUrl");
+    const linkedinInput = document.getElementById("linkedinUrl");
+    const portfolioInput = document.getElementById("portfolioUrl");
+
+    if (githubInput && profile.githubUrl) githubInput.value = profile.githubUrl;
+    if (linkedinInput && profile.linkedinUrl) linkedinInput.value = profile.linkedinUrl;
+    if (portfolioInput && profile.portfolioUrl) portfolioInput.value = profile.portfolioUrl;
+
+    // Load existing projects
+    const container = document.getElementById("projectsContainer");
+    if (container && Array.isArray(profile.projects) && profile.projects.length > 0) {
+        container.innerHTML = "";
+        portfolioProjects = [];
+        profile.projects.forEach(p => addProjectEntry(p));
+    }
+}
+
+// Expose portfolio fields when profile data loads
+const originalLoadProfile = window.loadProfile;
+if (typeof loadProfile === "function") {
+    const _origLoad = loadProfile;
+    window.loadProfile = async function() {
+        await _origLoad();
+        const data = window.__lastProfileData || {};
+        loadPortfolioFields(data);
+    };
+}
+

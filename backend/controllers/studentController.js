@@ -61,7 +61,20 @@ export const getProfile = async (req, res) => {
 ============================ */
 export const saveProfile = async (req, res) => {
   try {
-    const { name, roll, branch, cgpa, college, skills, resume } = req.body;
+    const {
+      name, roll, branch, cgpa, college, skills, resume,
+      githubUrl, linkedinUrl, portfolioUrl, projects
+    } = req.body;
+
+    // Run validation on incoming profile data
+    const { validateStudentProfile } = await import("../utils/profileValidator.js");
+    const validation = validateStudentProfile({ cgpa, branch, githubUrl, linkedinUrl, portfolioUrl });
+    if (!validation.isValid) {
+      return res.status(400).json({
+        message: "Profile validation failed",
+        errors: validation.errors
+      });
+    }
 
     let student = await Student.findOne({ user: req.user.id });
 
@@ -76,6 +89,18 @@ export const saveProfile = async (req, res) => {
     student.college = college || "";
     student.skills = skills || [];
     student.resume = resume || "";
+    student.githubUrl = githubUrl || "";
+    student.linkedinUrl = linkedinUrl || "";
+    student.portfolioUrl = portfolioUrl || "";
+
+    // Update projects portfolio if provided
+    if (Array.isArray(projects)) {
+      student.projects = projects.map(p => ({
+        title: p.title || "",
+        description: p.description || "",
+        link: p.link || ""
+      }));
+    }
 
     await student.save();
 
