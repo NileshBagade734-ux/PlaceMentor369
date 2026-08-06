@@ -3,6 +3,7 @@ import Job from "../models/job.js";
 import Student from "../models/student.js";
 import { APPLICATION_STATUS } from "../constants/applicationStatus.js";
 import { transitionApplicationStatus, computePlacementMetrics } from "../utils/placementTracker.js";
+import { formatReportData } from "../utils/exporter.js";
 
 /**
  * Month name lookup for aggregation results.
@@ -200,3 +201,41 @@ export const getAnalytics = async (req, res) => {
     });
   }
 };
+
+/**
+ * GET /api/admin/analytics/export
+ * Downloads placement data report in CSV or JSON format
+ */
+export const exportAnalytics = async (req, res) => {
+  try {
+    const { format = 'csv', branch } = req.query;
+
+    const query = {};
+    if (branch) query.branch = branch;
+
+    const students = await Student.find(query).lean();
+    const applications = await Application.find({}).populate('student').populate('job').lean();
+
+    const placements = applications.map(app => ({
+      studentName: app.student ? `${app.student.firstName || ''} ${app.student.lastName || ''}`.trim() : 'Unknown',
+      email: app.student?.email || 'N/A',
+      branch: app.student?.branch || 'N/A',
+      cgpa: app.student?.cgpa || 'N/A',
+      company: app.job?.company || 'N/A',
+      role: app.job?.title || 'N/A',
+      packageLPA: app.job?.salary || 0,
+      status: app.status || 'Applied',
+      date: app.appliedAt || app.createdAt
+    }));
+
+    const report = formatReportData({ totalRecords: placements.length, placements }, format);
+
+    res.setHeader('Content-Type', report.contentType);
+    res.setHeader('Content-Disposition', `attachment; filename="${report.filename}"`);
+    return res.send(report.data);
+  } catch (err) {
+    console.error("Analytics Export Error:", err);
+    return res.status(500).json({ message: "Failed to generate export report", error: err.message });
+  }
+};
+

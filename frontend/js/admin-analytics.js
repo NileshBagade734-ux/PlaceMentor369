@@ -502,8 +502,60 @@ function logout() {
 }
 
 /* =========================
+   EXPORT DATA HANDLERS
+========================= */
+function setupExportHandlers() {
+  const exportCsvBtn = document.getElementById("exportCsvBtn");
+  const exportJsonBtn = document.getElementById("exportJsonBtn");
+
+  if (exportCsvBtn) {
+    exportCsvBtn.addEventListener("click", () => triggerExport("csv"));
+  }
+  if (exportJsonBtn) {
+    exportJsonBtn.addEventListener("click", () => triggerExport("json"));
+  }
+}
+
+async function triggerExport(format) {
+  try {
+    const session = JSON.parse(localStorage.getItem("placementor_session"));
+    const token = session?.token;
+    if (!token) {
+      alert("Authentication token expired. Please login again.");
+      return;
+    }
+
+    const response = await fetch(`${API_BASE_URL}/admin/analytics/export?format=${format}`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Export failed with status " + response.status);
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Placement_Report_${Date.now()}.${format}`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error("Export error:", err);
+    alert("Failed to export analytics report: " + err.message);
+  }
+}
+
+/* =========================
    INITIALIZE
 ========================= */
 document.addEventListener("DOMContentLoaded", () => {
   loadAnalytics();
+  setupExportHandlers();
 });
+

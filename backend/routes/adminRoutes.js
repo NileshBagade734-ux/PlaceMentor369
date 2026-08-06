@@ -12,6 +12,7 @@ import {
 } from "../controllers/adminController.js";
 import {
   getAnalytics,
+  exportAnalytics,
   updateApplicationOutcome,
   getPlacementMetrics,
   getApplicationAuditTrail
@@ -22,6 +23,7 @@ const router = express.Router();
 /* DASHBOARD */
 router.get("/dashboard", protect, adminOnly, getDashboardStats);
 router.get("/analytics", protect, adminOnly, getAnalytics);
+router.get("/analytics/export", protect, adminOnly, exportAnalytics);
 
 /* PLACEMENT TRACKING (Issue #354) */
 router.get("/analytics/placement-metrics", protect, adminOnly, getPlacementMetrics);

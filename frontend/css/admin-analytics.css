@@ -119,10 +119,17 @@ body {
   border: 1px solid rgba(99, 102, 241, 0.3);
   background: rgba(99, 102, 241, 0.1);
   color: #a5b4fc;
-  cursor: pointer;
   font-size: 13px;
   font-weight: 500;
-  transition: all 0.25s ease;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-refresh:hover {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: rgba(99, 102, 241, 0.6);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .btn-refresh:hover {
