@@ -8,6 +8,7 @@ import {
   getAllRecruiterApplications,
   deleteJob,
   updateApplicantStatus,
+  bulkUpdateApplicantStatus,
   getRecruiterDashboardStats,
   exportJobApplicantsToCSV
 } from "../controllers/recruiterController.js";
@@ -26,5 +27,6 @@ router.delete("/jobs/:id", verifyToken, recruiterOnly, deleteJob);
 router.get("/applications", verifyToken, recruiterOnly, getAllRecruiterApplications);
 router.get("/applications/export", verifyToken, recruiterOnly, exportJobApplicantsToCSV);
 router.patch("/applications/status", verifyToken, recruiterOnly, updateApplicantStatus);
+router.patch("/applications/bulk-status", verifyToken, recruiterOnly, bulkUpdateApplicantStatus);
 
 export default router;
