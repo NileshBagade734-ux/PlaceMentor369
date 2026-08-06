@@ -14,7 +14,7 @@ import studentRoutes from "./routes/studentRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import recruiterRoutes from "./routes/recruiterRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
-import notificationRoutes from "./routes/notificationRoutes.js";
+import atsRoutes from "./routes/atsRoutes.js";
 
 dotenv.config({ override: true });
 
@@ -117,7 +117,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/recruiter", recruiterRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/notifications", notificationRoutes);
+app.use("/api/ats", atsRoutes);
 
 // 404 handler — catches any unmatched routes
 app.use(notFoundHandler);

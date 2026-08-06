@@ -356,9 +356,38 @@ body.dark-mode #themeToggle {
 
 /* Dark mode overrides for tracker */
 body.dark-mode #completion-tracker {
-    background-color: #1e293b;
-    border-color: #334155;
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
 }
+
+/* --- ATS Evaluation Custom Enhancements --- */
+.score-circle {
+    transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glow-circle {
+    filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.45));
+}
+
+.section-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.section-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+}
+
+.checklist-item--done {
+    background-color: #f0fdf4;
+    border-color: #bbf7d0;
+}
+
+.checklist-item--pending {
+    background-color: #fffbeb;
+    border-color: #fde68a;
+}
+
 
 body.dark-mode .checklist-item--done {
     background-color: #052e16;
