@@ -6,6 +6,11 @@
   font-family: Inter, sans-serif;
 }
 
+:focus-visible {
+  outline: 3px solid #4f46e5 !important;
+  outline-offset: 2px !important;
+}
+
 body {
   background: linear-gradient(to bottom right, #eef2ff, #ffffff, #eff6ff);
   color: #1f2937;

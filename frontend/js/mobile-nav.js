@@ -64,12 +64,14 @@ function injectMobileNav(links, currentPage, breakpoint) {
     drawer.classList.remove('-translate-x-full');
     overlay.classList.remove('hidden');
     btn.setAttribute('aria-expanded', 'true');
+    closeBtn.focus();
   }
 
   function closeDrawer() {
     drawer.classList.add('-translate-x-full');
     overlay.classList.add('hidden');
     btn.setAttribute('aria-expanded', 'false');
+    btn.focus();
   }
 
   btn.addEventListener('click', openDrawer);
