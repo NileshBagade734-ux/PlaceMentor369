@@ -84,6 +84,38 @@ export const getAllRecruiterApplications = async (req, res) => {
   }
 };
 
+import { formatApplicantsExport } from "../utils/exporter.js";
+
+/* ======================================================
+    EXPORT APPLICANTS DATA (CSV / JSON)
+====================================================== */
+export const exportApplicants = async (req, res) => {
+  try {
+    const { format = "csv", jobId } = req.query;
+    const filter = {};
+
+    if (jobId) {
+      filter.job = jobId;
+    } else {
+      const recruiterJobs = await Job.find({ recruiter: req.user.id }).select("_id");
+      filter.job = { $in: recruiterJobs.map((j) => j._id) };
+    }
+
+    const applications = await Application.find(filter)
+      .populate("student", "name branch cgpa email")
+      .populate("job", "title company");
+
+    const exportPayload = formatApplicantsExport(applications, format.toLowerCase());
+
+    res.setHeader("Content-Type", exportPayload.contentType);
+    res.setHeader("Content-Disposition", `attachment; filename="${exportPayload.filename}"`);
+    return res.status(200).send(exportPayload.data);
+  } catch (err) {
+    console.error("EXPORT APPLICANTS ERROR:", err);
+    res.status(500).json({ message: "Failed to generate export file" });
+  }
+};
+
 /* ======================================================
     UPDATE APPLICATION STATUS
 ====================================================== */

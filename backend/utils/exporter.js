@@ -61,3 +61,35 @@ export const formatReportData = (reportPayload, format = 'json') => {
     data: JSON.stringify(reportPayload, null, 2)
   };
 };
+
+/**
+ * Formats recruiter applicants list into downloadable export object
+ * @param {Array<Object>} applicants
+ * @param {string} format 'csv' | 'json'
+ */
+export const formatApplicantsExport = (applicants = [], format = 'csv') => {
+  const sanitized = applicants.map(app => ({
+    ApplicationID: String(app._id || ''),
+    StudentName: app.student?.name || 'N/A',
+    Branch: app.student?.branch || 'N/A',
+    CGPA: app.student?.cgpa || 'N/A',
+    JobTitle: app.job?.title || 'N/A',
+    Company: app.job?.company || 'N/A',
+    Status: app.status || 'Pending',
+    AppliedDate: app.createdAt ? new Date(app.createdAt).toISOString().split('T')[0] : ''
+  }));
+
+  if (format === 'csv') {
+    return {
+      contentType: 'text/csv',
+      filename: `Applicants_Export_${Date.now()}.csv`,
+      data: convertToCSV(sanitized, ['ApplicationID', 'StudentName', 'Branch', 'CGPA', 'JobTitle', 'Company', 'Status', 'AppliedDate'])
+    };
+  }
+
+  return {
+    contentType: 'application/json',
+    filename: `Applicants_Export_${Date.now()}.json`,
+    data: JSON.stringify(sanitized, null, 2)
+  };
+};

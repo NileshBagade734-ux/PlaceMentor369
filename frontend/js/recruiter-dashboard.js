@@ -116,16 +116,22 @@ function renderJobs(jobs, apps) {
 }
 
 // ---------------- DELETE JOB ----------------
-window.deleteJob = async function(jobId) {
-  if(!confirm("Are you sure you want to delete this job?")) return;
+window.deleteJob = async function deleteJob(jobId) {
+  if (!confirm("Are you sure you want to delete this job posting?")) return;
 
-  try {
-    await apiRequest(`/recruiter/jobs/${jobId}`, "DELETE");
-    initDashboard();
-  } catch (err) {
-    console.error("Delete job error:", err);
-    alert("Failed to delete job. Try again.");
-  }
+  apiRequest(`/recruiter/jobs/${jobId}`, "DELETE")
+    .then(() => {
+      alert("Job deleted successfully.");
+      initDashboard();
+    })
+    .catch(err => alert("Error deleting job: " + err.message));
+}
+
+function downloadApplicantsExport(format = "csv", jobId = "") {
+  const query = new URLSearchParams({ format });
+  if (jobId) query.append("jobId", jobId);
+
+  window.open(`${API_BASE_URL}/recruiter/export?${query.toString()}`, "_blank");
 }
 
 // ---------------- EDIT JOB ----------------
