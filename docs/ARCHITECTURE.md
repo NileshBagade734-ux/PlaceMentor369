@@ -8,6 +8,10 @@ Welcome to the comprehensive technical documentation for **PlaceMentor369**, an 
 
 PlaceMentor369 is built with a decoupled architecture featuring an Express backend REST API, MongoDB document storage, BullMQ Redis-backed async task queues, Socket.io real-time notifications, and dual frontends (Tailwind/HTML5 traditional client and React modern dashboard).
 
+For detailed API definitions and deployment instructions, refer to:
+- 📖 [API REST Endpoint Specification](API_SPECIFICATION.md)
+- 🚀 [Production Deployment Runbook](DEPLOYMENT_GUIDE.md)
+
 ```mermaid
 graph TD
     Client[Frontend Clients - Student / Recruiter / Admin] -->|HTTPS REST API| API Gateway[Express.js Server]

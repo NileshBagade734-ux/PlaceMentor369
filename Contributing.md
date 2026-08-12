@@ -53,6 +53,9 @@ Your help makes this project better for everyone.
 ### ✅ Pull Request Checklist
 - I updated relevant documentation (if needed)
 - I linked the PR to any relevant issues
+- I ran unit tests and verified backend syntax (`node --check server.js`)
+- Each branch modifies related files for a single focused purpose
+- Zero merge conflicts with `main` branch
 
 
 ### Legal / License
