@@ -34,6 +34,13 @@ The backend runs on `http://localhost:5000`.
 
 ---
 
+## 📚 Technical Documentation
+
+- [System Architecture](docs/ARCHITECTURE.md)
+- [API Endpoints Specification](docs/API_SPECIFICATION.md)
+- [Deployment Guide](docs/DEPLOYMENT_GUIDE.md)
+- [Contribution Guidelines](Contributing.md)
+
 ## Project Overview
 
 PlacementorAI helps educational institutions and recruiters manage placements efficiently by:
