@@ -70,3 +70,34 @@ export const validateLogin = [
 
   handleValidationErrors,
 ];
+
+/**
+ * Validation rules for posting job listings.
+ */
+export const validateJobCreate = [
+  body("title")
+    .trim()
+    .notEmpty()
+    .withMessage("Job title is required")
+    .isLength({ min: 3, max: 100 })
+    .withMessage("Job title must be between 3 and 100 characters"),
+
+  body("companyName")
+    .trim()
+    .notEmpty()
+    .withMessage("Company name is required"),
+
+  body("location")
+    .trim()
+    .notEmpty()
+    .withMessage("Location is required"),
+
+  body("description")
+    .trim()
+    .notEmpty()
+    .withMessage("Description is required")
+    .isLength({ min: 20 })
+    .withMessage("Description must be at least 20 characters long"),
+
+  handleValidationErrors,
+];
