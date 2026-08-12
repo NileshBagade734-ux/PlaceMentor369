@@ -1,9 +1,7 @@
 import { useRef, useMemo, useEffect } from "react";
-// import { io } from "socket.io-client";
 import { Link } from "react-router-dom";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Sphere, MeshDistortMaterial, Float } from "@react-three/drei";
-import * as THREE from "three";
+import { SkeletonLoader } from "./SkeletonLoader";
+import { useFetchJobs } from "../hooks/useFetchJobs";
 
 function AnimatedSphere() {
   const meshRef = useRef(null);

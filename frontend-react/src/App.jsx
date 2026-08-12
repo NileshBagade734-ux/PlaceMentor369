@@ -1,4 +1,6 @@
 import Homepage from "./components/HomePage";
+import Navbar from "./components/Navbar";
+import ErrorBoundary from "./components/ErrorBoundary";
 import { Routes, Route } from "react-router-dom";
 import RecruiterLayout from "./components/layout/RecruiterLayout";
 import DashboardOverview from "./pages/recruiter/DashboardOverview";
@@ -7,18 +9,23 @@ import ManageApplicants from "./pages/recruiter/ManageApplicants";
 
 function App() {
   return (
-    <div>
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        
-        {/* Recruiter Routes */}
-        <Route path="/recruiter" element={<RecruiterLayout />}>
-          <Route index element={<DashboardOverview />} />
-          <Route path="post-job" element={<PostJob />} />
-          <Route path="manage-applicants" element={<ManageApplicants />} />
-        </Route>
-      </Routes>
-    </div>
+    <ErrorBoundary>
+      <div className="min-h-screen bg-slate-50 text-slate-900">
+        <Navbar />
+        <main className="pt-24">
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            
+            {/* Recruiter Routes */}
+            <Route path="/recruiter" element={<RecruiterLayout />}>
+              <Route index element={<DashboardOverview />} />
+              <Route path="post-job" element={<PostJob />} />
+              <Route path="manage-applicants" element={<ManageApplicants />} />
+            </Route>
+          </Routes>
+        </main>
+      </div>
+    </ErrorBoundary>
   );
 }
 

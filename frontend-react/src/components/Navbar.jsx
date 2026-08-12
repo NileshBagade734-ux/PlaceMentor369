@@ -5,23 +5,18 @@ import { Link } from "react-router-dom";
 // import { useChat } from "../hooks/useChat";
 // import ChatPopup from "./chat/ChatPopup";
 
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+
 const Navbar = () => {
-  const { themeMode, darkTheme, lightTheme } = useTheme();
+  const [themeMode, setThemeMode] = useState("light");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
 
-  const { currentUser } = useAuth();
-
-  const {
-    conversations,
-    messages,
-    activeConversation,
-    typingUsers,
-    openConversation,
-    sendMessage,
-    startTyping,
-    stopTyping,
-  } = useChat();
+  const toggleTheme = () => {
+    const next = themeMode === "light" ? "dark" : "light";
+    setThemeMode(next);
+  };
 
   return (
     <nav
