@@ -70,9 +70,16 @@ export const createJob = async (req, res) => {
   }
 };
 
+import { paginateQuery } from "../utils/pagination.js";
+
 /* GET RECRUITER JOBS */
 export const getRecruiterJobs = async (req, res) => {
   try {
+    const { page, limit } = req.query;
+    if (page || limit) {
+      const result = await paginateQuery(Job, { recruiter: req.user._id }, { page, limit, sort: { createdAt: -1 } });
+      return res.status(200).json(result);
+    }
     const jobs = await Job.find({ recruiter: req.user._id }).sort({ createdAt: -1 });
     res.status(200).json(jobs);
   } catch (err) {

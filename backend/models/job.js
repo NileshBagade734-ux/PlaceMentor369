@@ -143,6 +143,11 @@ jobSchema.pre("find", function () {
   this.where({ deadline: { $lt: new Date() }, status: { $ne: "expired" } } );
 });
 
+// Database indexes for high-throughput queries
+jobSchema.index({ status: 1, createdAt: -1 });
+jobSchema.index({ recruiter: 1, status: 1 });
+jobSchema.index({ title: "text", company: "text", description: "text" });
+
 jobSchema.pre("findOne", function () {
   this.where({ deadline: { $lt: new Date() }, status: { $ne: "expired" } } );
 });
