@@ -1,6 +1,7 @@
 import Job from "../models/job.js";
 import Student from "../models/student.js";
 import { generateText } from "../utils/gemini.js";
+import { analyzeResumeStructure } from "../utils/resumeParser.js";
 
 /**
  * Evaluates candidate resume against target job requirements or general ATS standard
@@ -37,6 +38,9 @@ export const evaluateATS = async (req, res) => {
       });
     }
 
+    // Advanced Structural Analysis
+    const structure = analyzeResumeStructure(textToAnalyze);
+
     // Keyword Extraction & Match Calculation
     const sanitizedText = textToAnalyze.toLowerCase();
     const matchedSkills = [];
@@ -55,8 +59,8 @@ export const evaluateATS = async (req, res) => {
       ? Math.round((matchedSkills.length / targetJobSkills.length) * 100)
       : 75;
 
-    // Formatting & Length checks
-    const wordCount = textToAnalyze.split(/\s+/).length;
+    // Formatting & Structure checks
+    const wordCount = structure.wordCount;
     let formatScore = 85;
     const formatIssues = [];
 
@@ -68,11 +72,20 @@ export const evaluateATS = async (req, res) => {
       formatIssues.push("Resume is lengthy. Keep content concise and targeted.");
     }
 
-    if (!/(education|bachelor|master|degree|university|college)/i.test(textToAnalyze)) {
+    if (!structure.hasEmail) {
+      formatScore -= 5;
+      formatIssues.push("Missing accessible email address in contact section.");
+    }
+    if (!structure.hasPhone) {
+      formatScore -= 5;
+      formatIssues.push("Missing accessible contact phone number.");
+    }
+
+    if (!structure.sectionsDetected.includes("Education")) {
       formatIssues.push("Missing explicit Education section header or credentials.");
     }
 
-    if (!/(experience|project|internship|work)/i.test(textToAnalyze)) {
+    if (!structure.sectionsDetected.includes("Experience") && !structure.sectionsDetected.includes("Projects")) {
       formatIssues.push("Missing explicit Work Experience or Projects section.");
     }
 
@@ -106,6 +119,7 @@ export const evaluateATS = async (req, res) => {
         keywordScore,
         formatScore,
         wordCount,
+        structure,
         matchedSkills,
         missingSkills,
         formatIssues,
