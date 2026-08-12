@@ -17,7 +17,25 @@ async function initDashboard() {
   showWelcome();
   await loadApplications();
   await loadProfileCompletion();
+  await loadNotificationsBadge();
   attachLogout();
+}
+
+async function loadNotificationsBadge() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/notifications`, {
+      headers: { Authorization: `Bearer ${session.token}` }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    const badgeEl = document.getElementById("notificationBadge");
+    if (badgeEl && data.unreadCount > 0) {
+      badgeEl.textContent = data.unreadCount;
+      badgeEl.classList.remove("hidden");
+    }
+  } catch (err) {
+    console.warn("Notifications fetch error:", err);
+  }
 }
 
 async function loadProfileCompletion() {

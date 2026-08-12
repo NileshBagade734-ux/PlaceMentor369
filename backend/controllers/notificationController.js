@@ -83,3 +83,23 @@ export const markAllAsRead = async (req, res) => {
     });
   }
 };
+
+/**
+ * DELETE /api/notifications/:id - Delete a specific notification
+ */
+export const deleteNotification = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const notification = await Notification.findOneAndDelete({ _id: id, recipient: userId });
+    if (!notification) {
+      return res.status(404).json({ success: false, message: "Notification not found." });
+    }
+
+    return res.status(200).json({ success: true, message: "Notification deleted." });
+  } catch (error) {
+    console.error("Delete Notification Error:", error);
+    return res.status(500).json({ success: false, message: "Failed to delete notification." });
+  }
+};
