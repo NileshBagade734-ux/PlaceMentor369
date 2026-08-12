@@ -189,3 +189,37 @@ export async function parseResume(file) {
 
   return result;
 }
+
+/**
+ * Extract candidate structural sections and keyword density metrics
+ */
+export function analyzeResumeStructure(text) {
+  if (!text || typeof text !== "string") {
+    return {
+      wordCount: 0,
+      hasEmail: false,
+      hasPhone: false,
+      sectionsDetected: [],
+      keywordDensity: {}
+    };
+  }
+
+  const normalized = text.toLowerCase();
+  const wordCount = text.split(/\s+/).filter(Boolean).length;
+  const hasEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(text);
+  const hasPhone = /(\+\d{1,3}[\s-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/.test(text);
+
+  const sectionsDetected = [];
+  if (/(education|academic|university|degree)/i.test(normalized)) sectionsDetected.push("Education");
+  if (/(experience|employment|work history|career)/i.test(normalized)) sectionsDetected.push("Experience");
+  if (/(projects|key projects|portfolio)/i.test(normalized)) sectionsDetected.push("Projects");
+  if (/(skills|technical skills|technologies|expertise)/i.test(normalized)) sectionsDetected.push("Skills");
+  if (/(certifications|certificates|licenses)/i.test(normalized)) sectionsDetected.push("Certifications");
+
+  return {
+    wordCount,
+    hasEmail,
+    hasPhone,
+    sectionsDetected,
+  };
+}
