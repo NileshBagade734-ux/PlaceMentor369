@@ -47,3 +47,19 @@ export const uploadLimiter = rateLimit({
     errorCode: "UPLOAD_LIMIT_EXCEEDED"
   }
 });
+
+/**
+ * Rate limiter for AI analysis and ATS evaluation endpoints.
+ * Window: 15 minutes, Max requests: 15 per IP
+ */
+export const aiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 15,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    status: "error",
+    message: "⚠️ AI service rate limit reached. Please wait a few minutes before trying again.",
+    errorCode: "AI_RATE_LIMIT_EXCEEDED"
+  }
+});

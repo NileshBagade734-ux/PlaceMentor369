@@ -18,6 +18,15 @@ export const setSecurityHeaders = (req, res, next) => {
   // HTTP Strict Transport Security (HSTS)
   res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
 
+  // Permissions Policy
+  res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+
+  // Basic Content Security Policy (CSP)
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
+  );
+
   // Remove Express powered-by header for obfuscation
   res.removeHeader("X-Powered-By");
 
