@@ -39,7 +39,9 @@ applicationSchema.pre("save", function () {
 
 // 🔹 Prevent duplicate application per student-job pair
 applicationSchema.index({ student: 1, job: 1 }, { unique: true });
+applicationSchema.index({ job: 1, status: 1 });
+applicationSchema.index({ student: 1, appliedAt: -1 });
 
 // 🔹 Export the model
-const Application = mongoose.model("Application", applicationSchema);
+const Application = mongoose.models.Application || mongoose.model("Application", applicationSchema);
 export default Application;
