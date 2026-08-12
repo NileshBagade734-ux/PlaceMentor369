@@ -1,18 +1,13 @@
-const toggleBtn = document.getElementById("theme-toggle");
+import { ThemeManager } from "./theme-manager.js";
 
-// Load saved theme
-if (localStorage.getItem("theme") === "dark") {
-  document.documentElement.classList.add("dark");
-}
+document.addEventListener("DOMContentLoaded", () => {
+  ThemeManager.init();
 
-if (toggleBtn) {
-  toggleBtn.addEventListener("click", () => {
-    document.documentElement.classList.toggle("dark");
-
-    if (document.documentElement.classList.contains("dark")) {
-      localStorage.setItem("theme", "dark");
-    } else {
-      localStorage.setItem("theme", "light");
-    }
-  });
-}
+  const toggleBtn = document.getElementById("theme-toggle");
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", () => {
+      const activeTheme = ThemeManager.toggle();
+      toggleBtn.setAttribute("aria-label", `Switch to ${activeTheme === "dark" ? "light" : "dark"} mode`);
+    });
+  }
+});
