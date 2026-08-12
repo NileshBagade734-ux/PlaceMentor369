@@ -23,6 +23,10 @@ const notificationSchema = new mongoose.Schema(
       enum: ["application_update", "job_approval", "ats_alert", "system_announcement"],
       default: "application_update"
     },
+    actionUrl: {
+      type: String,
+      default: ""
+    },
     isRead: {
       type: Boolean,
       default: false,
@@ -38,5 +42,7 @@ const notificationSchema = new mongoose.Schema(
   }
 );
 
-const Notification = mongoose.model("Notification", notificationSchema);
+notificationSchema.index({ recipient: 1, isRead: 1, createdAt: -1 });
+
+const Notification = mongoose.models.Notification || mongoose.model("Notification", notificationSchema);
 export default Notification;
