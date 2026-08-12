@@ -83,6 +83,7 @@ if (redisConnection) {
 
 import { setSecurityHeaders, sanitizeInput } from "./middlewares/securityMiddleware.js";
 import { apiLimiter } from "./middlewares/rateLimiter.js";
+import { requestTracer } from "./middlewares/requestTracer.js";
 
 // ✅ CORS (allow frontend URLs)
 app.use(
@@ -91,6 +92,9 @@ app.use(
     credentials: true
   })
 );
+
+// ✅ Request Tracing Correlation ID
+app.use(requestTracer);
 
 // ✅ Security Headers & Input Sanitization
 app.use(setSecurityHeaders);

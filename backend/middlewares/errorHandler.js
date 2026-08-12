@@ -49,6 +49,8 @@ const handleJWTError = (err) => {
   return null;
 };
 
+import { logger } from "../utils/logger.js";
+
 /**
  * Global error handling middleware.
  * Catches all errors and returns a consistent JSON response.
@@ -57,6 +59,17 @@ const handleJWTError = (err) => {
 export const errorHandler = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
+
+  const processedError = handleMongoError(err) || handleJWTError(err) || err;
+
+  // Log error using structured logger
+  logger.error(processedError.message || "Unhandled server error", {
+    requestId: req.requestId,
+    statusCode: processedError.statusCode,
+    url: req.originalUrl,
+    method: req.method,
+    stack: process.env.NODE_ENV === "development" ? processedError.stack : undefined
+  });
 
   let error = err;
 
