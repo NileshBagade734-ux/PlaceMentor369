@@ -104,7 +104,7 @@ function updateCompletion() {
         resumeBase64
     ].filter(Boolean).length;
 
-    const percent = Math.floor((filled / 6) * 100);
+    const percent = Math.round((filled / 6) * 100);
     completionBar.style.width = percent + "%";
     completionText.textContent = percent + "%";
     completionMessage.innerHTML = percent === 100
@@ -366,11 +366,11 @@ resetProfileBtn?.addEventListener("click", async () => {
 document.addEventListener("DOMContentLoaded", () => {
     loadProfile();
 
-    // Attach dynamic input listeners to update profile completion in real-time
-    firstNameInput?.addEventListener("input", updateCompletion);
-    lastNameInput?.addEventListener("input", updateCompletion);
-    branchSelect?.addEventListener("change", updateCompletion);
-    cgpaInput?.addEventListener("input", updateCompletion);
+// Attach dynamic input listeners to update profile completion in real-time
+firstNameInput?.addEventListener("input", updateCompletion);
+lastNameInput?.addEventListener("input", updateCompletion);
+branchSelect?.addEventListener("change", updateCompletion);
+cgpaInput?.addEventListener("input", updateCompletion);
 });
 
 // ============================
