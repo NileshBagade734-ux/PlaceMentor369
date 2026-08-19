@@ -45,7 +45,9 @@ function getReadinessTier(score) {
 ============================ */
 export const getProfile = async (req, res) => {
   try {
-    const student = await Student.findOne({ user: req.user.id });
+    // Support both /profile (implicit) and /:id/profile (explicit) routes
+    const userId = req.params.id || req.user.id;
+    const student = await Student.findOne({ user: userId });
 
     // Frontend expects empty object if profile does not exist
     if (!student) return res.json({});
@@ -77,10 +79,13 @@ export const saveProfile = async (req, res) => {
       });
     }
 
-    let student = await Student.findOne({ user: req.user.id });
+    // Support both /profile (implicit) and /:id/profile (explicit) routes
+    const userId = req.params.id || req.user.id;
+
+    let student = await Student.findOne({ user: userId });
 
     if (!student) {
-      student = new Student({ user: req.user.id });
+      student = new Student({ user: userId });
     }
 
     student.name = name || "";
@@ -178,7 +183,9 @@ export const applyJob = async (req, res) => {
 ============================ */
 export const getApplications = async (req, res) => {
   try {
-    const studentProfile = await Student.findOne({ user: req.user.id });
+    // Support both /applications (implicit) and /:id/applications (explicit) routes
+    const userId = req.params.id || req.user.id;
+    const studentProfile = await Student.findOne({ user: userId });
     if (!studentProfile) return res.status(200).json([]);
 
     const apps = await Application.find({ student: studentProfile._id }).populate({

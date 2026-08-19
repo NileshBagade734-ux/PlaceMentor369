@@ -1,5 +1,5 @@
 import express from "express";
-import { verifyToken } from "../middlewares/authMiddleware.js";
+import { verifyToken, requireSelf } from "../middlewares/authMiddleware.js";
 import {
   getProfile,
   saveProfile,
@@ -49,5 +49,14 @@ router.post(
   upload.single("resume"),
   uploadResume
 );
+
+// Get student profile by ID with IDOR protection
+router.get("/:id/profile", verifyToken, requireSelf, getProfile);
+
+// Update student profile by ID with IDOR protection
+router.patch("/:id/profile", verifyToken, requireSelf, saveProfile);
+
+// Get student applications by ID with IDOR protection
+router.get("/:id/applications", verifyToken, requireSelf, getApplications);
 
 export default router;
