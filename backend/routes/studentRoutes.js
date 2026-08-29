@@ -9,7 +9,7 @@ import {
   getApplications,
   getSkillGapAnalysis,
   uploadResume,
-  getAtsDashboard
+  getAtsDashboard,
 } from "../controllers/studentController.js";
 import multer from "multer";
 
