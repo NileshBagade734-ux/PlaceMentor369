@@ -109,6 +109,9 @@ app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 
 // Health check
 app.get("/", (req, res) => res.status(200).send("🚀 PlacementorAI Backend Running!"));
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "healthy", uptime: process.uptime(), dbState: mongoose.connection.readyState });
+});
 
 // Auth routes
 app.use("/api/auth", authRoutes);
