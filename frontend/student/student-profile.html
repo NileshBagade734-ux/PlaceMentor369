@@ -95,16 +95,35 @@
                     <input type="file" id="resumeInput" accept=".pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                 </div>
                 <p id="resumeError" class="text-sm text-red-500 mt-2 hidden"></p>
-                <div id="resumeActions" class="mt-4 flex gap-3 hidden">
-                    <div class="flex-1 p-3 bg-blue-50 rounded-lg flex items-center justify-between">
-                        <span id="resumeFileName" class="text-sm text-blue-700 font-medium truncate px-2"></span>
-                        <button id="viewPdfBtn" class="text-blue-600 hover:text-blue-800 text-sm font-bold flex items-center gap-2">
-                            <i class="fas fa-eye"></i> View PDF
+
+                <!-- Resume preview card — shown after a file is selected or loaded -->
+                <div id="resumeActions" class="resume-preview-card mt-4 hidden">
+                    <!-- Left: PDF icon + file details -->
+                    <div class="resume-preview-info">
+                        <div class="resume-preview-icon" aria-hidden="true">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="resume-preview-meta">
+                            <span id="resumeFileName" class="resume-preview-name" title=""></span>
+                            <span id="resumeFileSize" class="resume-preview-size"></span>
+                        </div>
+                    </div>
+
+                    <!-- Right: action buttons -->
+                    <div class="resume-preview-actions">
+                        <button id="viewPdfBtn" class="resume-btn resume-btn-view" title="Preview resume in a new tab">
+                            <i class="fas fa-eye"></i>
+                            <span>View</span>
+                        </button>
+                        <button id="replaceResumeBtn" class="resume-btn resume-btn-replace" title="Upload a different file">
+                            <i class="fas fa-retweet"></i>
+                            <span>Replace</span>
+                        </button>
+                        <button id="removeResumeBtn" class="resume-btn resume-btn-remove" title="Remove this resume">
+                            <i class="fas fa-trash-alt"></i>
+                            <span>Remove</span>
                         </button>
                     </div>
-                    <button id="removeResumeBtn" class="p-3 text-red-500 hover:bg-red-50 rounded-lg transition">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
                 </div>
             </section>
 
