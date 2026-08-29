@@ -113,6 +113,24 @@
           <span class="px-2 text-gray-400 text-sm">OR</span>
           <hr class="flex-grow border-gray-300 dark:border-gray-600">
         </div>
+        
+        <div class="flex gap-4">
+         <button
+             id="googleBtn"
+             type="button"
+           class="flex-1 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-600 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition dark:text-white text-sm">
+            <img src="https://img.icons8.com/color/20/google-logo.png" alt="Google">
+            Google
+          </button>
+           <button
+           id="githubBtn"
+           type="button"
+            class="flex-1 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-600 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition dark:text-white text-sm">
+            <img src="https://img.icons8.com/ios-glyphs/20/github.png" class="dark:invert" alt="GitHub">
+             GitHub
+        </button>
+      </div>
+        
 
         <!-- Social Login -->
         <div class="flex gap-4">
@@ -127,6 +145,48 @@
         </div>
       </form>
     </div>
+  </main>
+
+  <!-- Toast container for OAuth buttons feedback -->
+  <div id="toast-notification" 
+  style="position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); 
+  background-color: #1f2937; color: #ffffff; padding: 12px 24px; border-radius: 8px; font-size: 14px; 
+  font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.3s ease; opacity: 0; pointer-events: none; z-index: 9999;">
+  Coming Soon! 🚀</div>
+
+  <!-- Theme Script -->
+  <script src="js/theme.js"></script>
+  
+  <!-- Auth Script -->
+  <script src="js/login.js"></script>
+
+  <!-- Animations -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+      gsap.to("#login-card", {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power3.out"
+      });
+
+      const togglePassword = document.getElementById("togglePassword");
+      const passwordInput = document.getElementById("password");
+
+      togglePassword.addEventListener("click", () => {
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+        } else {
+          passwordInput.type = "password";
+        }
+      });
+    });
+  </script>
 
     <p class="text-center text-sm mt-6 text-gray-600 dark:text-gray-400">
       Don't have an account?

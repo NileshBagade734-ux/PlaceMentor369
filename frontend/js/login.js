@@ -60,6 +60,41 @@ toggleBtn?.addEventListener("click", () => {
   if (window.lucide) lucide.createIcons();
 });
 
+// --------------------------------------------------
+// OAuth Buttons Feedback (GSSoC '26 Issue #247)
+// --------------------------------------------------
+const googleBtn = document.getElementById("googleBtn");
+const githubBtn = document.getElementById("githubBtn");
+const toast = document.getElementById("toast-notification");
+
+function showToast() {
+    if (!toast) return;
+    // Smoothly slide up and show the toast
+    toast.style.bottom = "24px";
+    toast.style.opacity = "1";
+
+    // Hide it automatically after 3 seconds
+    setTimeout(() => {
+        toast.style.bottom = "-60px";
+        toast.style.opacity = "0";
+    }, 2000);
+}
+
+if (googleBtn) {
+    googleBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        showToast();
+    });
+}
+
+if (githubBtn) {
+    githubBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        showToast();
+    });
+}
+
+
 // -------------------------
 // Login Form Submit
 // -------------------------
