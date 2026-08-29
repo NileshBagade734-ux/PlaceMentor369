@@ -245,12 +245,8 @@ async function handleApply(jobId) {
   if (window.lucide) lucide.createIcons();
 
   try {
-    const res = await fetch(`${API_BASE}/apply/${jobId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
+    const res = await fetchWithAuth(`${API_BASE}/apply/${jobId}`, {
+      method: "POST"
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Apply failed");
@@ -275,9 +271,7 @@ async function init() {
   }
 
   try {
-    const res = await fetch(`${API_BASE}/skill-gap/${jobId}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    const res = await fetchWithAuth(`${API_BASE}/skill-gap/${jobId}`);
     const data = await res.json();
 
     if (!res.ok) throw new Error(data.message || "Failed to load analysis");

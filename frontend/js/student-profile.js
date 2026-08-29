@@ -315,12 +315,8 @@ resetProfileBtn?.addEventListener("click", async () => {
     resetProfileBtn.innerText = "Resetting...";
 
     try {
-        const res = await fetch(`${API_BASE}/profile`, {
+        const res = await fetchWithAuth(`${API_BASE}/profile`, {
             method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
             body: JSON.stringify({
                 name: "",
                 roll: "",

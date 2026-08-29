@@ -22,9 +22,7 @@ async function initDashboard() {
 
 async function loadProfileCompletion() {
   try {
-    const res = await fetch(`${API_BASE_URL}/student/profile`, {
-      headers: { Authorization: `Bearer ${session.token}` }
-    });
+    const res = await fetchWithAuth(`${API_BASE_URL}/student/profile`);
     if (!res.ok) return;
     const profile = await res.json();
     if (!profile) return;
