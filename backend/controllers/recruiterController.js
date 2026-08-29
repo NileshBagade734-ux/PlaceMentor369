@@ -76,7 +76,7 @@ export const getAllRecruiterApplications = async (req, res) => {
 
     const applications = await Application.find({ job: { $in: jobIds } })
       .populate("student", "name branch cgpa resume")
-      .populate("job", "title");
+      .populate("job", "title").lean();
 
     res.status(200).json(applications);
   } catch (err) {
@@ -176,7 +176,7 @@ export const exportJobApplicantsToCSV = async (req, res) => {
 
       applications = await Application.find({ job: jobId })
         .populate("student", "name email branch cgpa skills resume")
-        .populate("job", "title");
+        .populate("job", "title").lean();
 
       filename = `applicants-${jobId}.csv`;
     } else {
@@ -185,7 +185,7 @@ export const exportJobApplicantsToCSV = async (req, res) => {
 
       applications = await Application.find({ job: { $in: jobIds } })
         .populate("student", "name email branch cgpa skills resume")
-        .populate("job", "title");
+        .populate("job", "title").lean();
     }
 
     const headers = [
