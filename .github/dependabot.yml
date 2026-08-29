@@ -1,0 +1,81 @@
+version: 2
+
+updates:
+  # ------------------------------------------------------------------ #
+  #  Root package.json                                                  #
+  # ------------------------------------------------------------------ #
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'security'
+    commit-message:
+      prefix: 'deps'
+    ignore:
+      # Ignore major version bumps by default — review manually
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
+
+  # ------------------------------------------------------------------ #
+  #  backend/package.json                                               #
+  # ------------------------------------------------------------------ #
+  - package-ecosystem: 'npm'
+    directory: '/backend'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'backend'
+    commit-message:
+      prefix: 'deps(backend)'
+
+  # ------------------------------------------------------------------ #
+  #  frontend/package.json                                              #
+  # ------------------------------------------------------------------ #
+  - package-ecosystem: 'npm'
+    directory: '/frontend'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'frontend'
+    commit-message:
+      prefix: 'deps(frontend)'
+
+  # ------------------------------------------------------------------ #
+  #  frontend-react/package.json                                        #
+  # ------------------------------------------------------------------ #
+  - package-ecosystem: 'npm'
+    directory: '/frontend-react'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'frontend'
+    commit-message:
+      prefix: 'deps(frontend-react)'
+
+  # ------------------------------------------------------------------ #
+  #  GitHub Actions                                                     #
+  # ------------------------------------------------------------------ #
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'ci'
+    commit-message:
+      prefix: 'ci(deps)'

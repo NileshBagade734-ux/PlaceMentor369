@@ -1,0 +1,102 @@
+name: Security & Dependency Scanning
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Run every Sunday at midnight UTC for proactive scanning
+    - cron: '0 0 * * 0'
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  # ------------------------------------------------------------------ #
+  #  CodeQL — Static Application Security Testing (SAST)               #
+  # ------------------------------------------------------------------ #
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          # Use the security-and-quality query suite for thorough SAST
+          queries: security-and-quality
+
+      - name: Auto-build (for compiled languages; no-op for JS)
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:${{ matrix.language }}
+
+  # ------------------------------------------------------------------ #
+  #  npm audit — Dependency Vulnerability Scanning                     #
+  # ------------------------------------------------------------------ #
+  dependency-audit:
+    name: Dependency Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Audit root dependencies
+        run: |
+          echo "=== Auditing root package.json ==="
+          npm install --ignore-scripts --legacy-peer-deps
+          npm audit --audit-level=high || true
+
+      - name: Audit backend dependencies
+        working-directory: backend
+        run: |
+          echo "=== Auditing backend/package.json ==="
+          npm install --ignore-scripts --legacy-peer-deps
+          npm audit --audit-level=high || true
+
+      - name: Audit frontend dependencies
+        working-directory: frontend
+        run: |
+          echo "=== Auditing frontend/package.json ==="
+          if [ -f package.json ]; then
+            npm install --ignore-scripts --legacy-peer-deps
+            npm audit --audit-level=high || true
+          else
+            echo "No package.json found, skipping."
+          fi
+
+      - name: Audit frontend-react dependencies
+        working-directory: frontend-react
+        run: |
+          echo "=== Auditing frontend-react/package.json ==="
+          npm install --ignore-scripts --legacy-peer-deps
+          npm audit --audit-level=high || true
+
+      - name: Summarise audit results
+        run: |
+          echo ""
+          echo "✅ Dependency audit complete."
+          echo "   • Critical & high vulnerabilities are reported above."
+          echo "   • Review output and apply patches via 'npm audit fix' or Dependabot PRs."
