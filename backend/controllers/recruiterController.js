@@ -1,3 +1,8 @@
+
+const sanitizeHTML = (str) => {
+  if (typeof str !== "string") return str;
+  return str.replace(/[&<>'"]/g, (tag) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", "\"": "&quot;" }[tag] || tag));
+};
 import Job from "../models/job.js";
 import Application from "../models/application.js";
 import mongoose from "mongoose";
@@ -36,6 +41,9 @@ export const createJob = async (req, res) => {
     if (existingJob) return res.status(400).json({ message: "Duplicate job posting detected. Please wait 5 minutes before posting the same job again." });
 
     const job = await Job.create({
+      title: sanitizeHTML(title),
+      company: sanitizeHTML(company),
+      description: sanitizeHTML(description),
       title,
       company: company.trim(),
       description,
