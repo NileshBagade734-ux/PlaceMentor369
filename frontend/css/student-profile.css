@@ -176,6 +176,152 @@ select:focus {
 }
 
 /* =========================
+   Resume Preview Card
+========================= */
+
+.resume-preview-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+    animation: scaleIn 0.25s ease-out;
+}
+
+/* Left section: icon + file meta */
+.resume-preview-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0; /* allow truncation */
+    flex: 1;
+}
+
+.resume-preview-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #dbeafe;
+    color: var(--primary);
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.resume-preview-meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.resume-preview-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1e40af;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+}
+
+.resume-preview-size {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+/* Right section: action buttons */
+.resume-preview-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+/* Shared base for all action buttons */
+.resume-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease;
+}
+
+.resume-btn:active {
+    transform: scale(0.95);
+}
+
+/* View */
+.resume-btn-view {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.resume-btn-view:hover {
+    background-color: #bfdbfe;
+}
+
+/* Replace */
+.resume-btn-replace {
+    background-color: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.resume-btn-replace:hover {
+    background-color: #dcfce7;
+}
+
+/* Remove */
+.resume-btn-remove {
+    background-color: #fff1f2;
+    color: #be123c;
+    border: 1px solid #fecdd3;
+}
+
+.resume-btn-remove:hover {
+    background-color: #ffe4e6;
+}
+
+/* Responsive — collapse button labels on small screens */
+@media (max-width: 480px) {
+    .resume-preview-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .resume-preview-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .resume-btn span {
+        display: none;
+    }
+
+    .resume-btn {
+        padding: 8px;
+    }
+
+    .resume-preview-name {
+        max-width: 180px;
+    }
+}
+
+/* =========================
    Scrollbar Customization
 ========================= */
 
