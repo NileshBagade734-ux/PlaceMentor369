@@ -13,7 +13,8 @@ function getReadinessTier(score) {
       label: "Job Ready",
       color: "green",
       icon: "🟢",
-      advice: "You're well-prepared for this role. Polish your resume and apply with confidence."
+      advice:
+        "You're well-prepared for this role. Polish your resume and apply with confidence."
     };
 
   if (score >= 65)
@@ -21,7 +22,8 @@ function getReadinessTier(score) {
       label: "Almost Ready",
       color: "blue",
       icon: "🔵",
-      advice: "You meet the core requirements. Close the skill gaps below to maximise your chances."
+      advice:
+        "You meet the core requirements. Close the skill gaps below to maximise your chances."
     };
 
   if (score >= 40)
@@ -29,14 +31,16 @@ function getReadinessTier(score) {
       label: "Developing",
       color: "yellow",
       icon: "🟡",
-      advice: "You have a foundation but need to build more skills. Focus on the top missing skills first."
+      advice:
+        "You have a foundation but need to build more skills. Focus on the top missing skills first."
     };
 
   return {
     label: "Needs Work",
     color: "red",
     icon: "🔴",
-    advice: "Significant preparation is needed. Use the learning recommendations to start your journey."
+    advice:
+      "Significant preparation is needed. Use the learning recommendations to start your journey."
   };
 }
 
@@ -181,37 +185,13 @@ export const getApplications = async (req, res) => {
     const studentProfile = await Student.findOne({ user: req.user.id });
     if (!studentProfile) return res.status(200).json([]);
 
-    const apps = await Application.find({ student: studentProfile._id }).populate({
-      path: "job",
-      select: "title company"
-    });
-
-    res.status(200).json(apps);
-  } catch (err) {
-    console.error("GET APPLICATIONS ERROR:", err);
-    res.status(500).json({ message: "Failed to fetch applications" });
-  }
-};
-
-/* ============================
-    GET JOB APPLICATIONS FOR RECRUITER
-============================ */
-export const getJobApplications = async (req, res) => {
-  try {
-    const { jobId } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(jobId)) {
-      return res.status(400).json({ message: "Invalid Job ID" });
-    }
-
-    const applications = await Application.find({ job: jobId }).populate({
-      path: "student",
-      select: "name email branch cgpa resume"
-    });
+    const applications = await Application.find({
+      student: studentProfile._id
+    }).populate("job");
 
     res.status(200).json(applications);
   } catch (err) {
-    console.error("GET JOB APPLICATIONS ERROR:", err);
+    console.error("GET APPLICATIONS ERROR:", err);
     res.status(500).json({ message: "Failed to fetch applications" });
   }
 };
@@ -232,8 +212,7 @@ export const getSkillGapAnalysis = async (req, res) => {
       Student.findOne({ user: req.user.id })
     ]);
 
-    if (!job)
-      return res.status(404).json({ message: "Job not found" });
+    if (!job) return res.status(404).json({ message: "Job not found" });
 
     if (!studentProfile)
       return res.status(400).json({ message: "Complete your profile first" });
@@ -261,7 +240,8 @@ export const getSkillGapAnalysis = async (req, res) => {
       skillScore = 60;
     }
 
-    const cgpaScore = (studentProfile.cgpa || 0) >= (job.cgpa || 0) ? 20 : 10;
+    const cgpaScore =
+      (studentProfile.cgpa || 0) >= (job.cgpa || 0) ? 20 : 10;
 
     const eligibleBranches = (job.branch || []).map(normalize);
 
@@ -276,28 +256,10 @@ export const getSkillGapAnalysis = async (req, res) => {
     const readiness = getReadinessTier(matchScore);
 
     res.status(200).json({
-      job: {
-        id: job._id,
-        title: job.title,
-        company: job.company,
-        minCGPA: job.cgpa || 0,
-        branches: job.branch || []
-      },
-      student: {
-        skills: studentProfile.skills || [],
-        cgpa: studentProfile.cgpa || 0,
-        branch: studentProfile.branch || ""
-      },
-      analysis: {
-        matchScore,
-        matchedSkills,
-        missingSkills,
-        readiness,
-        cgpaMet: (studentProfile.cgpa || 0) >= (job.cgpa || 0),
-        branchEligible: eligibleBranches.length === 0 || eligibleBranches.includes(normalize(studentProfile.branch)),
-        totalRequired,
-        recommendations: []
-      }
+      matchScore,
+      matchedSkills,
+      missingSkills,
+      readiness
     });
   } catch (err) {
     console.error("SKILL GAP ANALYSIS ERROR:", err);
@@ -324,17 +286,22 @@ export const uploadResume = async (req, res) => {
     const aiResult = await analyzeResume(resumeText);
 
     let student = await Student.findOne({ user: req.user.id });
+
     if (!student) {
-      student = new Student({ user: req.user.id });
+      student = new Student({
+        user: req.user.id
+      });
     }
 
-    // Auto-Onboarding mapping
     if (aiResult.firstName || aiResult.lastName) {
-      student.name = `${aiResult.firstName || ""} ${aiResult.lastName || ""}`.trim();
+      student.name =
+        `${aiResult.firstName || ""} ${aiResult.lastName || ""}`.trim();
     }
+
     if (aiResult.roll) student.roll = aiResult.roll;
     if (aiResult.college) student.college = aiResult.college;
     if (aiResult.branch) student.branch = aiResult.branch;
+
     if (aiResult.cgpa !== undefined && aiResult.cgpa !== null) {
       student.cgpa = aiResult.cgpa;
     }
@@ -364,7 +331,12 @@ export const uploadResume = async (req, res) => {
     if (parseResult.flagged && parseResult.reviewEntry) {
       student.resumeReviewQueue = parseResult.reviewEntry;
     } else {
-      student.resumeReviewQueue = { originalName: req.file.originalname, mimeType: req.file.mimetype, reason: "", flaggedAt: null };
+      student.resumeReviewQueue = {
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+        reason: "",
+        flaggedAt: null
+      };
     }
 
     await student.save();
@@ -396,7 +368,9 @@ export const getAtsDashboard = async (req, res) => {
     }
 
     if (!student.resume) {
-      return res.status(404).json({ message: "No resume uploaded yet. Please upload your resume first." });
+      return res
+        .status(404)
+        .json({ message: "No resume uploaded yet. Please upload your resume first." });
     }
 
     res.status(200).json({

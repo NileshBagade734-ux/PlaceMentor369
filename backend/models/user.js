@@ -9,7 +9,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["admin", "recruiter", "student"],
       required: true
-    }
+    },
+
+    // Password reset — token is stored as a SHA-256 hash; never stored in plain text
+    resetToken: { type: String, default: null },
+    // Hard expiry: 1 hour from issue time
+    resetTokenExpiry: { type: Date, default: null }
   },
   { timestamps: true }
 );

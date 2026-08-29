@@ -69,7 +69,9 @@ const resumeInput = document.getElementById("resumeInput");
 const resumeDropArea = document.getElementById("resumeDropArea");
 const resumeActions = document.getElementById("resumeActions");
 const resumeFileName = document.getElementById("resumeFileName");
+const resumeFileSize = document.getElementById("resumeFileSize");
 const viewPdfBtn = document.getElementById("viewPdfBtn");
+const replaceResumeBtn = document.getElementById("replaceResumeBtn");
 const removeResumeBtn = document.getElementById("removeResumeBtn");
 const resumeError = document.getElementById("resumeError");
 
@@ -187,7 +189,7 @@ function readResumeFile(file) {
 
     reader.onload = () => {
         resumeBase64 = reader.result;
-        showResumeUI(file.name);
+        showResumeUI(file.name, file.size);
         updateCompletion();
     };
 
@@ -223,9 +225,34 @@ resumeDropArea?.addEventListener("drop", (e) => {
     readResumeFile(file);
 });
 
-function showResumeUI(name) {
+/**
+ * Formats a byte count into a human-readable string (KB / MB).
+ * @param {number|null} bytes
+ * @returns {string}
+ */
+function formatFileSize(bytes) {
+    if (!bytes || bytes <= 0) return "";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+}
+
+/**
+ * Reveals the resume preview card with file name and optional size.
+ * @param {string} name - Display file name
+ * @param {number|null} [size] - File size in bytes (omit for saved resumes)
+ */
+function showResumeUI(name, size) {
+    const displayName = name || "Saved_Resume.pdf";
+    resumeFileName.textContent = displayName;
+    resumeFileName.title = displayName;
+
+    const sizeLabel = formatFileSize(size);
+    if (resumeFileSize) {
+        resumeFileSize.textContent = sizeLabel;
+        resumeFileSize.classList.toggle("hidden", !sizeLabel);
+    }
+
     resumeActions.classList.remove("hidden");
-    resumeFileName.textContent = name || "Saved_Resume.pdf";
 }
 
 viewPdfBtn?.addEventListener("click", (e) => {
@@ -233,6 +260,13 @@ viewPdfBtn?.addEventListener("click", (e) => {
     if (!resumeBase64) return;
     const win = window.open();
     win.document.write(`<iframe src="${resumeBase64}" style="width:100%;height:100vh" frameborder="0"></iframe>`);
+});
+
+// Replace — re-trigger the hidden file input so the user can pick a new file
+replaceResumeBtn?.addEventListener("click", () => {
+    clearResumeError();
+    resumeInput.value = ""; // Reset so "change" fires even if same file is re-selected
+    resumeInput.click();
 });
 
 removeResumeBtn?.addEventListener("click", () => {
@@ -349,6 +383,7 @@ resetProfileBtn?.addEventListener("click", async () => {
         resumeBase64 = null;
         resumeInput.value = "";
         resumeActions.classList.add("hidden");
+        if (resumeFileSize) resumeFileSize.textContent = "";
         updateCompletion();
 
         showToast("🧹 Profile and Resume reset successfully!", "success");
