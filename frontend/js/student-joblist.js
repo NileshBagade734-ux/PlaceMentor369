@@ -161,6 +161,18 @@ function renderJobList() {
   const list = document.getElementById("jobs-list");
   if (!list) return;
 
+  if (allAvailableJobs.length === 0) {
+    list.innerHTML = `
+      <div class="flex flex-col items-center justify-center p-10 text-center bg-white border border-slate-200 rounded-xl">
+        <i data-lucide="inbox" class="w-16 h-16 text-slate-300 mb-4"></i>
+        <h3 class="text-xl font-bold text-slate-700 mb-2">No Jobs Available</h3>
+        <p class="text-slate-500 text-sm max-w-xs">There are currently no job postings available that match your profile. Check back later!</p>
+      </div>
+    `;
+    if (window.lucide) lucide.createIcons();
+    return;
+  }
+
   const studentCGPA = studentSession.cgpa || 0;
   const studentBranch = studentSession.branch || "";
 
