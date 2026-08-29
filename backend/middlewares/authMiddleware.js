@@ -48,3 +48,32 @@ export const protect = async (req, res, next) => {
 
 // Alias so verifyToken imports still work
 export const verifyToken = protect;
+
+// Authorization middleware: ensures user can only access their own data
+// unless they have admin role. Prevents IDOR (Insecure Direct Object Reference).
+export const requireSelf = (req, res, next) => {
+  try {
+    const requestedId = req.params.id;
+    const userId = req.user._id.toString();
+    const userIdStr = req.user.id.toString();
+    const isAdmin = req.user.role === "admin";
+
+    if (
+      !isAdmin &&
+      requestedId !== userId &&
+      requestedId !== userIdStr
+    ) {
+      return res.status(403).json({
+        error: "Access denied",
+        message: "You can only access your own data"
+      });
+    }
+
+    next();
+  } catch (err) {
+    console.error("Authorization check error:", err.message);
+    return res.status(500).json({
+      message: "Authorization check failed"
+    });
+  }
+};
