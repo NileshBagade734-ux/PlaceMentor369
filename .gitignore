@@ -13,3 +13,8 @@ node_modules/
 !.env.example
 !**/.env.example
 
+
+__pycache__/
+*.pyc
+*.pt
+.venv/
