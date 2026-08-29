@@ -1,19 +1,37 @@
-// Job.js
 import mongoose from "mongoose";
 
-const jobSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  company: { type: String, required: true },
-  location: String,
-  description: String,
-  skillsRequired: [String],
-  salary: String,
-  cgpa: { type: Number, default: 0 },
-  branch: [String],
-  recruiter: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-  createdAt: { type: Date, default: Date.now }
-});
+const recruiterSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      unique: true,
+    },
+    company: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    designation: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    website: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "verified", "rejected"],
+      default: "pending",
+    },
+  },
+  { timestamps: true }
+);
 
-const Job = mongoose.models.Job || mongoose.model("Job", jobSchema);
-export default Job;
+const Recruiter =
+  mongoose.models.Recruiter || mongoose.model("Recruiter", recruiterSchema);
+export default Recruiter;
