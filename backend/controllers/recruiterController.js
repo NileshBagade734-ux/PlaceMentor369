@@ -157,7 +157,73 @@ export const getRecruiterDashboardStats = async (req, res) => {
     res.status(500).json({ message: "Dashboard stats failed" });
   }
 };
+export const getRecruiterAnalytics = async (req, res) => {
+  try {
+    const recruiterId = req.user.id;
 
+    const jobs = await Job.find({
+      recruiter: recruiterId,
+    }).select("_id title");
+
+    const jobIds = jobs.map((j) => j._id);
+
+    const applications = await Application.find({
+      job: { $in: jobIds },
+    })
+      .populate("student", "branch")
+      .populate("job", "title");
+
+    const totalApplicants = applications.length;
+
+    const shortlisted = applications.filter(
+      (a) => a.status === "shortlisted"
+    ).length;
+
+    const rejected = applications.filter(
+      (a) => a.status === "rejected"
+    ).length;
+
+    const rejectionRatio =
+      totalApplicants > 0
+        ? ((rejected / totalApplicants) * 100).toFixed(2)
+        : 0;
+
+    const applicationsPerJob = jobs.map((job) => ({
+      job: job.title,
+      count: applications.filter(
+        (a) => a.job?._id?.toString() === job._id.toString()
+      ).length,
+    }));
+
+    const branchMap = {};
+
+    applications.forEach((app) => {
+      const branch = app.student?.branch || "Unknown";
+      branchMap[branch] = (branchMap[branch] || 0) + 1;
+    });
+
+    const activeBranches = Object.entries(branchMap)
+      .map(([branch, count]) => ({
+        branch,
+        count,
+      }))
+      .sort((a, b) => b.count - a.count);
+
+    res.status(200).json({
+      totalApplicants,
+      shortlisted,
+      rejected,
+      rejectionRatio,
+      applicationsPerJob,
+      activeBranches,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "Analytics fetch failed",
+    });
+  }
+};
 /* ======================================================
     EXPORT APPLICANTS TO CSV
 ====================================================== */
