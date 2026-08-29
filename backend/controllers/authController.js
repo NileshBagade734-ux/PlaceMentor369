@@ -5,7 +5,30 @@ import generateToken from "../utils/generateToken.js";
 // REGISTER
 export const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    let { name, email, password, role } = req.body;
+
+    // Sanitize and validate inputs
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    name = name.trim();
+    email = email.trim().toLowerCase();
+    
+    // Basic email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters long" });
+    }
+
+    const validRoles = ["student", "recruiter", "admin"];
+    if (!validRoles.includes(role)) {
+      return res.status(400).json({ message: "Invalid role specified" });
+    }
 
     const exists = await User.findOne({ email });
     if (exists) {
